@@ -1,0 +1,76 @@
+var __ticache_html = [];
+function getProxyHtml(target, options, callback) {
+    if (__ticache_html[target] === undefined)
+    {
+        $.ajax("struct/" + target + ".html", { 
+            success: function(htmlx) {
+                __ticache_html[target] = htmlx;
+                var newtml = htmlx;
+                for (var key in options)
+                {
+                    newtml = newtml.replace("$" + target + key + "$", options[key]);
+                }
+                callback(newtml);
+            }
+        });
+    }
+    else {
+        var newtml = __ticache_html[target];
+        for (var key in options)
+        {
+            newtml = newtml.replace("$" + target + key + "$", options[key]);
+        } 
+        callback(newtml);
+    }
+}
+
+function getEventItemHtml(itemOptions, callback) {
+    getProxyHtml('item', itemOptions, callback);
+}
+
+function getEventPickHtml(pickOptions, callback) {
+    getProxyHtml('pick', pickOptions, callback);
+}
+
+function getCategoryHtml(catOptions, callback) {
+    getProxyHtml('cat', catOptions, callback);
+}
+
+var __ticonfig = null;
+function getTiConf(callback) {
+    if (__ticonfig)
+        callback(__ticonfig);
+    else
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("load", function() {
+            __ticonfig = JSON.parse(this.responseText);
+            callback(__ticonfig);
+        });
+        xhr.open("GET", "config.json");
+        xhr.send();
+    }
+}
+
+function isUrnAllowed(urn) {
+    return ($.inArray(urn, __ticonfig.allowed_urns) > -1);
+}
+
+function processMiniCast(datx) {
+    if (datx.type === "film" || datx.type === "performance")
+    {
+        var _nxaut1 = datx.spec.director;
+        _nxaut1 = (!_nxaut1) ? null : _nxaut1.text;
+        var _nxaut2 = datx.spec.writer;
+        _nxaut2 = (!_nxaut2) ? null : _nxaut2.text;
+        var _nxaut = "";
+        if (!(_nxaut1 || _nxaut2))
+            return null;
+        else if (_nxaut1 === _nxaut2)
+            return "ن و ک: " + _nxaut1;
+        else
+            return (!_nxaut1 ? "" : ("ک: " + _nxaut1)) + ((_nxaut1 && _nxaut2) ? " / " : "") + (!_nxaut2 ? "" : ("ن: " + _nxaut2));
+    }
+    else if (datx.spec.cast)
+        return datx.spec.cast.text;
+}
