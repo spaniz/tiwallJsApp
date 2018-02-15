@@ -6,9 +6,13 @@ var __active_event = null;
 var __current_cat = null;
 var __eol = false;
 
-function displayEventItem(htmlx) {
+function displayEventItem(htmlx, coords) {
     var list = $('#ti-listHolder');
     list.append(htmlx);
+    if (DEBUG)
+        console.log("rendering item " + coords.i + "/" + coords.max);
+    if (coords.i === (coords.max || 0) - 1) 
+        finaliseListLoad();
     $('#ti-listHolder .ti-witem:last-child').click(function(event) {
         var i = $(this).attr('itemid');
         __active_event = __current_data.data[i];
@@ -111,7 +115,7 @@ function onSeatSelectionChange(data) {
     $('#ti-seatHolder .ti-xcontainer').text = _dat.summary;
 }
 
-function addItem(i, offset, datX) {
+function addItem(i, offset, datX, max) {
     lockLoader(true);
     var _spec = datX.spec.director;
     if (_spec && _spec != undefined)
@@ -124,7 +128,7 @@ function addItem(i, offset, datX) {
         'info': _spec,
         'image': datX.image.thumb_url,
         'id': i + offset
-        }, displayEventItem);
+        }, displayEventItem, { max: max, i: i });
     lockLoader(false);
 }
 
@@ -156,6 +160,10 @@ function addCat(datX) {
     lockLoader(false);
 }
 
+function finaliseListLoad() {
+    $('#ti-listHolder').scroll();
+}
+
 function loadMore(force) {
     if (DEBUG)
         console.warn("called @loadMore with lock[" + __load_lock + "]");
@@ -179,7 +187,7 @@ function loadMore(force) {
         for (var i = 0; i < datJ.data.length; i++) {
             if (!force)
                 __current_data.data.push(datJ.data[i]);
-            addItem(i, datJ.meta.offset, datJ.data[i], force);
+            addItem(i, datJ.meta.offset, datJ.data[i], force, datJ.data.length);
         }
         lockLoader(false);
     });

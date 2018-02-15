@@ -1,4 +1,5 @@
 <?php    
+    require_once("php/consts.php");
     header("Content-Type: text/json");
     $params = "?";
     if (!isset($_GET['urn']) || !isset($_GET['action']))

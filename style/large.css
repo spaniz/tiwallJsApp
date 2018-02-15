@@ -60,10 +60,12 @@
         border-radius: 4px;
         vertical-align: middle;
         margin: 5px;
-        transition: .2s var(--ti-normbaz);
+        transition: .4s var(--ti-normbaz);
         cursor: pointer;
         flex: 1 1 auto;
-        background: rgba(255,255,255,.1);
+        background: radial-gradient(rgba(255,255,255,.1) 50%, transparent 50%) no-repeat;
+        background-size: 5000px 5000px;
+        background-position: 50% 50%;
         text-align: center;
         padding: 10px 5%;
         display: flex;
@@ -73,13 +75,11 @@
         align-items: center;
         height: unset;
         width: unset;
+        min-width: 10%;
     }
 
     #ti-catSel .ti-citem:hover {
-        padding: 0;
-        border-radius: 100%;
-        margin: 15px calc(5% + 5px);
-        background: transparent;
+        background-size: 0% 0%;
     }
 
     #ti-catSel .ti-citem > img {
@@ -103,15 +103,12 @@
         /*border-radius: 100%;*/
         margin: 5px;
         background: transparent;
+        transform: translateY(+9px);
     }
 
     #ti-catSel.ti-contrive .ti-citem:not(:hover) {
-        background: var(--ti-blind); 
+        filter: blur(1.2px) brightness(0);
     }
-
-    /*#ti-catSel.ti-contrive .ti-citem:not(:hover) {
-        background: transparent;
-    }*/
 
     #ti-seatHolder .ti-btn.ti-dead {
         display: none;

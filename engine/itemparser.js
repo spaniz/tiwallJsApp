@@ -1,5 +1,5 @@
 var __ticache_html = [];
-function getProxyHtml(target, options, callback) {
+function getProxyHtml(target, options, callback, state) {
     if (__ticache_html[target] === undefined)
     {
         $.ajax("struct/" + target + ".html", { 
@@ -10,7 +10,7 @@ function getProxyHtml(target, options, callback) {
                 {
                     newtml = newtml.replace("$" + target + key + "$", options[key]);
                 }
-                callback(newtml);
+                callback(newtml, state);
             }
         });
     }
@@ -20,20 +20,20 @@ function getProxyHtml(target, options, callback) {
         {
             newtml = newtml.replace("$" + target + key + "$", options[key]);
         } 
-        callback(newtml);
+        callback(newtml, state);
     }
 }
 
-function getEventItemHtml(itemOptions, callback) {
-    getProxyHtml('item', itemOptions, callback);
+function getEventItemHtml(itemOptions, callback, state) {
+    getProxyHtml('item', itemOptions, callback, state);
 }
 
-function getEventPickHtml(pickOptions, callback) {
-    getProxyHtml('pick', pickOptions, callback);
+function getEventPickHtml(pickOptions, callback, state) {
+    getProxyHtml('pick', pickOptions, callback, state);
 }
 
-function getCategoryHtml(catOptions, callback) {
-    getProxyHtml('cat', catOptions, callback);
+function getCategoryHtml(catOptions, callback, state) {
+    getProxyHtml('cat', catOptions, callback, state);
 }
 
 var __ticonfig = null;
