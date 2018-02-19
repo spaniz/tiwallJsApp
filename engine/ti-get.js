@@ -12,17 +12,24 @@ function getLastTi() {
 
 var TI_BASE_URL = "https://store.zirbana.com/v2";
 
-function getTiPages(path, callback, passable) {
+function getTiPages(path, callback, error, passable) {
     var addr = TI_BASE_URL + "/pages/" + path;
     $.ajax(addr, { 
         success: function(result) {
             __lastTiResponse = JSON.parse(result);
             callback(__lastTiResponse);
         },
+        error: function() {
+            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                function(e) { getTiPages(e.path, e.callback, e.error, e.passable) },
+                error,
+                { path: path, callback: callback, error: error, passable: passable });
+        },
         headers: {
             'Accept': 'text/json'
         },
-        type: 'GET'
+        type: 'GET',
+        timeout: 8000
     });
 }
 
@@ -35,7 +42,7 @@ function getTiCats(attrs, callback, passable) {
 }
 
 function getTiEventList(cat, attrs, callback, passable) {
-    var addr = "list?include_samples=1&";
+    var addr = "list?" + (DEBUG ? "include_samples=1&" : "");
     if (cat)
         addr += "cat=" + cat + '&';
     if (attrs)

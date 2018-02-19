@@ -827,3 +827,43 @@ div.ti-checkbox:not([check="true"]) + span {
 		opacity: .4;
 	}
 }
+
+#ti-mastercontain.errored {
+    filter: brightness(1.2) blur(15px);
+    transition: 1s var(--ti-normbaz);
+}
+
+#ti-mastercontain.errored + #ti-errorHandle {
+	pointer-events: unset;
+	opacity: 1;
+	transition: 1s var(--ti-normbaz);
+}
+
+#ti-errorHandle {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+	flex-direction: column;
+	pointer-events: none;
+	opacity: 0;
+	z-index: 99;
+}
+#ti-errorHandle > * {
+    flex: 0 0 auto;
+    display: inline-block;
+}
+#ti-errorHandle > h2 {
+	margin: 0;
+	opacity: .87;
+	font-weight: 300;
+}
+#ti-errorHandle > .ti-btnwrap {
+    margin-top: 20px;
+}
+
+span.material-icons {
+	text-align: center;
+	color: var(--ti-accent);
+	font-size: 36px;
+}
