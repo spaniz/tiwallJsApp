@@ -193,8 +193,9 @@ function loadMore(force) {
             'name': "تلاش مجدد",
             'info': "خطایی رخ داد، این دکمه را بزنید تا مجددا بارگذاری انجام شود."
         }, function (htmlx) {
-            var rti = $(htmlx).addClass('ti-retryItem').children('span').attr('style', "").addClass('material-icons').text('refresh').parent();
+            var rti = $(htmlx).addClass('ti-retryItem');
             $('#ti-listHolder').append(rti);
+            $('#ti-listHolder .ti-witem.ti-retryItem > div > span').addClass('material-icons').text('refresh').click(function() { loadMore(force); });
             if (DEBUG) console.log(rti);
             lockLoader(false);
         });
