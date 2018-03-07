@@ -1,7 +1,7 @@
 const DEBUG = true;
 
 // specify your framework type (based on zb-agent file extension)
-var __FRAMEWORK = "aspx";
+var __FRAMEWORK = "php";
 
 // Tiwall API Engine
 var __lastTiResponse = null;
@@ -29,7 +29,7 @@ function getTiPages(path, callback, error, passable) {
             'Accept': 'text/json'
         },
         type: 'GET',
-        timeout: 8000
+        timeout: 7000
     });
 }
 
@@ -61,26 +61,27 @@ function getTiEventItem(pageId, callback, passable) {
 // Zirbana API Engine
 var ZB_BASE_URL = "zb-agent." + __FRAMEWORK;
 
-function getZbData(urn, action, params, callback) {
+function getZbData(urn, action, params, callback, error) {
     var addr = ZB_BASE_URL + "?urn=" + urn + "&action=" + action;
     if (params)
         for (var key in params)
             addr += '&' + key + '=' + params[key];
-    $.ajax(addr, { success: callback });
+    $.ajax(addr, { 
+        success: callback,
+        error: function() {
+            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                function(e) { getTiPages(e.urn, e.action, e.params, e.callback, e.error) },
+                error,
+                { urn, callback, params, action, error });
+        },
+        timeout: 10000
+    });
 }
 
-function getShowtimes(urn, params, callback) {
-    var addr = ZB_BASE_URL + "?urn=" + urn + "&action=instances";
-    if (params)
-        for (var key in params)
-            addr += '&' + key + '=' + params[key];
-    $.ajax(addr, { success: callback });
+function getShowtimes(urn, params, callback, error) {
+    getZbData(urn, "instances", params, callback, error);
 }
 
-function getSeatmap(urn, params, callback) {
-    var addr = ZB_BASE_URL + "?urn=" + urn + "&action=seatmap&format=html";
-    if (params)
-        for (var key in params)
-            addr += '&' + key + '=' + params[key];
-    $.ajax(addr, { success: callback });
+function getSeatmap(urn, params, callback, error) {
+    getZbData(urn, "instances", {'format': "html", ...params}, callback, error);
 }

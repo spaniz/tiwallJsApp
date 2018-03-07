@@ -13,7 +13,7 @@
     $head = array(
         'http' => array(
             'method' => "GET",
-            'header' => "Zb-Header: " . _ZB_APPID . ':' . _ZB_SECRET
+            'header' => "Zb-Auth: " . _ZB_APPID . ':' . _ZB_SECRET
         )
     );
     $cont = stream_context_create($head);

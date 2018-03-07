@@ -12,6 +12,7 @@
         <script type="text/javascript" src="engine/ti-get.js"></script>
         <script type="text/javascript" src="engine/itemparser.js"></script>
         <script type="text/javascript" src="engine/displayengine.js"></script>
+        <script type="text/javascript" src="engine/exoticengine.js"></script>
 
         <script type="text/javascript">
 
@@ -65,7 +66,7 @@
                     $('#ti-pickHolder .ti-xcontainer').empty();
                     lockLoader(true);
                     getShowtimes(__active_event.urn, null, function(zirdat) {
-                        //console.log(zirdat);
+                        console.log(zirdat);
                         for (var i = 0; i < zirdat.data.length; i++)
                         {
                             var _dt = zirdat.data[i];
@@ -73,7 +74,8 @@
                             addPick(_dt);
                         }
                         lockLoader(false);
-                    });
+                    },
+                    () => switchToEvent());
                 });
             });
         </script>

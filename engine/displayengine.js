@@ -197,7 +197,6 @@ function loadMore(force) {
             $('#ti-listHolder').append(rti);
             $('#ti-listHolder .ti-witem.ti-retryItem > div > span').addClass('material-icons').text('refresh').click(function() { loadMore(force); });
             if (DEBUG) console.log(rti);
-            lockLoader(false);
         });
     });
 }
@@ -238,6 +237,7 @@ $(document).ready(function () {
         $(this).addClass('ti-active');
         selectSectionById($(this).attr('itemid'));
     });
+
 });
 
 function switchToDead() {
@@ -269,6 +269,7 @@ var __err_pass = null;
 function showError(message, retry_callback, return_callback, pass) {
     $('#ti-mastercontain').addClass('errored');
     $('#ti-errorHandle span.ti-xname').text(message);
+    lockLoader(false);
 
     $('#ti-errorHandle .ti-btnwrap .ti-btn:not(.ti-dead)').off();
     if (retry_callback) {

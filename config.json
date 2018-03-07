@@ -1,8 +1,1 @@
-{
-    "categories": {
-        "mode": "ticket-store"
-    },
-    "list": {
-        "venue": null
-    }
-}
+{"js":{"debug":true},"categories":{"mode":"ticket_store"}}
