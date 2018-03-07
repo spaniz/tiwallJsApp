@@ -2,11 +2,14 @@
     <meta charset="UTF-8" />
 </head>
 <body>
+    <?php
+        define('ROOTDIR', "");
+        require_once("php/paths.php")
+    ?>
     <div id="ti-mastercontain">
         <link rel="stylesheet" href="style/core.css" />
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
-        <link type="text/json" href="config.json" as="fetch" rel="preload" />
         <script type="text/javascript" src="http://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
         <script type="text/javascript" src="engine/ti-get.js"></script>
@@ -14,14 +17,11 @@
         <script type="text/javascript" src="engine/displayengine.js"></script>
         <script type="text/javascript" src="engine/exoticengine.js"></script>
 
-        <script type="text/javascript">
-
-        </script>
-
         <div id="ti-listHolder"></div>
         <div id="ti-listHeader" style="top: 100%"></div>
 
         <script type="text/javascript">
+            const __config = <?= file_get_contents($config_path) ?>
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
             $(document).ready(function() {

@@ -1,8 +1,9 @@
 <?php
+    //ini_set('display_errors', TRUE);
+    //error_reporting(E_ALL);
+    define('ROOTDIR', "../");
     require_once('../php/consts.php');
-
-    $config_path = "../config.json";
-    $consts_path = "../php/consts.php";
+    require_once('../php/paths.php');
     $app_config = null;
 
     if ($_POST)
@@ -18,9 +19,7 @@
                     'mode' => isset($_POST["categories_mode"]) ? $_POST["categories_mode"] : null
                 ),
                 'list' => array(
-                    'venue' => array(
-                        'id' => $_POST["list_venue_id"]
-                    )
+                    'venue' => $_POST["list_venue_id"]
                 )
             ));
             header("Refresh:0;url=?result=ok");
@@ -30,14 +29,15 @@
             header("Refresh:0;url=?result=fail");
         }
     }
+    
 
     $f = file_get_contents($config_path);
     if ($f)
         $app_config = json_decode($f);
-
+    
     function updateConfig($update) {
         global $config_path;
-        file_put_contents( $config_path, json_encode($update));
+        file_put_contents($config_path, "const __config = " . json_encode($update) . ";");
     }
     function updateConsts($id, $auth) {
         global $consts_path;
@@ -126,10 +126,8 @@
             $(document).ready(() => {
                 <?php 
                     if (isset($_GET["result"]))
-                    {
                         echo "$('#" . $_GET["result"] . "-msg').css('display', 'block');";
-                    }
-                        if ($app_config->js->debug)
+                    if ($app_config->js->debug)
                         echo "$('#jsdebug').click();\n";
                     echo "$('#cat_" . $app_config->categories->mode . "').click();\n";
                 ?>
@@ -176,7 +174,7 @@
                 </div>
                 <br />
                 <span style="margin-left: 15px;">محل/سالن</span>
-                <input class="exotic-input textbox" name="list.venue.id" id="venueid" type="text" placeholder="Venue ID" value="<?= isset($app_config->list->venue->id) ? $app_config->list->venue->id : "" ?>" />
+                <input class="exotic-input textbox" name="list.venue.id" id="venueid" type="text" placeholder="Venue ID" value="<?= isset($app_config->list->venue) ? $app_config->list->venue : "" ?>" />
             </div>
 
             <input class="ti-btn" type="submit" value="ثبت تغییرات" />

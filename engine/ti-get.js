@@ -1,7 +1,7 @@
 const DEBUG = true;
 
 // specify your framework type (based on zb-agent file extension)
-var __FRAMEWORK = "php";
+const __FRAMEWORK = "php";
 
 // Tiwall API Engine
 var __lastTiResponse = null;
@@ -10,7 +10,7 @@ function getLastTi() {
     return __lastTiResponse;
 }
 
-var TI_BASE_URL = "https://store.zirbana.com/v2";
+const TI_BASE_URL = "https://store.zirbana.com/v2";
 
 function getTiPages(path, callback, error, passable) {
     var addr = TI_BASE_URL + "/pages/" + path;
@@ -45,6 +45,8 @@ function getTiEventList(cat, attrs, callback, passable) {
     var addr = "list?" + (DEBUG ? "include_samples=1&" : "");
     if (cat)
         addr += "cat=" + cat + '&';
+    if (__config.list.venue)
+        addr += "venue=" + __config.list.venue + '&'
     if (attrs)
         for (var key in attrs)
             addr += key + "=" + attrs[key] + '&';
@@ -59,7 +61,7 @@ function getTiEventItem(pageId, callback, passable) {
 }
 
 // Zirbana API Engine
-var ZB_BASE_URL = "zb-agent." + __FRAMEWORK;
+const ZB_BASE_URL = "zb-agent." + __FRAMEWORK;
 
 function getZbData(urn, action, params, callback, error) {
     var addr = ZB_BASE_URL + "?urn=" + urn + "&action=" + action;
@@ -70,7 +72,7 @@ function getZbData(urn, action, params, callback, error) {
         success: callback,
         error: function() {
             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
-                function(e) { getTiPages(e.urn, e.action, e.params, e.callback, e.error) },
+                function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error) },
                 error,
                 { urn, callback, params, action, error });
         },
@@ -78,8 +80,18 @@ function getZbData(urn, action, params, callback, error) {
     });
 }
 
-function getShowtimes(urn, params, callback, error) {
-    getZbData(urn, "instances", params, callback, error);
+function getShowtimes(urn, callback, error) {
+    var addr = TI_BASE_URL + "/" + urn + "/instances";
+    $.ajax(addr, { 
+        success: callback,
+        error: function() {
+            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                function(e) { getShowtimes(e.urn, e.callback, e.error) },
+                error,
+                { urn, callback, error });
+        },
+        timeout: 10000
+    });
 }
 
 function getSeatmap(urn, params, callback, error) {
