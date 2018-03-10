@@ -1,4 +1,5 @@
 <?php
+    require_once('../inc/php/consts.php');
 
     $config_path = "../inc/config.json";
     $consts_path = "../inc/php/consts.php";
