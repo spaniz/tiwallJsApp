@@ -11,8 +11,6 @@ function displayEventItem(htmlx, coords) {
     list.append(htmlx);
     if (DEBUG)
         console.log("rendering item " + coords.i + "/" + coords.max);
-    if (coords.i === (coords.max || 0) - 1)
-        finaliseListLoad();
     $('#ti-listHolder .ti-witem:last-child').click(function (event) {
         var i = $(this).attr('itemid');
         __active_event = __current_data.data[i];
@@ -62,6 +60,8 @@ function displayEventItem(htmlx, coords) {
             $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
         $('#ti-eventHolder .ti-seperator').text(__current_data.data[i].short_desc || "");
     });
+    if (coords.i === (coords.max || 0) - 1)
+        setTimeout(finaliseListLoad, 500);
 }
 
 function addPick(datZ) {
@@ -82,9 +82,9 @@ function addPick(datZ) {
             $('#ti-seatHolder .ti-xcontainer').empty();
             lockLoader(true);
             getSeatmap(__active_event.urn, { 'showtime_id': $(this).attr('itemid') },
-                function (jsdat) {
+                function (_jsdat) {
                     //console.warn(jsdat);
-                    //var _seatmap = JSON.parse(jsdat);
+                    var jsdat = JSON.parse(_jsdat);
                     //if (DEBUG)
                     //    jsdat.data.html = jsdat.data.html.replace('https://store.zirbana.com/resource/js/hallRenderer-v2.js', '/engine/hallRenderer-v2.js');
                     $('#ti-seatHolder .ti-xframe').html(jsdat.data.html);
@@ -149,7 +149,7 @@ function addCat(datX) {
                 $('#ti-catSel').css('top', '-100%');
                 $('#ti-catSel + div').removeClass('ti-hidden');
                 $('#ti-catSel + div').css('top', '-100%').css('background', ti.attr('catcol'));
-                $('#ti-listHeader').css('top', '0px').css('background', ti.attr('catcol')).text(ti.children('.ti-name').text());
+                $('#ti-listHeader').css('top', '0px').css('background', ti.attr('catcol')).children('span').text(ti.children('.ti-name').text());
                 __current_cat = ti.attr('itemid');
                 loadMore(true);
             });
@@ -158,13 +158,19 @@ function addCat(datX) {
 }
 
 function finaliseListLoad() {
-    $('#ti-listHolder').scroll();
+    if (DEBUG)
+        console.log("calling finaliseListLoad on " + __current_cat + " with #" + __last_count);
+    $('#ti-listHolder').trigger("scroll");
+    if (DEBUG)
+        console.log("call ended, finaliseListLoad on " + __current_cat + " with #" + __last_count);
 }
 
 function loadMore(force) {
-    if (DEBUG)
-        console.warn("called @loadMore with lock[" + __load_lock + "]");
-    if (__load_lock) return;
+    if (__load_lock) {
+        if (DEBUG)
+            console.warn("called @loadMore with lock[" + __load_lock + "]");
+        return;
+    }
     if ((__last_count < 20 && !force) || __eol) return;
     if (force)
         clearList();
@@ -185,7 +191,7 @@ function loadMore(force) {
         for (var i = 0; i < datJ.data.length; i++) {
             if (!force)
                 __current_data.data.push(datJ.data[i]);
-            addItem(i, datJ.meta.offset, datJ.data[i], force, datJ.data.length);
+            addItem(i, datJ.meta.offset, datJ.data[i], datJ.data.length);
         }
         lockLoader(false);
     }, function (e) {
@@ -202,14 +208,34 @@ function loadMore(force) {
 }
 
 function loadCats() {
+    let ctx = null;
+    let ctn = 0;
+    let ctc = "";
+    if (__config.categories && __config.categories._filter)
+        ctx = __config.categories._filter.split(',');
     $('#ti-catSel').css('top', '0%');
     $('#ti-catSel + div').addClass('ti-hidden').css('top', '0%').css('background', 'var(--ti-blind)');
-    $('#ti-listHeader').css('top', '100%').css('background', 'var(--ti-blind)').empty();
+    $('#ti-listHeader').css('top', '100%').css('background', 'var(--ti-blind)').children('span').empty();
     $('#ti-catSel > div > div').empty();
     lockLoader(true);
     getTiCats(null, function (datJ) {
         for (var i = 0; i < datJ.data.length; i++) {
-            addCat(datJ.data[i]);
+            if (ctx && ctx.find(x => x == datJ.data[i].key) != undefined)
+            {
+                addCat(datJ.data[i]);
+                ctn++;
+                ctc = datJ.data[i];
+            }
+        }
+        if (ctn == 1)
+        {
+            __current_cat = ctc.key;
+            var ti = $(this);
+            $('#ti-catSel').css('top', '-100%');
+            $('#ti-catSel + div').removeClass('ti-hidden');
+            $('#ti-catSel + div').css('top', '-100%').css('background', ctc.color);
+            $('#ti-listHeader').css('top', '0px').css('background', ctc.color).children('span').text(ctc.text);
+            loadMore(true);
         }
         lockLoader(false);
     });

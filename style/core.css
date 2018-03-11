@@ -73,7 +73,6 @@ iframe.width-changed {
 	padding: 0 15px;
 	padding-bottom: 8px;
 	padding-top: 24px;
-	/*border: 2px solid white;*/
 	color: white;
 	font-size: 18px;
 	font-weight: 300;
@@ -85,11 +84,12 @@ iframe.width-changed {
 	font-family: IRANSans, Tahoma;
 	position: absolute;
 	border-radius: 0 0 4px 4px;
-	display: inline-block;
+	display: flex;
 	transition: .8s var(--ti-normbaz);
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--ti-blind);
+	justify-content: space-between;
 }
 
 #ti-listHeader:hover {

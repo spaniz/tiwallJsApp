@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = __config.js.debug;
 
 // specify your framework type (based on zb-agent file extension)
 const __FRAMEWORK = "php";
@@ -17,11 +17,18 @@ function getTiPages(path, callback, error, passable) {
     $.ajax(addr, { 
         success: function(result) {
             __lastTiResponse = JSON.parse(result);
+            if (!__lastTiResponse.ok) {
+                showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                    function(e) { getTiPages(e.path, e.callback, e.error, e.passable); lockLoader(true); },
+                    error,
+                    { path: path, callback: callback, error: error, passable: passable });
+                return;
+            }
             callback(__lastTiResponse);
         },
         error: function() {
             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
-                function(e) { getTiPages(e.path, e.callback, e.error, e.passable) },
+                function(e) { getTiPages(e.path, e.callback, e.error, e.passable); lockLoader(true); },
                 error,
                 { path: path, callback: callback, error: error, passable: passable });
         },
@@ -34,10 +41,18 @@ function getTiPages(path, callback, error, passable) {
 }
 
 function getTiCats(attrs, callback, passable) {
+    __current_data = null;
+    __last_count = 0;
+    __open_pageid = null;
+    __active_event = null;
+    __current_cat = null;
+    __eol = false;
     var addr = "categories?";
     if (attrs)
         for (var key in attrs)
             addr += key + "=" + attrs[key] + '&';
+    if (__config.categories && __config.categories.mode)
+        addr += "mode=" + __config.categories.mode + '&';
     getTiPages(addr, callback, passable);
 }
 
@@ -46,7 +61,7 @@ function getTiEventList(cat, attrs, callback, passable) {
     if (cat)
         addr += "cat=" + cat + '&';
     if (__config.list.venue)
-        addr += "venue=" + __config.list.venue + '&'
+        addr += "venue=" + __config.list.venue + '&';
     if (attrs)
         for (var key in attrs)
             addr += key + "=" + attrs[key] + '&';
@@ -62,6 +77,7 @@ function getTiEventItem(pageId, callback, passable) {
 
 // Zirbana API Engine
 const ZB_BASE_URL = "zb-agent." + __FRAMEWORK;
+const ZB_MAIN_URL = "https://store.zirbana.com/v2/";
 
 function getZbData(urn, action, params, callback, error) {
     var addr = ZB_BASE_URL + "?urn=" + urn + "&action=" + action;
@@ -72,7 +88,24 @@ function getZbData(urn, action, params, callback, error) {
         success: callback,
         error: function() {
             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
-                function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error) },
+                function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error); lockLoader(true); },
+                error,
+                { urn, callback, params, action, error });
+        },
+        timeout: 10000
+    });
+}
+
+function getZbInsecureData(urn, action, params, callback, error) {
+    var addr = ZB_MAIN_URL + urn + '/' + action + '?';
+    if (params)
+        for (var key in params)
+            addr += key + '=' + params[key] + '&';
+    $.ajax(addr, { 
+        success: callback,
+        error: function() {
+            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error); lockLoader(true); },
                 error,
                 { urn, callback, params, action, error });
         },
@@ -81,19 +114,9 @@ function getZbData(urn, action, params, callback, error) {
 }
 
 function getShowtimes(urn, callback, error) {
-    var addr = TI_BASE_URL + "/" + urn + "/instances";
-    $.ajax(addr, { 
-        success: callback,
-        error: function() {
-            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
-                function(e) { getShowtimes(e.urn, e.callback, e.error) },
-                error,
-                { urn, callback, error });
-        },
-        timeout: 10000
-    });
+    getZbData(urn, "instances", null, callback, error);
 }
 
 function getSeatmap(urn, params, callback, error) {
-    getZbData(urn, "instances", {'format': "html", ...params}, callback, error);
+    getZbData(urn, "seatmap", {'format': "html"}, callback, error);
 }

@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="style/core.css" />
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
+        <script type="text/javascript">const __config = <?= file_get_contents($config_path) ?>;</script>
         <script type="text/javascript" src="http://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
         <script type="text/javascript" src="engine/ti-get.js"></script>
@@ -18,20 +19,26 @@
         <script type="text/javascript" src="engine/exoticengine.js"></script>
 
         <div id="ti-listHolder"></div>
-        <div id="ti-listHeader" style="top: 100%"></div>
+        <div id="ti-listHeader" style="top: 100%">
+        <i class="material-icons" style="margin-top: -4px;">expand_less</i>
+        <span></span>
+        </div>
 
         <script type="text/javascript">
-            const __config = <?= file_get_contents($config_path) ?>
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
             $(document).ready(function() {
                 $('#ti-listHeader').click(loadCats);
                 $('#ti-mastercontain').trigger('widthChanged');
                 $('#ti-listHolder').scroll(function(eventScr) {
-                    if (DEBUG) console.warn($('#ti-listHolder .ti-retryItem').length);
+                    if (DEBUG)
+                        console.log("handler triggered, finaliseListLoad on " + __current_cat + " with " + __scroll_pos + "%" + $('#ti-listHolder').scrollTop());
+                    if (DEBUG) console.warn("awaiting retry: " + ($('#ti-listHolder .ti-retryItem').length > 0));
                     if (!$('#ti-listHolder .ti-retryItem').length)
-                        if ($('.ti-witem:last-child').visible(true, true, 'both', $('#ti-listHolder')))
-                            if (!__load_lock) loadMore();
+                        if ($('.ti-witem:last-child').visible(true, true, 'both', $('#ti-listHolder'))) {
+                                console.warn('loading more on primescroll trigger...');
+                                loadMore();
+                            }
                     var list = $('#ti-listHolder');
                     var head = $('#ti-listHeader');
                     if (__scroll_pos <= list.scrollTop())
@@ -65,7 +72,12 @@
                     switchToPick();
                     $('#ti-pickHolder .ti-xcontainer').empty();
                     lockLoader(true);
-                    getShowtimes(__active_event.urn, null, function(zirdat) {
+                    getShowtimes(__active_event.urn, function(zirdat) {
+                        if (!zirdat.ok) {
+                            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                                null,
+                                () => switchToEvent());
+                        }
                         console.log(zirdat);
                         for (var i = 0; i < zirdat.data.length; i++)
                         {
