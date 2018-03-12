@@ -27,14 +27,3 @@ $(document).ready(function() {
         $('#tooltip').css('display', 'none');
     });
 });
-
-let user = { 
-    name: "meme", 
-    prem: true, 
-    prc: function() 
-    { 
-        return users.filter(function(i) { 
-            return i[0] === 'm' && this.prem;
-        });
-    }
-}

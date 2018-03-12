@@ -4,7 +4,28 @@
         <meta charset="utf-8" />
     </head>
     <body>
-        <div style="min-width: 290px; min-width: 290px; height: 400px; width: 400px; resize: both; overflow: hidden">
+        <style>
+            #module-viewx {
+                min-width: 290px; 
+                min-width: 290px; 
+                height: 400px; 
+                width: 400px; 
+                resize: both; 
+                overflow: hidden;
+            }
+
+            @media only screen and (max-device-width: 480px) {
+                #module-viewx {
+                    height: 100vh; 
+                    width: 100vw; 
+                    resize: none; 
+                }
+                body {
+                    margin: 0;
+                }
+            }
+        </style>
+        <div id="module-viewx">
             <object data="module.php" style="height: 100%; width: 100%" />
         </div>
     </body>

@@ -85,7 +85,7 @@ function getZbData(urn, action, params, callback, error) {
         for (var key in params)
             addr += '&' + key + '=' + params[key];
     $.ajax(addr, { 
-        success: callback,
+        success: d => callback(JSON.parse(d)),
         error: function() {
             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
                 function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error); lockLoader(true); },
@@ -102,7 +102,7 @@ function getZbInsecureData(urn, action, params, callback, error) {
         for (var key in params)
             addr += key + '=' + params[key] + '&';
     $.ajax(addr, { 
-        success: callback,
+        success: d => callback(JSON.parse(d)),
         error: function() {
             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
                 function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error); lockLoader(true); },
@@ -114,9 +114,18 @@ function getZbInsecureData(urn, action, params, callback, error) {
 }
 
 function getShowtimes(urn, callback, error) {
-    getZbData(urn, "instances", null, callback, error);
+    getZbInsecureData(urn, "instances", null, callback, error);
 }
 
 function getSeatmap(urn, params, callback, error) {
-    getZbData(urn, "seatmap", {'format': "html"}, callback, error);
+    params['format'] = 'html';
+    getZbInsecureData(urn, "seatmap", params, callback, error);
+}
+
+function goForPayment(args) {
+    getZbInsecureData(__active_event.urn, "reserve", args, dat => {
+        if (!dat.ok) {
+            return;
+        }
+    }, () => switchToFinal());
 }

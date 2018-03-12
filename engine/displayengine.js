@@ -64,6 +64,7 @@ function displayEventItem(htmlx, coords) {
         setTimeout(finaliseListLoad, 500);
 }
 
+let __current_instance = null;
 function addPick(datZ) {
 
     lockLoader(true);
@@ -77,18 +78,20 @@ function addPick(datZ) {
             switchToSeat();
             $('#ti-seatHolder').addClass('fulfilled');
             if (datZ.title)
-                $('#ti-seatHolder .ti-prefix').text(datZ.title);
+                $('#ti-pickHolder ~ tr .ti-prefix').text(datZ.title);
             $('#ti-seatHolder .ti-xframe').empty();
             $('#ti-seatHolder .ti-xcontainer').empty();
             lockLoader(true);
             getSeatmap(__active_event.urn, { 'showtime_id': $(this).attr('itemid') },
-                function (_jsdat) {
+                function (jsdat) {
+                    __current_instance = jsdat.data.id;
                     //console.warn(jsdat);
-                    var jsdat = JSON.parse(_jsdat);
+                    //var jsdat = JSON.parse(_jsdat);
                     //if (DEBUG)
                     //    jsdat.data.html = jsdat.data.html.replace('https://store.zirbana.com/resource/js/hallRenderer-v2.js', '/engine/hallRenderer-v2.js');
                     $('#ti-seatHolder .ti-xframe').html(jsdat.data.html);
                     $('#ti-seatHolder .ti-seperator').empty();
+                    console.warn(jsdat.data.sections.length + " sections");
                     for (var seat in jsdat.data.sections) {
                         $('#ti-seatHolder .ti-seperator').append(
                             '<span itemid="' + jsdat.data.sections[seat].id + '">' + jsdat.data.sections[seat].title + '</span>');
@@ -106,10 +109,18 @@ function addPick(datZ) {
     });
 }
 
+let __finalSeatData = null;
 function onSeatSelectionChange(data) {
-    if (DEBUG) console.log(data);
-    //_dat = JSON.parse(data);
-    $('#ti-seatHolder .ti-xcontainer').text = data.summary;
+    let _data = JSON.parse(data);
+    if (DEBUG) console.log(_data);
+    $('#ti-seatHolder .ti-xcontainer').text(_data.summary);
+    __finalSeatData = _data;
+    if (count) {
+        $("#ti-seatHolder .ti-btnwrap .ti-btn:first-child").removeClass('ti-locked');
+    }
+    else {
+        $("#ti-seatHolder .ti-btnwrap .ti-btn:first-child").addClass('ti-locked');
+    }
 }
 
 function addItem(i, offset, datX, max) {
@@ -263,6 +274,7 @@ $(document).ready(function () {
         $(this).addClass('ti-active');
         selectSectionById($(this).attr('itemid'));
     });
+    $('#ti-finalHolder #ti-xusecup').click(cuponUseCheck);
 
 });
 
@@ -289,6 +301,18 @@ function switchToSeat() {
     //$('#ti-cardWrapper').removeClass('ti-hidden');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '2');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '2');
+}
+function switchToFinal() {
+    $('#ti-listHolder').addClass('ti-unfocus');
+    //$('#ti-cardWrapper').removeClass('ti-hidden');
+    $('#ti-cardWrapper').get(0).style.setProperty('--shift', '3');
+    $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
+}
+function switchToAftermath() {
+    $('#ti-listHolder').addClass('ti-unfocus');
+    //$('#ti-cardWrapper').removeClass('ti-hidden');
+    $('#ti-cardWrapper').get(0).style.setProperty('--shift', '4');
+    $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
 }
 
 var __err_pass = null;
@@ -325,4 +349,17 @@ function showError(message, retry_callback, return_callback, pass) {
         __err_pass = pass;
     else
         __err_pass = null;
+}
+
+function cuponUseCheck() {
+    var isx = $('#ti-finalHolder #ti-xusecup').attr('check') === 'true';
+    if (DEBUG) console.warn('Use cupon? >>' + isx);
+    if (isx) {
+        $('#ti-finalHolder #ti-xcupon').fadeOut();
+        $('#ti-finalHolder #ti-bvouch').addClass('ti-locked');
+    }
+    else {
+        $('#ti-finalHolder #ti-xcupon').fadeIn();
+        $('#ti-finalHolder #ti-bvouch').removeClass('ti-locked');
+    }
 }

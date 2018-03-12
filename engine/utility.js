@@ -5,6 +5,20 @@ function toLocalisedNumbers(text) {
     return _txt;
 }
 
+function seperateDigits(num, sep) {
+    let strm = "";
+    let x = parseInt(num);
+    let i = 0;
+    while (x > 0) {
+        if (!(i % 3 || i))
+            strm = sep + strm;
+        strm = (x % 10) + strm;
+        x = Math.floor(x / 10);
+        i++;
+    }
+    return strm;
+}
+
 (function($){
 
     /**

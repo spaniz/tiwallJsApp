@@ -1,5 +1,6 @@
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <?php
@@ -7,6 +8,7 @@
         require_once("php/paths.php")
     ?>
     <div id="ti-mastercontain">
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
         <link rel="stylesheet" href="style/core.css" />
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
@@ -67,6 +69,9 @@
                 $('#ti-seatHolder .ti-btn.ti-dead').click(function (event) {
                     switchToPick();
                 });
+                $('#ti-finalHolder .ti-btn.ti-dead').click(function (event) {
+                    switchToSeat();
+                });
                 // ACCEPT BTNS
                 $('#ti-eventHolder .ti-btn:not(.ti-dead)').click(function(event) {
                     switchToPick();
@@ -77,6 +82,7 @@
                             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
                                 null,
                                 () => switchToEvent());
+                            return;
                         }
                         console.log(zirdat);
                         for (var i = 0; i < zirdat.data.length; i++)
@@ -88,6 +94,26 @@
                         lockLoader(false);
                     },
                     () => switchToEvent());
+                });
+                $('#ti-seatHolder .ti-btn:not(.ti-dead)').click(function(event) {
+                    $('#ti-finalHolder #ti-xseats').text(toLocalisedNumbers(__finalSeatData.seats || "") || __finalSeatData.count);
+                    $('#ti-finalHolder #ti-xcost').text(toLocalisedNumbers(seperateDigits(__finalSeatData.total_price), ',') + " تومان");
+                    switchToFinal();
+                });
+                $('#ti-finalHolder #ti-bvouch').click(function() {
+                    // CHECK VOUCHER
+                });
+                $('#ti-finalHolder #ti-bpay').click(function() {
+                    goForPayment({ 'instance_id': __current_instance, 
+                        'seats': __finalSeatData.seats, 
+                        'count': __finalSeatData.count, 
+                        'user_fullname': $('#ti-finalHolder #ti-uname').val(),
+                        'user_mobile': $('#ti-finalHolder #ti-umobile').val(),
+                        'user_email': $('#ti-finalHolder #ti-umail').val(),
+                        'voucher': $('#ti-finalHolder #ti-xcupon').val(), 
+                        'send_sms': true, 
+                        'send_email': true, 
+                        'use_internal_receipt': true });
                 });
             });
         </script>
@@ -150,6 +176,85 @@
                             <div class="ti-btn ti-locked">ادامه</div>
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
+                    </div>
+                </td>
+            </tr>
+            <tr id="ti-finalHolder" class="ti-rightside">
+                <td>
+                    <div>
+                        <div class="ti-prefix"></div>
+                        <div class="ti-title"></div>
+                        <div class="ti-seperator"></div>
+                        <div class="ti-xcontainer">
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>صندلی‌ها</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span id="ti-xseats"></span>
+                                </div>
+                            </div>  
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>قیمت کل</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span id="ti-xcost"></span>
+                                </div>
+                            </div> 
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>نام و نام خانوادگی</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <input id="ti-uname" class="exotic-input textbox" name="u_name" />
+                                </div>
+                            </div> 
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>آدرس ایمیل</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <input id="ti-umail" class="exotic-input textbox" name="u_mail" />
+                                </div>
+                            </div> 
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>شماره موبایل</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <input id="ti-umobile" class="exotic-input textbox" name="u_mobile" />
+                                </div>
+                            </div>
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <div id="ti-xusecup" class="exotic-input checkbox">
+                                        <input type="checkbox" name="u_usecupon" />
+                                    </div>
+                                    <span>کد تخفیف</span>
+                                    <br/>
+                                    <span id="ti-xvouchstat"></span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <input style="display: none" id="ti-xcupon" class="exotic-input textbox" name="u_cupon">
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ti-btnwrap">
+                            <div id="ti-bpay" class="ti-btn">پرداخت</div>
+                            <div id="ti-bvouch" class="ti-btn ti-locked">چک کد تخفیف</div>
+                            <div class="ti-btn ti-dead">برگشت</div>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr id="ti-aftermathHolder" class="ti-leftside">
+                <td>
+                    <div>
+                        <div class="ti-prefix"></div>
+                        <div class="ti-title"></div>
+                        <div class="ti-seperator"></div>
+
                     </div>
                 </td>
             </tr>

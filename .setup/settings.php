@@ -58,6 +58,7 @@
                 color: white;
                 font-family: 'IRANSans';
                 direction: rtl;
+                font-size: 16rem;
             }
             form {
                 display: flex;
