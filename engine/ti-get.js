@@ -133,7 +133,9 @@ function getSeatmap(urn, params, callback, error) {
 
 let __paymentClause = { reserve_id: null, trace_number: null, total_price: null, time: null };
 function goForPayment(args) {
+    lockLoader(true);
     getZbData(__active_event.urn, "reserve", args, dat => {
+        lockLoader(false);
         if (DEBUG) console.log(dat);
         if (!dat.ok) {
             switch (dat.error.code) {
@@ -169,7 +171,7 @@ function goForPayment(args) {
         __paymentClause.time = __RESERVETIME;
         setupAftemath();
     }, 
-    () => switchToFinal());
+    () => { switchToFinal(); });
 }
 
 function cancelAftermath(callback) {
@@ -191,13 +193,11 @@ function cancelAftermath(callback) {
 }
 
 function getVoucherState(vouch, callback) {
-    getZbData(__active_event.urn, "checkVoucher", { voucher: vouch }, dat => {
+    getZbInsecureData(__active_event.urn, "checkVoucher", { voucher: vouch }, dat => {
         if (!dat.ok) 
-            callback("خطایی رخ داد", false);
+            callback("نادرست است", false);
         else if (dat.data.state === 'valid' || dat.data.state === 'conditional')
             callback("درست است", true);
-        else
-            callback("نادرست است", false);
     }, 
     () => callback("خطایی رخ داد", false));
 }
