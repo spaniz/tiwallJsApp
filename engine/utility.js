@@ -1,5 +1,5 @@
 function toLocalisedNumbers(text) {
-    var _txt = text;
+    var _txt = text.toString();
     for (var i = 0; i < 10; i++)
         _txt = _txt.replace(new RegExp(i.toLocaleString("en-US"), 'g'), i.toLocaleString('fa-IR'));
     return _txt;

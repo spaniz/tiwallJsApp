@@ -1,10 +1,10 @@
-var __current_data = null;
-var __last_count = 0;
-var __load_lock = false;
-var __open_pageid = null;
-var __active_event = null;
-var __current_cat = null;
-var __eol = false;
+let __current_data = null;
+let __last_count = 0;
+let __load_lock = false;
+let __open_pageid = null;
+let __active_event = null;
+let __current_cat = null;
+let __eol = false;
 
 function displayEventItem(htmlx, coords) {
     var list = $('#ti-listHolder');
@@ -82,9 +82,9 @@ function addPick(datZ) {
             $('#ti-seatHolder .ti-xframe').empty();
             $('#ti-seatHolder .ti-xcontainer').empty();
             lockLoader(true);
+            __current_instance = $(this).attr('itemid');
             getSeatmap(__active_event.urn, { 'showtime_id': $(this).attr('itemid') },
                 function (jsdat) {
-                    __current_instance = jsdat.data.id;
                     //console.warn(jsdat);
                     //var jsdat = JSON.parse(_jsdat);
                     //if (DEBUG)
@@ -219,7 +219,7 @@ function loadMore(force) {
 }
 
 function loadCats() {
-    let ctx = null;
+    let ctx = "";
     let ctn = 0;
     let ctc = "";
     if (__config.categories && __config.categories._filter)
@@ -231,7 +231,7 @@ function loadCats() {
     lockLoader(true);
     getTiCats(null, function (datJ) {
         for (var i = 0; i < datJ.data.length; i++) {
-            if (ctx && ctx.find(x => x == datJ.data[i].key) != undefined)
+            if (!ctx || ctx.find(x => x == datJ.data[i].key) != undefined)
             {
                 addCat(datJ.data[i]);
                 ctn++;
@@ -315,7 +315,7 @@ function switchToAftermath() {
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
 }
 
-var __err_pass = null;
+let __err_pass = null;
 function showError(message, retry_callback, return_callback, pass) {
     $('#ti-mastercontain').addClass('errored');
     $('#ti-errorHandle span.ti-xname').text(message);
@@ -362,4 +362,52 @@ function cuponUseCheck() {
         $('#ti-finalHolder #ti-xcupon').fadeIn();
         $('#ti-finalHolder #ti-bvouch').removeClass('ti-locked');
     }
+}
+
+let __aftermath_timer = null;
+function setupAftemath() {
+    $('#ti-aftermathHolder #ti-xreserve').text(toLocalisedNumbers(__paymentClause.reserve_id));
+    $('#ti-aftermathHolder #ti-xtrace').text(toLocalisedNumbers(__paymentClause.trace_number));
+    $('#ti-aftermathHolder #ti-xfinalprice').text(toLocalisedNumbers(seperateDigits(__paymentClause.total_price, ',') + " تومان"));
+    $('#ti-aftermathHolder .ti-btnwrap').removeClass('ti-hidden');
+    switchToAftermath();
+    $('#ti-aftermathHolder #ti-xrtimer').text("");
+    __aftermath_timer = setInterval(reserveTimerTick, 1000);
+}
+
+function reserveTimerTick() {
+    __paymentClause.time--;
+    var time = __paymentClause.time;
+    var strtime = Math.floor(time / 60) + ':' + (time % 60);
+    $('#ti-aftermathHolder #ti-xrtimer').text(toLocalisedNumbers(strtime));
+    if (time < 60)
+        $('#ti-aftermathHolder #ti-xrtimer').addClass('ti-error');
+    else
+        $('#ti-aftermathHolder #ti-xrtimer').removeClass('ti-error');
+    if (time <= 0) {
+        getZbData(__active_event.urn, "check", __paymentClause, dat => {
+            if (!dat.ok)
+                switchToFinal();
+            else {
+                clearTimeout(__aftermath_timer);
+                switch (dat.data.state) {
+                    case "reserved":
+                        switchToDead();
+                        break;
+                    case "pending": 
+                        break;
+                    default:
+                        switchToFinal();
+                        break;
+                }
+            }
+        }, switchToDead)
+    }
+}
+
+function causeAftermathPayment() {
+    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}`;
+    var nwo = window.open(payUrl, '_blank');
+    if (window.focus)
+        nwo.focus();
 }

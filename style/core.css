@@ -219,6 +219,7 @@ iframe.width-changed {
 	-ms-transition: ease .9s;
 	-o-transition: ease .9s;
 	opacity: calc(var(--shift) + 1);
+	background: rgba(0,0,0,.25);
 }
 
 #ti-cardWrapper tr {

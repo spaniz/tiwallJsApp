@@ -72,6 +72,9 @@
                 $('#ti-finalHolder .ti-btn.ti-dead').click(function (event) {
                     switchToSeat();
                 });
+                $('#ti-aftermathHolder .ti-btn.ti-dead').click(function (event) {
+                    cancelAftermath(switchToFinal);
+                });
                 // ACCEPT BTNS
                 $('#ti-eventHolder .ti-btn:not(.ti-dead)').click(function(event) {
                     switchToPick();
@@ -101,7 +104,13 @@
                     switchToFinal();
                 });
                 $('#ti-finalHolder #ti-bvouch').click(function() {
-                    // CHECK VOUCHER
+                    getVoucherState($('#ti-finalHolder #ti-xcupon').val(), (msg, ok) => {
+                        $('#ti-finalHolder #ti-xvouchstat').text(msg);
+                        if (ok)
+                            $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
+                        else 
+                            $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
+                    })
                 });
                 $('#ti-finalHolder #ti-bpay').click(function() {
                     goForPayment({ 'instance_id': __current_instance, 
@@ -115,6 +124,7 @@
                         'send_email': true, 
                         'use_internal_receipt': true });
                 });
+                $('#ti-aftermathHolder #ti-bxpay').click(() => causeAftermathPayment());
             });
         </script>
 
@@ -196,7 +206,7 @@
                             </div>  
                             <div class="ti-duo">
                                 <div class="ti-rightside">
-                                    <span>قیمت کل</span>
+                                    <span>بهای کل</span>
                                 </div>
                                 <div class="ti-leftside">
                                     <span id="ti-xcost"></span>
@@ -241,7 +251,7 @@
                             </div>
                         </div>
                         <span class="ti-btnwrap">
-                            <div id="ti-bpay" class="ti-btn">پرداخت</div>
+                            <div id="ti-bpay" class="ti-btn">رزرو</div>
                             <div id="ti-bvouch" class="ti-btn ti-locked">چک کد تخفیف</div>
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
@@ -254,7 +264,39 @@
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
                         <div class="ti-seperator"></div>
-
+                        <div class="ti-xcontainer">
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>کد رزرو</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span id="ti-xreserve"></span>
+                                </div>
+                            </div>
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>کد رهگیری</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span id="ti-xtrace"></span>
+                                </div>
+                            </div>
+                            <div class="ti-duo">
+                                <div class="ti-rightside">
+                                    <span>بهای نهایی</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span id="ti-xfinalprice" style="font-size: 20rem"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; display: flex; justify-content: space-around; font-size: 36px; color: var(--ti-accent)">
+                            <div id="ti-xrtimer" class="ti-error"></div>
+                        </div>
+                        <span class="ti-btnwrap ti-hidden">
+                            <div id="ti-bxpay" class="ti-btn">پرداخت</div>
+                            <div class="ti-btn ti-dead">لغو</div>
+                        </span>
                     </div>
                 </td>
             </tr>
