@@ -1,18 +1,16 @@
-var __current_data = null;
-var __last_count = 0;
-var __load_lock = false;
-var __open_pageid = null;
-var __active_event = null;
-var __current_cat = null;
-var __eol = false;
+let __current_data = null;
+let __last_count = 0;
+let __load_lock = false;
+let __open_pageid = null;
+let __active_event = null;
+let __current_cat = null;
+let __eol = false;
 
 function displayEventItem(htmlx, coords) {
     var list = $('#ti-listHolder');
     list.append(htmlx);
     if (DEBUG)
         console.log("rendering item " + coords.i + "/" + coords.max);
-    if (coords.i === (coords.max || 0) - 1)
-        finaliseListLoad();
     $('#ti-listHolder .ti-witem:last-child').click(function (event) {
         var i = $(this).attr('itemid');
         __active_event = __current_data.data[i];
@@ -62,8 +60,11 @@ function displayEventItem(htmlx, coords) {
             $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
         $('#ti-eventHolder .ti-seperator').text(__current_data.data[i].short_desc || "");
     });
+    if (coords.i === (coords.max || 0) - 1)
+        setTimeout(finaliseListLoad, 500);
 }
 
+let __current_instance = null;
 function addPick(datZ) {
 
     lockLoader(true);
@@ -77,18 +78,20 @@ function addPick(datZ) {
             switchToSeat();
             $('#ti-seatHolder').addClass('fulfilled');
             if (datZ.title)
-                $('#ti-seatHolder .ti-prefix').text(datZ.title);
+                $('#ti-pickHolder ~ tr .ti-prefix').text(datZ.title);
             $('#ti-seatHolder .ti-xframe').empty();
             $('#ti-seatHolder .ti-xcontainer').empty();
             lockLoader(true);
+            __current_instance = $(this).attr('itemid');
             getSeatmap(__active_event.urn, { 'showtime_id': $(this).attr('itemid') },
                 function (jsdat) {
                     //console.warn(jsdat);
-                    //var _seatmap = JSON.parse(jsdat);
+                    //var jsdat = JSON.parse(_jsdat);
                     //if (DEBUG)
                     //    jsdat.data.html = jsdat.data.html.replace('https://store.zirbana.com/resource/js/hallRenderer-v2.js', '/engine/hallRenderer-v2.js');
                     $('#ti-seatHolder .ti-xframe').html(jsdat.data.html);
                     $('#ti-seatHolder .ti-seperator').empty();
+                    console.warn(jsdat.data.sections.length + " sections");
                     for (var seat in jsdat.data.sections) {
                         $('#ti-seatHolder .ti-seperator').append(
                             '<span itemid="' + jsdat.data.sections[seat].id + '">' + jsdat.data.sections[seat].title + '</span>');
@@ -106,10 +109,18 @@ function addPick(datZ) {
     });
 }
 
+let __finalSeatData = null;
 function onSeatSelectionChange(data) {
-    if (DEBUG) console.log(data);
-    //_dat = JSON.parse(data);
-    $('#ti-seatHolder .ti-xcontainer').text = data.summary;
+    let _data = JSON.parse(data);
+    if (DEBUG) console.log(_data);
+    $('#ti-seatHolder .ti-xcontainer').text(_data.summary);
+    __finalSeatData = _data;
+    if (count) {
+        $("#ti-seatHolder .ti-btnwrap .ti-btn:first-child").removeClass('ti-locked');
+    }
+    else {
+        $("#ti-seatHolder .ti-btnwrap .ti-btn:first-child").addClass('ti-locked');
+    }
 }
 
 function addItem(i, offset, datX, max) {
@@ -149,7 +160,7 @@ function addCat(datX) {
                 $('#ti-catSel').css('top', '-100%');
                 $('#ti-catSel + div').removeClass('ti-hidden');
                 $('#ti-catSel + div').css('top', '-100%').css('background', ti.attr('catcol'));
-                $('#ti-listHeader').css('top', '0px').css('background', ti.attr('catcol')).text(ti.children('.ti-name').text());
+                $('#ti-listHeader').css('top', '0px').css('background', ti.attr('catcol')).children('span').text(ti.children('.ti-name').text());
                 __current_cat = ti.attr('itemid');
                 loadMore(true);
             });
@@ -158,13 +169,19 @@ function addCat(datX) {
 }
 
 function finaliseListLoad() {
-    $('#ti-listHolder').scroll();
+    if (DEBUG)
+        console.log("calling finaliseListLoad on " + __current_cat + " with #" + __last_count);
+    $('#ti-listHolder').trigger("scroll");
+    if (DEBUG)
+        console.log("call ended, finaliseListLoad on " + __current_cat + " with #" + __last_count);
 }
 
 function loadMore(force) {
-    if (DEBUG)
-        console.warn("called @loadMore with lock[" + __load_lock + "]");
-    if (__load_lock) return;
+    if (__load_lock) {
+        if (DEBUG)
+            console.warn("called @loadMore with lock[" + __load_lock + "]");
+        return;
+    }
     if ((__last_count < 20 && !force) || __eol) return;
     if (force)
         clearList();
@@ -185,7 +202,7 @@ function loadMore(force) {
         for (var i = 0; i < datJ.data.length; i++) {
             if (!force)
                 __current_data.data.push(datJ.data[i]);
-            addItem(i, datJ.meta.offset, datJ.data[i], force, datJ.data.length);
+            addItem(i, datJ.meta.offset, datJ.data[i], datJ.data.length);
         }
         lockLoader(false);
     }, function (e) {
@@ -202,14 +219,34 @@ function loadMore(force) {
 }
 
 function loadCats() {
+    let ctx = "";
+    let ctn = 0;
+    let ctc = "";
+    if (__config.categories && __config.categories._filter)
+        ctx = __config.categories._filter.split(',');
     $('#ti-catSel').css('top', '0%');
     $('#ti-catSel + div').addClass('ti-hidden').css('top', '0%').css('background', 'var(--ti-blind)');
-    $('#ti-listHeader').css('top', '100%').css('background', 'var(--ti-blind)').empty();
+    $('#ti-listHeader').css('top', '100%').css('background', 'var(--ti-blind)').children('span').empty();
     $('#ti-catSel > div > div').empty();
     lockLoader(true);
     getTiCats(null, function (datJ) {
         for (var i = 0; i < datJ.data.length; i++) {
-            addCat(datJ.data[i]);
+            if (!ctx || ctx.find(x => x == datJ.data[i].key) != undefined)
+            {
+                addCat(datJ.data[i]);
+                ctn++;
+                ctc = datJ.data[i];
+            }
+        }
+        if (ctn == 1)
+        {
+            __current_cat = ctc.key;
+            var ti = $(this);
+            $('#ti-catSel').css('top', '-100%');
+            $('#ti-catSel + div').removeClass('ti-hidden');
+            $('#ti-catSel + div').css('top', '-100%').css('background', ctc.color);
+            $('#ti-listHeader').css('top', '0px').css('background', ctc.color).children('span').text(ctc.text);
+            loadMore(true);
         }
         lockLoader(false);
     });
@@ -237,6 +274,7 @@ $(document).ready(function () {
         $(this).addClass('ti-active');
         selectSectionById($(this).attr('itemid'));
     });
+    $('#ti-finalHolder #ti-xusecup').click(cuponUseCheck);
 
 });
 
@@ -264,8 +302,20 @@ function switchToSeat() {
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '2');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '2');
 }
+function switchToFinal() {
+    $('#ti-listHolder').addClass('ti-unfocus');
+    //$('#ti-cardWrapper').removeClass('ti-hidden');
+    $('#ti-cardWrapper').get(0).style.setProperty('--shift', '3');
+    $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
+}
+function switchToAftermath() {
+    $('#ti-listHolder').addClass('ti-unfocus');
+    //$('#ti-cardWrapper').removeClass('ti-hidden');
+    $('#ti-cardWrapper').get(0).style.setProperty('--shift', '4');
+    $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
+}
 
-var __err_pass = null;
+let __err_pass = null;
 function showError(message, retry_callback, return_callback, pass) {
     $('#ti-mastercontain').addClass('errored');
     $('#ti-errorHandle span.ti-xname').text(message);
@@ -299,4 +349,65 @@ function showError(message, retry_callback, return_callback, pass) {
         __err_pass = pass;
     else
         __err_pass = null;
+}
+
+function cuponUseCheck() {
+    var isx = $('#ti-finalHolder #ti-xusecup').attr('check') === 'true';
+    if (DEBUG) console.warn('Use cupon? >>' + isx);
+    if (isx) {
+        $('#ti-finalHolder #ti-xcupon').fadeOut();
+        $('#ti-finalHolder #ti-bvouch').addClass('ti-locked');
+    }
+    else {
+        $('#ti-finalHolder #ti-xcupon').fadeIn();
+        $('#ti-finalHolder #ti-bvouch').removeClass('ti-locked');
+    }
+}
+
+let __aftermath_timer = null;
+function setupAftemath() {
+    $('#ti-aftermathHolder #ti-xreserve').text(toLocalisedNumbers(__paymentClause.reserve_id));
+    $('#ti-aftermathHolder #ti-xtrace').text(toLocalisedNumbers(__paymentClause.trace_number));
+    $('#ti-aftermathHolder #ti-xfinalprice').text(toLocalisedNumbers(seperateDigits(__paymentClause.total_price, ',') + " تومان"));
+    $('#ti-aftermathHolder .ti-btnwrap').removeClass('ti-hidden');
+    switchToAftermath();
+    $('#ti-aftermathHolder #ti-xrtimer').text("");
+    __aftermath_timer = setInterval(reserveTimerTick, 1000);
+}
+
+function reserveTimerTick() {
+    __paymentClause.time--;
+    var time = __paymentClause.time;
+    var strtime = Math.floor(time / 60) + ':' + (time % 60);
+    $('#ti-aftermathHolder #ti-xrtimer').text(toLocalisedNumbers(strtime));
+    if (time < 60)
+        $('#ti-aftermathHolder #ti-xrtimer').addClass('ti-error');
+    else
+        $('#ti-aftermathHolder #ti-xrtimer').removeClass('ti-error');
+    if (time <= 0) {
+        getZbData(__active_event.urn, "check", __paymentClause, dat => {
+            if (!dat.ok)
+                switchToFinal();
+            else {
+                clearTimeout(__aftermath_timer);
+                switch (dat.data.state) {
+                    case "reserved":
+                        switchToDead();
+                        break;
+                    case "pending": 
+                        break;
+                    default:
+                        switchToFinal();
+                        break;
+                }
+            }
+        }, switchToDead)
+    }
+}
+
+function causeAftermathPayment() {
+    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}`;
+    var nwo = window.open(payUrl, '_blank');
+    if (window.focus)
+        nwo.focus();
 }
