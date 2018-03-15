@@ -13,7 +13,7 @@
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
         <script type="text/javascript">const __config = <?= file_get_contents($config_path) ?>;</script>
-        <script type="text/javascript" src="http://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
         <script type="text/javascript" src="engine/ti-get.js"></script>
         <script type="text/javascript" src="engine/itemparser.js"></script>
@@ -119,7 +119,7 @@
                         'user_fullname': $('#ti-finalHolder #ti-uname').val(),
                         'user_mobile': $('#ti-finalHolder #ti-umobile').val(),
                         'user_email': $('#ti-finalHolder #ti-umail').val(),
-                        'voucher': $('#ti-finalHolder #ti-xcupon').val(), 
+                        'voucher': $('#ti-finalHolder #ti-xcupon').val(),
                         'send_sms': true, 
                         'send_email': true, 
                         'use_internal_receipt': true });

@@ -2,7 +2,7 @@
     //ini_set('display_errors', TRUE);
     //error_reporting(E_ALL);
     define('ROOTDIR', "../");
-    require_once('../php/consts.php');
+    include_once('../php/consts.php');
     require_once('../php/paths.php');
     $app_config = null;
 
