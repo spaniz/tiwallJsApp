@@ -12,7 +12,13 @@
         <link rel="stylesheet" href="style/core.css" />
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
-        <script type="text/javascript">const __config = <?= file_get_contents($config_path) ?>;</script>
+        <script type="text/javascript">
+            let __config = <?= file_get_contents($config_path) ?>;
+            <?php
+                foreach ($_GET as $k => $v)
+                    echo "__config." . str_replace('~', '.', $k) . " = '$v';";
+            ?>
+        </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
         <script type="text/javascript" src="engine/ti-get.js"></script>
@@ -100,7 +106,7 @@
                 });
                 $('#ti-seatHolder .ti-btn:not(.ti-dead)').click(function(event) {
                     $('#ti-finalHolder #ti-xseats').text(toLocalisedNumbers(__finalSeatData.seats || "") || __finalSeatData.count);
-                    $('#ti-finalHolder #ti-xcost').text(toLocalisedNumbers(seperateDigits(__finalSeatData.total_price), ',') + " تومان");
+                    $('#ti-finalHolder #ti-xcost').text(toLocalisedNumbers(seperateDigits(__finalSeatData.total_price, ',') + " تومان"));
                     switchToFinal();
                 });
                 $('#ti-finalHolder #ti-bvouch').click(function() {

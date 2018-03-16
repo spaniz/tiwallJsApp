@@ -10,13 +10,23 @@ function seperateDigits(num, sep) {
     let x = parseInt(num);
     let i = 0;
     while (x > 0) {
-        if (!(i % 3 || i))
+        if (!(i % 3) && i)
             strm = sep + strm;
         strm = (x % 10) + strm;
         x = Math.floor(x / 10);
         i++;
     }
     return strm;
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 (function($){

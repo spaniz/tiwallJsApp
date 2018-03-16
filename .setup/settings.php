@@ -8,7 +8,7 @@
 
     if ($_POST)
     {
-        try {
+        try { 
             if ($_POST["app_id"] != _ZB_APPID || $_POST["app_token"] != _ZB_SECRET)
                 updateConsts($_POST["app_id"], $_POST["app_token"]);
             updateConfig(array(
@@ -130,7 +130,7 @@
         </style>
     </head>
     <body>
-        <script type="text/javascript" src="http://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="../engine/exoticengine.js"></script>
         <script type="text/javascript">
             $(document).ready(() => {
