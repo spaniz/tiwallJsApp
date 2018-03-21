@@ -88,14 +88,13 @@
                     lockLoader(true);
                     getShowtimes(__active_event.urn, function(zirdat) {
                         if (!zirdat.ok) {
-                            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
-                                null,
-                                () => switchToEvent());
+                            addPick({ title: 'سانسی برای این برنامه وجود ندارد' });
                             return;
                         }
                         console.log(zirdat);
                         for (var i = 0; i < zirdat.data.length; i++)
                         {
+                            __instances = zirdat.data;
                             var _dt = zirdat.data[i];
                             //console.log(_dt);
                             addPick(_dt);
@@ -105,7 +104,7 @@
                     () => switchToEvent());
                 });
                 $('#ti-seatHolder .ti-btn:not(.ti-dead)').click(function(event) {
-                    $('#ti-finalHolder #ti-xseats').text(toLocalisedNumbers(__finalSeatData.seats || "") || __finalSeatData.count);
+                    $('#ti-finalHolder #ti-xseats').text(toLocalisedNumbers(__finalSeatData.seats || "") || toLocalisedNumbers(__finalSeatData.count));
                     $('#ti-finalHolder #ti-xcost').text(toLocalisedNumbers(seperateDigits(__finalSeatData.total_price, ',') + " تومان"));
                     switchToFinal();
                 });
@@ -176,12 +175,21 @@
                     </div>
                 </td>
             </tr>
-            <tr id="ti-seatHolder" class="ti-leftside">
+            <tr id="ti-seatHolder" class="ti-leftside ti-seatmap">
                 <td>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
                         <div class="ti-seperator"></div>
+                        <div class="ti-spinner">
+                            <span style="display: inline-block; margin: 10px;">تعداد صندلی</span>
+                            <div class="numeric">
+                                <div class="rem">remove_circle</div>
+                                <span class="value">۱</span>
+                                <input id="ti-seatcount" type="number" value="1" min="1" max="20" />
+                                <div class="add">add_circle</div>
+                            </div>
+                        </div>
                         <div class="ti-xframe">
                         </div>
                         <div class="ti-xcontainer">

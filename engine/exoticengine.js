@@ -26,4 +26,24 @@ $(document).ready(function() {
     $('*').mouseout(function() {
         $('#tooltip').css('display', 'none');
     });
+    $('div.numeric > .rem').click(function() {
+		var t = $(this).parent();
+		var xn = parseInt(t.children('input').val()) || 0;
+		var xMax = parseInt(t.children('input').attr('max'));
+		var xMin = parseInt(t.children('input').attr('min'));
+		var n = Math.max(xMin, Math.min(xn - 1, xMax));
+		t.children('input').val(n);
+        t.children('span.value').text(toLocalisedNumbers(n));
+        onExoticNumericChange(t.children('input'));
+	});
+	$('div.numeric > .add').click(function() {
+		var t = $(this).parent();
+		var xn = parseInt(t.children('input').val()) || 0;
+		var xMax = parseInt(t.children('input').attr('max'));
+		var xMin = parseInt(t.children('input').attr('min'));
+		var n = Math.max(xMin, Math.min(xn + 1, xMax));
+		t.children('input').val(n);
+        t.children('span.value').text(toLocalisedNumbers(n));
+        onExoticNumericChange(t.children('input'));
+	});
 });

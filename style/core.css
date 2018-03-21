@@ -983,3 +983,46 @@ div#tooltip {
 .ti-error {
 	color: red;
 }
+.numeric {
+	padding: 5px 50px;
+	font-size: 24px;
+	position: relative;
+	display: inline-block;
+}
+.numeric .rem, .numeric .add {
+	font-size: 30px;
+	vertical-align: middle;
+	position: absolute;
+	color: var(--ti-dead);
+	top: 50%;
+	transform: translateY(-50%);
+	font-family: 'Material Icons';
+	transition: .5s var(--bounce-bez);
+	cursor: pointer;
+	display: inline-block;
+}
+.numeric .rem:hover, .numeric .add:hover {
+	color: var(--ti-accent);
+} 
+.numeric .rem {
+	left: 0;
+	content: 'remove_circle';
+}
+.numeric .add {
+	content: 'add_circle';
+	right: 0;
+}
+.numeric input {
+	display: none;
+}
+.ti-spinner {
+	text-align: center;
+	flex: 1 0 auto;
+}
+#ti-seatHolder.ti-seatmap .ti-spinner {
+	display: none;
+}
+
+#ti-seatHolder.ti-numeric .ti-xframe, #ti-seatHolder.ti-numeric .ti-xcontainer {
+	display: none;
+}

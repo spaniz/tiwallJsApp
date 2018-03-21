@@ -249,6 +249,10 @@
         font-size: 14rem;
     }
 
+    #ti-cardWrapper tr:not(.fulfilled) > td > div > * {
+        display: none;
+    }
+
     #ti-cardWrapper tr:not(.fulfilled) > td > div::before {
         position: absolute;
         border: dashed rgba(0,0,0,.5) 2rem;
@@ -262,6 +266,14 @@
 
     #ti-seatHolder:not(.fulfilled) > td > div::before {
         content: "لطفا سانس را انتخاب کنید";
+    }
+
+    #ti-finalHolder:not(.fulfilled) > td > div::before {
+        content: "لطفا صندلی انتخاب کنید";
+    }
+
+    #ti-aftermathHolder:not(.fulfilled) > td > div::before {
+        content: "ابتدا اطلاعات را تکمیل و بلیط را رزرو کنید";
     }
 
     #ti-cardWrapper tr:not(:hover) > td > div {

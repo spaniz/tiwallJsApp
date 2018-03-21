@@ -1,4 +1,6 @@
 function toLocalisedNumbers(text) {
+    if (!(text || null))
+        return null;
     var _txt = text.toString();
     for (var i = 0; i < 10; i++)
         _txt = _txt.replace(new RegExp(i.toLocaleString("en-US"), 'g'), i.toLocaleString('fa-IR'));
@@ -6,6 +8,8 @@ function toLocalisedNumbers(text) {
 }
 
 function seperateDigits(num, sep) {
+    if (!(num || null))
+        return null;
     let strm = "";
     let x = parseInt(num);
     let i = 0;
