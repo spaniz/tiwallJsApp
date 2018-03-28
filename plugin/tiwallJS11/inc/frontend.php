@@ -1,5 +1,4 @@
-
 <?php
-add_shortcode('tiwall', 'loadjs');	
-
+add_shortcode('drama', 'loaddrama');	
+add_shortcode('concert', 'loadconcert');
 ?>

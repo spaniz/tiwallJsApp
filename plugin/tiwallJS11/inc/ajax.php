@@ -1,4 +1,3 @@
-
 <?php
 add_action('wp_ajax_insert_db','insertdb');
 add_action( "wp_ajax_nopriv_insert_db", "insertdb" );

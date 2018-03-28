@@ -1,9 +1,9 @@
-@media all and (min-width: 560px) {
+@media all and (min-width: 580px) {
     #ti-listHolder {
-        padding: 20px;
+        padding: 20rem;
         display: flex;
         flex-wrap: wrap;
-        padding-top: 60px;
+        padding-top: 60rem;
         justify-content: space-evenly;
         align-content: flex-start;
     }
@@ -16,34 +16,34 @@
 
     #ti-listHolder .ti-xitem {
         height: unset;
-        padding: 5px;
+        padding: 5rem;
     }
 
     #ti-listHolder .ti-xitem > span {
-        height: 100px;
-        width: 100px;
+        height: 100rem;
+        width: 100rem;
     }
 
     #ti-listHolder .ti-xitem > .ti-name {
-        padding-right: 3px;
-        max-width: 100px;
+        padding-right: 3rem;
+        max-width: 100rem;
         box-sizing: border-box;
-        margin-top: 4px;
+        margin-top: 4rem;
     }
 
     #ti-listHolder .ti-xitem > .ti-name > div {
-        line-height: 19px;
-        margin-bottom: 5px;
+        line-height: 19rem;
+        margin-bottom: 5rem;
     }
 
     #ti-listHolder .ti-xitem > .ti-name > span {
-        line-height: 15px;
+        line-height: 15rem;
     }
 
     #ti-listHeader {
-        right: 0px;
-        border-bottom-right-radius: 0px;
-        min-width: calc(100% - 30px);
+        right: 0rem;
+        border-bottom-right-radius: 0rem;
+        min-width: calc(100% - 30rem);
     }
 
     #ti-catSel > div > div {
@@ -58,9 +58,9 @@
     #ti-catSel .ti-citem {
         --bgsize: calc(100vh + 100vw);
         overflow: visible;
-        border-radius: 4px;
+        border-radius: 4rem;
         vertical-align: middle;
-        margin: 5px;
+        margin: 5rem;
         transition: .4s var(--ti-normbaz);
         cursor: pointer;
         flex: 1 1 auto;
@@ -68,7 +68,7 @@
         background-size: var(--bgsize) var(--bgsize);
         background-position: 50% 50%;
         text-align: center;
-        padding: 10px 5%;
+        padding: 10rem 5%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -84,31 +84,31 @@
     }
 
     #ti-catSel .ti-citem > img {
-        height: 64px;
-        width: 64px;
+        height: 64rem;
+        width: 64rem;
         background: transparent;
         border-radius: 0;
         padding: 0;
-        margin: 5px;
+        margin: 5rem;
     }
 
     #ti-catSel .ti-citem:hover > img {
         padding: 0;
         border-radius: 0;
-        margin: 5px;
+        margin: 5rem;
         background: transparent;
     }
 
     #ti-catSel.ti-contrive .ti-citem:not(:hover) > img {
         padding: 0;
         /*border-radius: 100%;*/
-        margin: 5px;
+        margin: 5rem;
         background: transparent;
-        transform: translateY(+9px);
+        transform: translateY(+9rem);
     }
 
     #ti-catSel.ti-contrive .ti-citem:not(:hover) {
-        filter: blur(1.2px) brightness(0);
+        filter: blur(1.2rem) brightness(0);
     }
 
     #ti-seatHolder .ti-btn.ti-dead {
@@ -116,7 +116,7 @@
     }
 
     #ti-catSel .ti-citem > div {
-        font-size: 16px;
+        font-size: 16rem;
         opacity: .70;
     }
 
@@ -125,7 +125,7 @@
     }
 
     #ti-cardWrapper {
-        --width: calc(50vw - 40px);
+        --width: calc(50vw - 40rem);
         top: 0;
         right: calc(-1 * var(--stage) * 50vw);
         height: 100%;
@@ -151,33 +151,33 @@
     #ti-cardWrapper tr#ti-bannerHolder div {
         width: auto;
         margin-left: 0;
-        padding: 5px;
+        padding: 5rem;
         justify-content: center;
         align-content: center;
     }
 
     #ti-cardWrapper tr#ti-bannerHolder img:not([src=""]) {
         display: initial;
-        max-width: calc(var(--width) - 10px);
+        max-width: calc(var(--width) - 10rem);
         margin: auto;
         max-height: 100%;
         box-sizing: border-box;
     }
 
     #ti-eventHolder .ti-seperator {
-        margin: 15px 0;
+        margin: 15rem 0;
         flex: 1 1 auto;
         word-wrap: break-word;
-        font-size: 12px;
-        line-height: 18px;
+        font-size: 12rem;
+        line-height: 18rem;
         color: initial;
         overflow: visible;
     }
 
     #ti-eventHolder .ti-seperator::after, #ti-eventHolder .ti-seperator::before {
-        font-size: 30px;
+        font-size: 30rem;
         font-family: Georgia;
-        line-height: 18px;
+        line-height: 18rem;
         display: inline-block;
         vertical-align: bottom;
         opacity: .5;
@@ -189,12 +189,12 @@
 
     #ti-eventHolder .ti-seperator:not(:empty)::after {
         content: '“';
-        margin-bottom: -15px;
+        margin-bottom: -15rem;
     }
 
     #ti-cardWrapper td > div {
-        max-height: 500px;
-        max-width: 500px;
+        max-height: 500rem;
+        max-width: 500rem;
         min-width: unset;
         width: var(--width);
     }
@@ -204,7 +204,7 @@
     }
 
     #ti-cardWrapper td {
-        padding: 20px 15px;
+        padding: 20rem 15rem;
     }
 
     #ti-cardWrapper > tbody {
@@ -217,7 +217,7 @@
     
     #ti-pickHolder .ti-witem.selected > .ti-xitem > span {
         background: darkred;
-        width: 10px;
+        width: 10rem;
     }
 
     #ti-pickHolder .ti-witem.selected > .ti-xitem > .ti-name {
@@ -225,35 +225,39 @@
     }
 
     #ti-cardWrapper .ti-container {
-        padding: 10px;
-        border-right: 2px solid var(--ti-accent);
+        padding: 10rem;
+        border-right: 2rem solid var(--ti-accent);
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
     }
 
     #ti-pickHolder .ti-xitem {
-        margin-left: 10px;
+        margin-left: 10rem;
     }
 
     #ti-cardWrapper .ti-xcontainer i.material-icons {
-        font-size: 20px;
-        line-height: 24px;
+        font-size: 20rem;
+        line-height: 24rem;
         vertical-align: bottom;
-        margin-left: 5px;
-        margin-top: 5px;
-        margin-right: 7px;
+        margin-left: 5rem;
+        margin-top: 5rem;
+        margin-right: 7rem;
     }
 
     #ti-cardWrapper .ti-xcontainer span {
-        font-size: 14px;
+        font-size: 14rem;
+    }
+
+    #ti-cardWrapper tr:not(.fulfilled) > td > div > * {
+        display: none;
     }
 
     #ti-cardWrapper tr:not(.fulfilled) > td > div::before {
         position: absolute;
-        border: dashed rgba(0,0,0,.5) 2px;
-        padding: 20px 20px;
-        border-radius: 8px;
+        border: dashed rgba(0,0,0,.5) 2rem;
+        padding: 20rem 20rem;
+        border-radius: 8rem;
         top: 50%;
         right: 50%;
         transform: translate(50%,-50%);
@@ -262,6 +266,14 @@
 
     #ti-seatHolder:not(.fulfilled) > td > div::before {
         content: "لطفا سانس را انتخاب کنید";
+    }
+
+    #ti-finalHolder:not(.fulfilled) > td > div::before {
+        content: "لطفا صندلی انتخاب کنید";
+    }
+
+    #ti-aftermathHolder:not(.fulfilled) > td > div::before {
+        content: "ابتدا اطلاعات را تکمیل و بلیط را رزرو کنید";
     }
 
     #ti-cardWrapper tr:not(:hover) > td > div {

@@ -9,16 +9,15 @@
     }
     foreach ($_GET as $getKey => $getVal)
         if ($getKey != 'urn' && $getKey != 'action')
-            $params .= $getKey . '=' . $getVal . '&';
+            $params .= $getKey . '=' . urlencode($getVal) . '&';
     $head = array(
         'http' => array(
+            'ignore_errors' => true,
             'method' => "GET",
             'header' => "Zb-Auth: " . _ZB_APPID . ':' . _ZB_SECRET
         )
     );
-    //var_dump($head);
     $cont = stream_context_create($head);
-    echo file_get_contents("https://store.zirbana.com/v2/" . $_GET['urn'] . "/" . $_GET['action'] . $params, false, $cont);
-    //echo ":)";
-	
+    $uri = "https://store.zirbana.com/v2/" . $_GET['urn'] . "/" . $_GET['action'] . $params;
+    echo file_get_contents($uri, false, $cont);
 ?>

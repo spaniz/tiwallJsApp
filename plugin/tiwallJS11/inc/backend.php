@@ -10,7 +10,4 @@ $load_submenu1=add_submenu_page( __FILE__,'صفحه اصلی' ,'صفحه اصل�
 //add_action("load-{$load_menu}","load_menu_css");
 	
 }
-
-
-
 ?>

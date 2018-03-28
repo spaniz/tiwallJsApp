@@ -1,8 +1,36 @@
 function toLocalisedNumbers(text) {
-    var _txt = text;
+    if (!(text || null))
+        return null;
+    var _txt = text.toString();
     for (var i = 0; i < 10; i++)
         _txt = _txt.replace(new RegExp(i.toLocaleString("en-US"), 'g'), i.toLocaleString('fa-IR'));
     return _txt;
+}
+
+function seperateDigits(num, sep) {
+    if (!(num || null))
+        return null;
+    let strm = "";
+    let x = parseInt(num);
+    let i = 0;
+    while (x > 0) {
+        if (!(i % 3) && i)
+            strm = sep + strm;
+        strm = (x % 10) + strm;
+        x = Math.floor(x / 10);
+        i++;
+    }
+    return strm;
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 (function($){
@@ -89,30 +117,30 @@ function toLocalisedNumbers(text) {
 
 })(jQuery);
 
-// $.event.special.widthChanged = {
-    // remove: function() {
-        // $(this).children('iframe.width-changed').remove();
-    // },
-    // add: function () {
-        // var elm = $(this);
-        // var iframe = elm.children('iframe.width-changed');
-        // if (!iframe.length) {
-            // iframe = $('<iframe/>').addClass('width-changed').prependTo(this);
-        // }
-        // var oldWidth = elm.width();
-        // function elmResized() {
-            // var width = elm.width();
-            // if (oldWidth != width) {
-                // elm.trigger('widthChanged', [width, oldWidth]);
-                // oldWidth = width;
-            // }
-        // }
-// 
-        // var timer = 0;
-        // var ielm = iframe[0];
-        // (ielm.contentWindow || ielm).onresize = function() {
-            // clearTimeout(timer);
-            // timer = setTimeout(elmResized, 20);
-        // };
-    // }
-// }
+$.event.special.widthChanged = {
+    remove: function() {
+        $(this).children('iframe.width-changed').remove();
+    },
+    add: function () {
+        var elm = $(this);
+        var iframe = elm.children('iframe.width-changed');
+        if (!iframe.length) {
+            iframe = $('<iframe/>').addClass('width-changed').prependTo(this);
+        }
+        var oldWidth = elm.width();
+        function elmResized() {
+            var width = elm.width();
+            if (oldWidth != width) {
+                elm.trigger('widthChanged', [width, oldWidth]);
+                oldWidth = width;
+            }
+        }
+
+        var timer = 0;
+        var ielm = iframe[0];
+        (ielm.contentWindow || ielm).onresize = function() {
+            clearTimeout(timer);
+            timer = setTimeout(elmResized, 20);
+        };
+    }
+}

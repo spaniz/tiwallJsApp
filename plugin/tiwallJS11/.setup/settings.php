@@ -1,13 +1,14 @@
 <?php
-    require_once('../inc/php/consts.php');
-
-    $config_path = "../inc/config.json";
-    $consts_path = "../inc/php/consts.php";
+    //ini_set('display_errors', TRUE);
+    //error_reporting(E_ALL);
+    define('ROOTDIR', "../");
+    include_once('../inc/php/consts.php');
+    require_once('../inc/php/paths.php');
     $app_config = null;
 
     if ($_POST)
     {
-        try {
+        try { 
             if ($_POST["app_id"] != _ZB_APPID || $_POST["app_token"] != _ZB_SECRET)
                 updateConsts($_POST["app_id"], $_POST["app_token"]);
             updateConfig(array(
@@ -15,12 +16,11 @@
                     'debug' => !empty($_POST["js_debug"])
                 ),
                 'categories' => array(
-                    'mode' => isset($_POST["categories_mode"]) ? $_POST["categories_mode"] : null
+                    'mode' => isset($_POST["categories_mode"]) ? $_POST["categories_mode"] : null,
+                    '_filter' => str_replace(' ', '', $_POST["categories_filter"])
                 ),
                 'list' => array(
-                    'venue' => array(
-                        'id' => $_POST["list_venue_id"]
-                    )
+                    'venue' => str_replace(' ', '', $_POST["list_venue"])
                 )
             ));
             header("Refresh:0;url=?result=ok");
@@ -30,19 +30,20 @@
             header("Refresh:0;url=?result=fail");
         }
     }
+    
 
     $f = file_get_contents($config_path);
     if ($f)
         $app_config = json_decode($f);
-
+    
     function updateConfig($update) {
         global $config_path;
-        file_put_contents( $config_path, json_encode($update));
+        file_put_contents($config_path, json_encode($update));
     }
     function updateConsts($id, $auth) {
         global $consts_path;
         $f = '<?php define("_ZB_APPID", "' . $id . '"); define("_ZB_SECRET", "' . $auth . '"); ?>';
-        file_put_contents( $consts_path, $f);
+        file_put_contents($consts_path, $f);
     }
 ?>
 
@@ -57,6 +58,7 @@
                 color: white;
                 font-family: 'IRANSans';
                 direction: rtl;
+                font-size: 16rem;
             }
             form {
                 display: flex;
@@ -117,19 +119,25 @@
                 background-size: 400px 400px !important;
                 color: black;
             }
+            br {
+                margin-bottom: 15px;
+            }
+            .duo-left {
+                float: left;
+                margin-left: 10px;
+                --width: 300px !important;
+            }
         </style>
     </head>
     <body>
-        <script type="text/javascript" src="http://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="../engine/exoticengine.js"></script>
         <script type="text/javascript">
             $(document).ready(() => {
                 <?php 
                     if (isset($_GET["result"]))
-                    {
                         echo "$('#" . $_GET["result"] . "-msg').css('display', 'block');";
-                    }
-                        if ($app_config->js->debug)
+                    if ($app_config->js->debug)
                         echo "$('#jsdebug').click();\n";
                     echo "$('#cat_" . $app_config->categories->mode . "').click();\n";
                 ?>
@@ -148,8 +156,8 @@
 
             <h1>شناسه امنیتی</h1>
             <div id="settings-security">
-                <input class="exotic-input textbox" name="app.token" id="apptoken" type="text" placeholder="Application Token" value="<?= _ZB_SECRET ?>" />
-                <input class="exotic-input textbox" name="app.id" id="appid" type="text" placeholder="Application ID" value="<?= _ZB_APPID ?>" />
+                <input class="exotic-input textbox" name="app.token" id="apptoken" type="text" placeholder="App Token" value="<?= _ZB_SECRET ?>" />
+                <input class="exotic-input textbox" name="app.id" id="appid" type="text" placeholder="App ID" value="<?= _ZB_APPID ?>" />
             </div>
             
             <h1>محلی سازی اطلاعات</h1>
@@ -175,8 +183,13 @@
                     </div>
                 </div>
                 <br />
-                <span style="margin-left: 15px;">محل/سالن</span>
-                <input class="exotic-input textbox" name="list.venue.id" id="venueid" type="text" placeholder="Venue ID" value="<?= isset($app_config->list->venue->id) ? $app_config->list->venue->id : "" ?>" />
+                <span>زمینه‌ها</span>
+                <input class="exotic-input textbox duo-left" name="categories.filter" id="venueid" type="text" placeholder="Category Keys" value="<?= isset($app_config->categories->_filter) ? $app_config->categories->_filter : "" ?>" />
+                <br />
+                <span>محل/سالن‌ها</span>
+                <input class="exotic-input textbox duo-left" name="list.venue" id="venueid" type="text" placeholder="Venue ID(s)" value="<?= isset($app_config->list->venue) ? $app_config->list->venue : "" ?>" />
+                <br style="margin-bottom: 30px" />
+                <span>شناسه سالن‌ها یا زمینه‌ها را با ویرگول انگلیسی "," از هم جدا کنید.</span>
             </div>
 
             <input class="ti-btn" type="submit" value="ثبت تغییرات" />
