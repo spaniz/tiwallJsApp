@@ -88,8 +88,8 @@ iframe.width-changed {
 #ti-listHeader {
 	position: absolute;
 	top: 0;
-	right: 10rem;
-	padding: 0 15rem;
+	right: 0;
+	padding: 0 20rem;
 	padding-bottom: 8rem;
 	padding-top: 20rem;
 	color: white;
@@ -101,14 +101,14 @@ iframe.width-changed {
 	vertical-align: bottom;
 	box-sizing: border-box;
 	font-family: IRANSans, Tahoma;
-	position: absolute;
-	border-radius: 0 0 4rem 4rem;
+	position: fixed;
 	display: flex;
 	transition: .8s var(--ti-normbaz);
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--ti-blind);
-	justify-content: space-between;
+	justify-content: right;
+	width: 100vw;
 }
 
 #ti-listHeader:hover {
@@ -117,14 +117,13 @@ iframe.width-changed {
 
 #ti-listHolder:hover > .ti-witem {
     /*filter: blur(.6rem);*/
-	opacity: .6;
+	opacity: .95;
 }
 
 #ti-listHolder:hover > .ti-witem:hover {
 	filter: none;
 	opacity: 1;
-	background: rgba(255,255,255,.7);
-	/*box-shadow: 0rem 1rem 1rem 0 rgba(0,0,0,0.3);*/
+	background: rgba(0,0,0,.08);
 }
 
 .ti-witem {
@@ -575,7 +574,7 @@ iframe.width-changed {
 }
 
 #ti-catSel.ti-contrive .ti-citem:not(:hover) {
-	filter: blur(1.2rem);
+	/*filter: blur(1.2rem);*/
 	opacity: .6;
 }
 

@@ -28,7 +28,7 @@
 
         <div id="ti-listHolder"></div>
         <div id="ti-listHeader" style="top: 100%">
-            <i class="material-icons" style="margin-top: -4px;">expand_less</i>
+            <i class="material-icons" style="margin-top: -4px; margin-left: 7px">expand_less</i>
             <span></span>
         </div>
         <div id="ti-singlePic">
@@ -51,15 +51,15 @@
                             }
                     var list = $('#ti-listHolder');
                     var head = $('#ti-listHeader');
-                    if (__scroll_pos <= list.scrollTop())
+                    if (__scroll_pos < list.scrollTop())
                     {
                         __scroll_pos = list.scrollTop();
-                        head.css('top', -Math.min(__scroll_pos - __scroll_anchor, 50) + 'rem');
+                        head.css('top', '-50rem');
                     }
                     else
                     {
                         __scroll_pos = list.scrollTop();
-                        head.css('top', '0px');
+                        head.css('top', '0rem');
                         __scroll_anchor = __scroll_pos;
                     }
                 });
@@ -206,7 +206,7 @@
                         <div class="ti-title"></div>
                         <div class="ti-seperator"></div>
                         <div class="ti-spinner">
-                            <span style="display: inline-block; margin: 10px;">تعداد صندلی</span>
+                            <span style="display: inline-block; margin: 10px;">به تعداد</span>
                             <div class="numeric">
                                 <div class="rem">remove_circle</div>
                                 <span class="value">۱</span>

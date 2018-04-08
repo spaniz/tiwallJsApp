@@ -4,7 +4,7 @@
         display: flex;
         flex-wrap: wrap;
         padding-top: 60rem;
-        justify-content: space-evenly;
+        justify-content: start;
         align-content: flex-start;
     }
 
@@ -19,9 +19,24 @@
         padding: 5rem;
     }
 
+    #ti-listHolder .ti-witem {
+        margin: 2.5rem;
+    }
+
     #ti-listHolder .ti-xitem > span {
-        height: 100rem;
-        width: 100rem;
+        height: 120rem;
+        width: 120rem;
+    }
+
+    @media all and (min-width: 720px) {
+        #ti-listHolder .ti-witem {
+            margin: 4rem;
+        }
+    
+        #ti-listHolder .ti-xitem > span {
+            height: 150rem;
+            width: 150rem;
+        }
     }
 
     #ti-listHolder .ti-xitem > .ti-name {
@@ -40,11 +55,11 @@
         line-height: 15rem;
     }
 
-    #ti-listHeader {
+    /*#ti-listHeader {
         right: 0rem;
         border-bottom-right-radius: 0rem;
         min-width: calc(100% - 30rem);
-    }
+    }*/
 
     #ti-catSel > div > div {
         display: flex;
@@ -64,9 +79,10 @@
         transition: .4s var(--ti-normbaz);
         cursor: pointer;
         flex: 1 1 auto;
-        background: radial-gradient(rgba(255,255,255,.1) 50%, transparent 50%) no-repeat;
+        /*background: radial-gradient(rgba(255,255,255,.1) 50%, transparent 50%) no-repeat;
         background-size: var(--bgsize) var(--bgsize);
-        background-position: 50% 50%;
+        background-position: 50% 50%;*/
+        background: rgba(255,255,255,.1);
         text-align: center;
         padding: 10rem 5%;
         display: flex;
@@ -80,7 +96,7 @@
     }
 
     #ti-catSel .ti-citem:hover {
-        background-size: 0% 0%;
+        background: rgba(0,0,0,.5);
     }
 
     #ti-catSel .ti-citem > img {
@@ -108,7 +124,7 @@
     }
 
     #ti-catSel.ti-contrive .ti-citem:not(:hover) {
-        filter: blur(1.2rem) brightness(0);
+        filter: /*blur(1.2rem)*/ brightness(0);
     }
 
     #ti-seatHolder .ti-btn.ti-dead {
