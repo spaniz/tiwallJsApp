@@ -17,7 +17,6 @@ const TI_BASE_URL = "https://store.zirbana.com/v2";
 function getTiPages(path, callback, error, passable) {
     var addr = TI_BASE_URL + "/pages/" + path;
     $.ajax(addr, { 
-        data: { get_param: 'value' }, 
         dataType: 'json',
         success: function(result) {
             __lastTiResponse = result;
@@ -74,7 +73,7 @@ function getTiEventList(cat, attrs, callback, passable) {
 
 function getTiEventItem(pageId, callback, passable) {
     var addr = "get?";
-    if (pageId !== null )
+    if (pageId !== null)
         addr += "id=" + pageId;
     getTiPages(addr, callback, passable);
 }
@@ -90,7 +89,6 @@ function getZbData(urn, action, params, callback, error) {
             addr += '&' + key + '=' + encodeURI(params[key]);
     console.warn('calling ' + addr);
     $.ajax(addr, { 
-        data: { get_param: 'value' }, 
         dataType: 'json',
         success: callback,
         error: function() {
@@ -109,7 +107,6 @@ function getZbInsecureData(urn, action, params, callback, error) {
         for (var key in params)
             addr += key + '=' + encodeURI(params[key]) + '&';
     $.ajax(addr, { 
-        data: { get_param: 'value' }, 
         dataType: 'json',
         success: callback,
         error: function() {

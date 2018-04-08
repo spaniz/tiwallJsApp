@@ -1,7 +1,6 @@
 $(document).ready(function() {
-    $('div.exotic-input').click(function() {
+    $('div.exotic-input.radiobox, div.exotic-input-checkbox').click(function() {
         var c = $(this).attr('check');
-      
         if (c == 'true') {
             $(this).children('input[type="checkbox"], input[type="radio"]').prop('checked', false);
             $(this).attr('check', 'false');
@@ -11,6 +10,7 @@ $(document).ready(function() {
             $(this).children('input[type="checkbox"], input[type="radio"]').prop('checked', true);
             $(this).attr('check', 'true');
         }
+        $(this).children('input[type="checkbox"], input[type="radio"]').trigger('change');
     });
     $(document).mousemove(function(e) {
         document.documentElement.style.setProperty('--overX', (e.pageX > (document.documentElement.clientWidth / 2)) ? 1 : 0)

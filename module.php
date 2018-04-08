@@ -28,8 +28,10 @@
 
         <div id="ti-listHolder"></div>
         <div id="ti-listHeader" style="top: 100%">
-        <i class="material-icons" style="margin-top: -4px;">expand_less</i>
-        <span></span>
+            <i class="material-icons" style="margin-top: -4px;">expand_less</i>
+            <span></span>
+        </div>
+        <div id="ti-singlePic">
         </div>
 
         <script type="text/javascript">
@@ -52,7 +54,7 @@
                     if (__scroll_pos <= list.scrollTop())
                     {
                         __scroll_pos = list.scrollTop();
-                        head.css('top', -Math.min(__scroll_pos - __scroll_anchor, 50) + 'px');
+                        head.css('top', -Math.min(__scroll_pos - __scroll_anchor, 50) + 'rem');
                     }
                     else
                     {
@@ -62,8 +64,27 @@
                     }
                 });
                 getTiConf(function() {
-                    loadCats();
+                    if (__config.view == "normal")
+                        loadCats();
+                    if (__config.view == "single")
+                        loadSingleView(__config.get.urn);
                     /*loadMore(true);*/
+                });
+                $('#ti-finalHolder #ti-xcupon').keypress(function (event) {
+                    if (event.keyCode === 13)
+                    {
+                        getVoucherState($('#ti-finalHolder #ti-xcupon').val(), (msg, ok) => {
+                            $('#ti-finalHolder #ti-xvouchstat').text(msg);
+                            if (ok)
+                                $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
+                            else 
+                                $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
+                        });
+                        return false;
+                    }
+                });
+                $('#ti-finalHolder #ti-xcupon').change(function (event) {
+                    $('#ti-finalHolder #ti-xvouchstat').text(""); 
                 });
                 // DEAD BTNS
                 $('#ti-eventHolder .ti-btn.ti-dead').click(function (event) {
@@ -124,7 +145,7 @@
                         'user_fullname': $('#ti-finalHolder #ti-uname').val(),
                         'user_mobile': $('#ti-finalHolder #ti-umobile').val(),
                         'user_email': $('#ti-finalHolder #ti-umail').val(),
-                        'voucher': $('#ti-finalHolder #ti-xcupon').val(),
+                        'voucher': $('#ti-finalHolder #ti-xusecup').attr('check') === 'true' ? $('#ti-finalHolder #ti-xcupon').val() : '',
                         'send_sms': true, 
                         'send_email': true, 
                         'use_internal_receipt': true });
@@ -152,6 +173,9 @@
                             <p><i class="material-icons">room</i><span class="ti-nxloc"></span></p>
                             <p><i class="material-icons">event</i><span class="ti-nxdat"></span></p>
                             <p><i class="material-icons">credit_card</i><span class="ti-nxprc"></span></p>
+                        </div>
+                        <div class="ti-xcontainer">
+                            <p></p>
                         </div>
                         <span class="ti-btnwrap">
                             <div class="ti-btn">خرید</div>

@@ -11,57 +11,60 @@ function displayEventItem(htmlx, coords) {
     list.append(htmlx);
     if (DEBUG)
         console.log("rendering item " + coords.i + "/" + coords.max);
-    $('#ti-listHolder .ti-witem:last-child').click(function (event) {
-        var i = $(this).attr('itemid');
-        __active_event = __current_data.data[i];
-        if (DEBUG) console.log(__active_event);
-        switchToEvent();
-        $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
-        $('#ti-cardWrapper .ti-prefix').text(__current_data.data[i].title_prefix);
-        $('#ti-cardWrapper .ti-title').text(__current_data.data[i].title);
-        $('#ti-bannerHolder img').attr('src', "");
-        if (__current_data.data[i].image)
-            $('#ti-bannerHolder img').attr('src', __current_data.data[i].image.normal_url || "");
-
-        _nxaut = processMiniCast(__current_data.data[i]);
-        if (_nxaut) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxaut').text(_nxaut);
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').addClass('ti-hidden');
-
-        var _nxloc = __current_data.data[i].spec.venue;
-        _nxloc = (!_nxloc) ? null : _nxloc.title;
-        if (_nxloc) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxloc').text(toLocalisedNumbers(_nxloc));
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').addClass('ti-hidden');
-
-        var _nxtime = __current_data.data[i].spec.time;
-        _nxtime = (!_nxtime) ? "" : _nxtime.text;
-        var _nxdat = __current_data.data[i].spec.date_duration_text || "";
-        if (_nxdat || _nxtime) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxdat').text(toLocalisedNumbers(_nxdat + ' ' + _nxtime));
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').addClass('ti-hidden');
-
-        var _nxprc = __current_data.data[i].price;
-        _nxprc = (!_nxprc) ? null : _nxprc.text;
-        if (_nxprc) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxprc').text(toLocalisedNumbers(_nxprc));
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
-        $('#ti-eventHolder .ti-seperator').text(__current_data.data[i].promo_desc || __current_data.data[i].short_desc || "");
+    $('#ti-listHolder .ti-witem:last-child').click(function() { 
+        initEventPage($(this).attr('itemid')); 
     });
     if (coords.i === (coords.max || 0) - 1)
         setTimeout(finaliseListLoad, 500);
+}
+
+function initEventPage(i) {
+    __active_event = __current_data.data[i];
+    if (DEBUG) console.log(__active_event);
+    switchToEvent();
+    $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper .ti-prefix').text(__current_data.data[i].title_prefix);
+    $('#ti-cardWrapper .ti-title').text(__current_data.data[i].title);
+    $('#ti-bannerHolder img').attr('src', "");
+    if (__current_data.data[i].image)
+        $('#ti-bannerHolder img').attr('src', __current_data.data[i].image.normal_url || "");
+
+    _nxaut = processMiniCast(__current_data.data[i]);
+    if (_nxaut) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxaut').text(_nxaut);
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').addClass('ti-hidden');
+
+    var _nxloc = __current_data.data[i].spec.venue;
+    _nxloc = (!_nxloc) ? null : _nxloc.title;
+    if (_nxloc) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxloc').text(toLocalisedNumbers(_nxloc));
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').addClass('ti-hidden');
+
+    var _nxtime = __current_data.data[i].spec.time;
+    _nxtime = (!_nxtime) ? "" : _nxtime.text;
+    var _nxdat = __current_data.data[i].spec.date_duration_text || "";
+    if (_nxdat || _nxtime) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxdat').text(toLocalisedNumbers(_nxdat + ' ' + _nxtime));
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').addClass('ti-hidden');
+
+    var _nxprc = __current_data.data[i].price;
+    _nxprc = (!_nxprc) ? null : _nxprc.text;
+    if (_nxprc) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxprc').text(toLocalisedNumbers(_nxprc));
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
+    $('#ti-eventHolder .ti-seperator').text(__current_data.data[i].promo_desc || __current_data.data[i].short_desc || "");
 }
 
 let __current_instance = null;
@@ -206,6 +209,8 @@ function finaliseListLoad() {
 }
 
 function loadMore(force) {
+    $('#ti-singlePic').addClass('ti-hidden');
+    $('#ti-eventHolder .ti-btn.ti-dead').removeClass('ti-hidden');
     if (__load_lock) {
         if (DEBUG)
             console.warn("called @loadMore with lock[" + __load_lock + "]");
@@ -248,6 +253,9 @@ function loadMore(force) {
 }
 
 function loadCats() {
+    $('#ti-singlePic').addClass('ti-hidden');
+    $('#ti-catSel').removeClass('ti-hidden');
+    $('#ti-eventHolder .ti-btn.ti-dead').removeClass('ti-hidden');
     let ctx = "";
     let ctn = 0;
     let ctc = "";
@@ -278,6 +286,25 @@ function loadCats() {
             loadMore(true);
         }
         lockLoader(false);
+    });
+}
+
+function loadSingleView(urn) {
+    lockLoader(true);
+    $('#ti-singlePic').removeClass('ti-hidden');
+    $('#ti-catSel').addClass('ti-hidden');
+    $('#ti-eventHolder .ti-btn.ti-dead').addClass('ti-hidden');
+    getZbInsecureData(urn, "info", null, function(xdata) {
+        __current_data = { data: [
+            xdata.data
+        ]};
+        var vpic = 
+            xdata.data.cover.normal_url ||
+            xdata.data.image.big_url ||
+            xdata.data.image.normal_url
+        $('#ti-singlePic').css('background-image', 'url(' + vpic + ')');
+        lockLoader(false);
+        initEventPage(0);
     });
 }
 
@@ -391,10 +418,12 @@ function cuponUseCheck() {
     if (DEBUG) console.warn('Use cupon? >>' + isx);
     if (isx) {
         $('#ti-finalHolder #ti-xcupon').fadeOut();
+        $('#ti-finalHolder #ti-xvouchstat').fadeOut();
         $('#ti-finalHolder #ti-bvouch').addClass('ti-locked');
     }
     else {
         $('#ti-finalHolder #ti-xcupon').fadeIn();
+        $('#ti-finalHolder #ti-xvouchstat').fadeIn();
         $('#ti-finalHolder #ti-bvouch').removeClass('ti-locked');
     }
 }
