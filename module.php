@@ -154,16 +154,16 @@
             });
         </script>
 
-        <table id="ti-cardWrapper">
-            <tr id="ti-bannerHolder" class="ti-rightside">
-                <td>
+        <div id="ti-cardWrapper">
+            <div id="ti-bannerHolder" class="flex-tr ti-rightside">
+                <div>
                     <div>
                         <img />
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-eventHolder" class="fulfilled ti-leftside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-eventHolder" class="flex-tr fulfilled ti-leftside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -182,10 +182,10 @@
                             <div class="ti-btn ti-dead">بستن</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-pickHolder" class="fulfilled ti-rightside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-pickHolder" class="flex-tr fulfilled ti-rightside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -197,10 +197,10 @@
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-seatHolder" class="ti-leftside ti-seatmap">
-                <td>
+                </div>
+            </div>
+            <div id="ti-seatHolder" class="flex-tr ti-leftside ti-seatmap">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -225,10 +225,10 @@
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-finalHolder" class="ti-rightside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-finalHolder" class="flex-tr ti-rightside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -294,10 +294,10 @@
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-aftermathHolder" class="ti-leftside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-aftermathHolder" class="flex-tr ti-leftside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -336,9 +336,9 @@
                             <div class="ti-btn ti-dead">لغو</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
 
         <div id="ti-catSel" class="ti-xHolder ti-currentcard">
             <div>

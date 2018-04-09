@@ -1,4 +1,4 @@
-@media all and (min-width: 580px) {
+@media all and (min-width: 744px) {
     #ti-listHolder {
         padding: 20rem;
         display: flex;
@@ -28,7 +28,7 @@
         width: 120rem;
     }
 
-    @media all and (min-width: 720px) {
+    @media all and (min-width: 986px) {
         #ti-listHolder .ti-witem {
             margin: 4rem;
         }
@@ -144,27 +144,29 @@
         --width: calc(50vw - 40rem);
         top: 0;
         right: calc(-1 * var(--stage) * 50vw);
-        height: 100%;
+        height: 100vh;
+        flex-direction: row;
     }
 
-    #ti-cardWrapper tr {
+    #ti-cardWrapper > div {
+        width: 50vw;
+        flex-basis: 50vw;
+    }
+
+    #ti-cardWrapper > div > div {
         width: 50vw;
     }
 
-    #ti-cardWrapper tr > td {
-        width: 50vw;
-    }
-
-    #ti-cardWrapper tr#ti-bannerHolder {
+    #ti-cardWrapper .flex-tr#ti-bannerHolder {
         height: 100vh;
         width: 50vw;
     }
 
-    #ti-cardWrapper tr#ti-bannerHolder td {
+    #ti-cardWrapper .flex-tr#ti-bannerHolder > div {
         display: flex;
     }
 
-    #ti-cardWrapper tr#ti-bannerHolder div {
+    #ti-cardWrapper .flex-tr#ti-bannerHolder div {
         width: auto;
         margin-left: 0;
         padding: 5rem;
@@ -172,7 +174,7 @@
         align-content: center;
     }
 
-    #ti-cardWrapper tr#ti-bannerHolder img:not([src=""]) {
+    #ti-cardWrapper .flex-tr#ti-bannerHolder img:not([src=""]) {
         display: initial;
         max-width: calc(var(--width) - 10rem);
         margin: auto;
@@ -208,7 +210,7 @@
         margin-bottom: -15rem;
     }
 
-    #ti-cardWrapper td > div {
+    #ti-cardWrapper > div > div > div {
         max-height: 500rem;
         max-width: 500rem;
         min-width: unset;
@@ -219,11 +221,11 @@
         vertical-align: middle;
     }
 
-    #ti-cardWrapper td {
+    #ti-cardWrapper > div > div {
         padding: 20rem 15rem;
     }
 
-    #ti-cardWrapper > tbody {
+    #ti-cardWrapper {
         display: flex;
     }
 
@@ -265,11 +267,11 @@
         font-size: 14rem;
     }
 
-    #ti-cardWrapper tr:not(.fulfilled) > td > div > * {
+    #ti-cardWrapper .flex-tr:not(.fulfilled) > div > div > * {
         display: none;
     }
 
-    #ti-cardWrapper tr:not(.fulfilled) > td > div::before {
+    #ti-cardWrapper .flex-tr:not(.fulfilled) > div > div::before {
         position: absolute;
         border: dashed rgba(0,0,0,.5) 2rem;
         padding: 20rem 20rem;
@@ -280,27 +282,35 @@
         opacity: .6;
     }
 
-    #ti-seatHolder:not(.fulfilled) > td > div::before {
+    #ti-seatHolder:not(.fulfilled) > div > div::before {
         content: "لطفا سانس را انتخاب کنید";
     }
 
-    #ti-finalHolder:not(.fulfilled) > td > div::before {
+    #ti-finalHolder:not(.fulfilled) > div > div::before {
         content: "لطفا صندلی انتخاب کنید";
     }
 
-    #ti-aftermathHolder:not(.fulfilled) > td > div::before {
+    #ti-aftermathHolder:not(.fulfilled) > div > div::before {
         content: "ابتدا اطلاعات را تکمیل و بلیط را رزرو کنید";
     }
 
-    #ti-cardWrapper tr:not(:hover) > td > div {
+    #ti-cardWrapper > div:not(:hover) > div > div {
         background: rgba(255,255,255,.8);
     }
 
-    #ti-cardWrapper tr.ti-rightside td > div {
+    #ti-cardWrapper > div.ti-rightside {
+        flex-direction: row-reverse;
+    }
+
+    #ti-cardWrapper > div.ti-leftside {
+        flex-direction: row;
+    }
+
+    #ti-cardWrapper > div.ti-rightside > div > div {
         margin-left: 0;
     }
 
-    #ti-cardWrapper tr.ti-leftside td > div {
+    #ti-cardWrapper > div.ti-leftside > div > div {
         margin-right: 0;
     }
 }

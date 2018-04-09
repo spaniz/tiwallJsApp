@@ -22,7 +22,7 @@ function initEventPage(i) {
     __active_event = __current_data.data[i];
     if (DEBUG) console.log(__active_event);
     switchToEvent();
-    $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper #ti-pickHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper .ti-prefix').text(__current_data.data[i].title_prefix);
     $('#ti-cardWrapper .ti-title').text(__current_data.data[i].title);
     $('#ti-bannerHolder img').attr('src', "");
@@ -336,44 +336,44 @@ $(document).ready(function () {
 
 function switchToDead() {
     $('#ti-listHolder').removeClass('ti-unfocus');
-    $('#ti-cardWrapper tr').addClass('fulfilled');
-    $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper .flex-tr').addClass('fulfilled');
+    $('#ti-cardWrapper #ti-pickHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '-1');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '-2');
 }
 function switchToEvent() {
     $('#ti-listHolder').addClass('ti-unfocus');
-    $('#ti-cardWrapper tr').addClass('fulfilled');
+    $('#ti-cardWrapper .flex-tr').addClass('fulfilled');
     $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '0');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '0');
 }
 function switchToPick() {
     $('#ti-listHolder').addClass('ti-unfocus');
-    $('#ti-cardWrapper tr').addClass('fulfilled');
-    $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper .flex-tr').addClass('fulfilled');
+    $('#ti-cardWrapper #ti-pickHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '1');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '2');
 }
 function switchToSeat() {
     $('#ti-listHolder').addClass('ti-unfocus');
-    $('#ti-cardWrapper tr').addClass('fulfilled');
-    $('#ti-cardWrapper #ti-seatHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper .flex-tr').addClass('fulfilled');
+    $('#ti-cardWrapper #ti-seatHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '2');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '2');
 }
 function switchToFinal() {
     $('#ti-listHolder').addClass('ti-unfocus');
-    $('#ti-cardWrapper tr').addClass('fulfilled');
-    $('#ti-cardWrapper #ti-finalHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper .flex-tr').addClass('fulfilled');
+    $('#ti-cardWrapper #ti-finalHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '3');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
     $('#ti-cardWrapper #ti-finalHolder').removeClass('ti-disabled');
 }
 function switchToAftermath() {
     $('#ti-listHolder').addClass('ti-unfocus');
-    $('#ti-cardWrapper tr').addClass('fulfilled');
-    $('#ti-cardWrapper #ti-aftermathHolder ~ tr').removeClass('fulfilled');
+    $('#ti-cardWrapper .flex-tr').addClass('fulfilled');
+    $('#ti-cardWrapper #ti-aftermathHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '4');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
     $('#ti-cardWrapper #ti-finalHolder').addClass('ti-disabled');
