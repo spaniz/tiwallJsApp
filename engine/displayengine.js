@@ -368,6 +368,7 @@ function switchToFinal() {
     $('#ti-cardWrapper #ti-finalHolder ~ tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '3');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
+    $('#ti-cardWrapper #ti-finalHolder').removeClass('ti-disabled');
 }
 function switchToAftermath() {
     $('#ti-listHolder').addClass('ti-unfocus');
@@ -375,6 +376,7 @@ function switchToAftermath() {
     $('#ti-cardWrapper #ti-aftermathHolder ~ tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '4');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
+    $('#ti-cardWrapper #ti-finalHolder').addClass('ti-disabled');
 }
 
 let __err_pass = null;

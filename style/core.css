@@ -326,7 +326,8 @@ iframe.width-changed {
 
 #ti-cardWrapper .ti-title {
 	font-weight: 400;
-	margin-bottom: -7rem;
+	margin-top: 2rem;
+	margin-bottom: -2rem;
 	font-size: 20rem;
 	line-height: 21rem;
 	flex: 0 0 auto;
@@ -461,6 +462,16 @@ iframe.width-changed {
 
 #ti-pickHolder .ti-xcontainer * {
 	transition: .25s ease;
+}
+
+#ti-pickHolder .ti-xcontainer .ti-witem {
+	border-radius: 0;
+	border-top: 1rem solid rgba(0,0,0,.2);
+}
+
+#ti-pickHolder .ti-xcontainer .ti-witem:not(.selected):not(.disabled):hover {
+	border-top-color: transparent;
+	background: rgba(0,0,0,.1);
 }
 
 #ti-pickHolder .ti-xcontainer:hover .ti-witem:not(.selected):not(.disabled) .ti-xitem > span:first-child  {
@@ -855,14 +866,14 @@ iframe.width-changed {
 	padding: 5rem;
 	font-family: inherit;
 	font-weight: 900;
-	animation: .75s unbloop 1;
+	/*animation: .75s unbloop 1;*/
   }
   
   input.textbox:focus {
 	background-size: calc(2 * var(--width)) calc(2 * var(--width));
 	border-color: var(--ti-accent);
 	color: white;
-	animation: 1.75s bloop 1;
+	/*animation: 1.75s bloop 1;*/
 	/*transition-delay: .1s;*/
   }
   
@@ -961,17 +972,24 @@ div#tooltip {
   }
 
 .ti-duo .ti-leftside {
-	margin-right: 10px;
+	margin-right: 10rem;
 	order: 99;
 }
 .ti-duo {
-	margin: 9px 5px;
+	margin: 9rem 4rem;
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
 }
+#ti-finalHolder .ti-xcontainer {
+	display: flex;
+	flex-direction: column;
+}
+#ti-finalHolder .ti-xcontainer * {
+	flex: 1;
+}
 #ti-finalHolder .ti-duo .ti-rightside {
-	color: var(--ti-accent);
+	color: var(--ti-blind);
 	order: 0;
 }
 .ti-duo > div {
@@ -984,13 +1002,13 @@ div#tooltip {
 	color: red;
 }
 .numeric {
-	padding: 5px 50px;
-	font-size: 24px;
+	padding: 5rem 50rem;
+	font-size: 24rem;
 	position: relative;
 	display: inline-block;
 }
 .numeric .rem, .numeric .add {
-	font-size: 30px;
+	font-size: 30rem;
 	vertical-align: middle;
 	position: absolute;
 	color: var(--ti-dead);
@@ -1037,5 +1055,14 @@ div#tooltip {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
-	filter: brightness(2) blur(4px);
+	filter: brightness(.9) blur(8px);
+}
+
+#ti-cardWrapper tr.ti-disabled > td > div {
+    cursor: not-allowed;
+}
+
+#ti-cardWrapper tr.ti-disabled > td > div > * {
+    pointer-events: none;
+    opacity: .5;
 }

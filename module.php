@@ -255,7 +255,7 @@
                                     <span>نام و نام خانوادگی</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-uname" class="exotic-input textbox" name="u_name" />
+                                    <input id="ti-uname" style="direction: rtl; text-align: right;" class="exotic-input textbox" name="u_name" />
                                 </div>
                             </div> 
                             <div class="ti-duo">
@@ -263,7 +263,7 @@
                                     <span>آدرس ایمیل</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-umail" class="exotic-input textbox" name="u_mail" />
+                                    <input id="ti-umail" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mail" />
                                 </div>
                             </div> 
                             <div class="ti-duo">
@@ -271,7 +271,7 @@
                                     <span>شماره موبایل</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-umobile" class="exotic-input textbox" name="u_mobile" />
+                                    <input id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
                             </div>
                             <div class="ti-duo">
@@ -284,7 +284,7 @@
                                     <span id="ti-xvouchstat"></span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input style="display: none" id="ti-xcupon" class="exotic-input textbox" name="u_cupon">
+                                    <input style="display: none; direction: ltr; text-align: left;"  id="ti-xcupon" class="exotic-input textbox" name="u_cupon">
                                 </div>
                             </div>
                         </div>
