@@ -111,7 +111,7 @@ iframe.width-changed {
 	width: 100vw;
 }
 
-#ti-listHeader:hover {
+#ti-listHeader:not(.ti-listHeader):hover {
 	background: var(--ti-blind) !important;
 }
 
@@ -344,20 +344,27 @@ iframe.width-changed {
 	flex: 0 0 20rem;
 }
 
-#ti-eventHolder .ti-seperator {
-	height: initial;
-	margin: 15rem 0;
-	flex: 0 1 auto;
-	word-wrap: break-word;
-	font-size: 12rem;
-	line-height: 15rem;
-	color: initial;
-	overflow: hidden;
+#ti-eventHolder .ti-seperator:not(:empty) {
+    margin: 18rem 0;
+    flex: 0 1 auto;
+    word-wrap: break-word;
+    font-size: 12rem;
+    line-height: 18rem;
+    color: initial;
+    overflow-y: auto;
+    position: relative;
+    padding-top: 1rem;
+	padding-bottom: 1rem;
+	height: auto;
 }
 
 #ti-cardWrapper .ti-xcontainer {
 	overflow-y: auto;
 	flex: 1 1 auto;
+}
+
+#ti-eventHolder .ti-xcontainer {
+	flex-shrink: 0;
 }
 
 #ti-seatHolder .ti-xcontainer {
@@ -1071,4 +1078,19 @@ div#tooltip {
 #ti-cardWrapper > div.ti-disabled > div > div > * {
     pointer-events: none;
     opacity: .5;
+}
+
+/*#ti-listHeader.ti-disabled {
+	pointer-events: none;
+}*/
+
+#ti-listHeader.ti-disabled > i {
+	visibility: hidden;
+}
+
+#ti-cardWrapper .ti-xplate {
+	text-align: left;
+	flex: 0 1 auto;
+	color: var(--ti-dead);
+	font-size: 14rem;
 }

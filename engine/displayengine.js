@@ -5,6 +5,7 @@ let __open_pageid = null;
 let __active_event = null;
 let __current_cat = null;
 let __eol = false;
+let __vouchtimer = null;
 
 function displayEventItem(htmlx, coords) {
     var list = $('#ti-listHolder');
@@ -64,7 +65,8 @@ function initEventPage(i) {
     }
     else
         $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
-    $('#ti-eventHolder .ti-seperator').text(__current_data.data[i].promo_desc || __current_data.data[i].short_desc || "");
+    $('#ti-eventHolder .ti-seperator').text(__current_data.data[i].short_desc || "");
+    $('#ti-eventHolder .ti-xplate').text(__current_data.data[i].promo_desc || "");
 }
 
 let __current_instance = null;
@@ -275,15 +277,18 @@ function loadCats() {
                 ctc = datJ.data[i];
             }
         }
-        if (ctn == 1)
-        {
+        if (ctn == 1) {
             __current_cat = ctc.key;
             var ti = $(this);
             $('#ti-catSel').css('top', '-100%');
             $('#ti-catSel + div').removeClass('ti-hidden');
             $('#ti-catSel + div').css('top', '-100%').css('background', ctc.color);
             $('#ti-listHeader').css('top', '0px').css('background', ctc.color).children('span').text(ctc.text);
+            $('#ti-listHeader').addClass('ti-disabled');
             loadMore(true);
+        }
+        else {
+            $('#ti-listHeader').removeClass('ti-disabled');
         }
         lockLoader(false);
     });
@@ -476,4 +481,14 @@ function causeAftermathPayment() {
     var nwo = window.open(payUrl, '_blank');
     if (window.focus)
         nwo.focus();
+}
+
+function updateVouch(voucher) {
+    getVoucherState(voucher, (msg, ok) => {
+        $('#ti-finalHolder #ti-xvouchstat').text(msg);
+        if (ok)
+            $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
+        else 
+            $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
+    });
 }

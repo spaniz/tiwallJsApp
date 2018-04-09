@@ -71,20 +71,24 @@
                     /*loadMore(true);*/
                 });
                 $('#ti-finalHolder #ti-xcupon').keypress(function (event) {
-                    if (event.keyCode === 13)
-                    {
-                        getVoucherState($('#ti-finalHolder #ti-xcupon').val(), (msg, ok) => {
-                            $('#ti-finalHolder #ti-xvouchstat').text(msg);
-                            if (ok)
-                                $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
-                            else 
-                                $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
-                        });
+                    if (event.keyCode === 13) {
+                        if (__vouchtimer)
+                            clearTimeout(__vouchtimer);
+                        __vouchtimer = null;
+                        $('#ti-finalHolder #ti-xvouchstat').text(""); 
+                        updateVouch($('#ti-finalHolder #ti-xcupon').val());
                         return false;
                     }
                 });
                 $('#ti-finalHolder #ti-xcupon').change(function (event) {
                     $('#ti-finalHolder #ti-xvouchstat').text(""); 
+                    if (__vouchtimer)
+                        clearTimeout(__vouchtimer);
+                    __vouchtimer = null;
+                    if ($('#ti-finalHolder #ti-xcupon').val().length >= 5) {
+                        __vouchtimer = setTimeout(() => updateVouch($('#ti-finalHolder #ti-xcupon').val()), 1000);
+                        if (DEBUG) console.log(__vouchtimer)
+                    }
                 });
                 // DEAD BTNS
                 $('#ti-eventHolder .ti-btn.ti-dead').click(function (event) {
@@ -174,8 +178,8 @@
                             <p><i class="material-icons">event</i><span class="ti-nxdat"></span></p>
                             <p><i class="material-icons">credit_card</i><span class="ti-nxprc"></span></p>
                         </div>
-                        <div class="ti-xcontainer">
-                            <p></p>
+                        <div class="ti-xplate">
+                            
                         </div>
                         <span class="ti-btnwrap">
                             <div class="ti-btn">خرید</div>
@@ -193,7 +197,7 @@
                         <div class="ti-xcontainer">
                         </div>
                         <span class="ti-btnwrap">
-                            <!--<div class="ti-btn">ادامه</div>-->
+                            <!-- <div class="ti-btn">ادامه</div> -->
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>

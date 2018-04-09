@@ -182,33 +182,32 @@
         box-sizing: border-box;
     }
 
-    #ti-eventHolder .ti-seperator {
-        margin: 15rem 0;
-        flex: 1 1 auto;
-        word-wrap: break-word;
-        font-size: 12rem;
-        line-height: 18rem;
-        color: initial;
-        overflow: visible;
+    #ti-eventHolder .ti-seperator:not(:empty) {
+        padding-top: 10rem;
+        padding-bottom: 10rem;
     }
 
-    #ti-eventHolder .ti-seperator::after, #ti-eventHolder .ti-seperator::before {
-        font-size: 30rem;
+    #ti-eventHolder .ti-seperator::before, #ti-eventHolder .ti-seperator::after {
+        font-size: 48rem;
         font-family: Georgia;
         line-height: 18rem;
-        display: inline-block;
-        vertical-align: bottom;
-        opacity: .5;
+        opacity: .2;
+        position: absolute;
     }
 
     #ti-eventHolder .ti-seperator:not(:empty)::before {
         content: '”';
+        top: 15rem;
+        vertical-align: top;
+        right: 0rem;
     }
 
-    #ti-eventHolder .ti-seperator:not(:empty)::after {
+    /*#ti-eventHolder .ti-seperator:not(:empty)::after {
         content: '“';
-        margin-bottom: -15rem;
-    }
+        bottom: 15rem;
+        vertical-align: bottom;
+        left: 0rem;
+    }*/
 
     #ti-cardWrapper > div > div > div {
         max-height: 500rem;
@@ -268,7 +267,7 @@
     }
 
     #ti-cardWrapper .flex-tr:not(.fulfilled) > div > div > * {
-        display: none;
+        display: none !important;
     }
 
     #ti-cardWrapper .flex-tr:not(.fulfilled) > div > div::before {
@@ -293,6 +292,10 @@
     #ti-aftermathHolder:not(.fulfilled) > div > div::before {
         content: "ابتدا اطلاعات را تکمیل و بلیط را رزرو کنید";
     }
+
+    #ti-aftermathHolder .ti-title, #ti-aftermathHolder .ti-prefix {
+        visibility: hidden;
+    } 
 
     #ti-cardWrapper > div:not(:hover) > div > div {
         background: rgba(255,255,255,.8);
