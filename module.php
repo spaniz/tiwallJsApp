@@ -9,11 +9,13 @@
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+        <style id="ti-hallstyle">
+        </style>
         <link rel="stylesheet" href="style/core.css" />
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
         <script type="text/javascript">
-            let __config = <?= file_get_contents($config_path) ?>;
+            let __config = <?= $cfg = file_get_contents($config_path) ?>;
             <?php
                 foreach ($_GET as $k => $v)
                     echo "__config." . str_replace('~', '.', $k) . " = '$v';";
@@ -23,6 +25,7 @@
         <script type="text/javascript" src="engine/utility.js"></script>
         <script type="text/javascript" src="engine/ti-get.js"></script>
         <script type="text/javascript" src="engine/itemparser.js"></script>
+        <script type="text/javascript" src="engine/scrollsync.js"></script>
         <script type="text/javascript" src="engine/displayengine.js"></script>
         <script type="text/javascript" src="engine/exoticengine.js"></script>
 
@@ -37,18 +40,25 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
+            //var __scroll_origin = null;
             $(document).ready(function() {
                 $('#ti-listHeader').click(loadCats);
                 $('#ti-mastercontain').trigger('widthChanged');
+                //__scroll_origin = $('#ti-listHolder');
                 $('#ti-listHolder').scroll(function(eventScr) {
                     if (DEBUG)
                         console.log("handler triggered, finaliseListLoad on " + __current_cat + " with " + __scroll_pos + "%" + $('#ti-listHolder').scrollTop());
                     if (DEBUG) console.warn("awaiting retry: " + ($('#ti-listHolder .ti-retryItem').length > 0));
-                    if (!$('#ti-listHolder .ti-retryItem').length)
-                        if ($('.ti-witem:last-child').visible(true, true, 'both', $('#ti-listHolder'))) {
-                                console.warn('loading more on primescroll trigger...');
-                                loadMore();
-                            }
+                    if (!$('#ti-listHolder .ti-retryItem').length) {
+                        if (!__config.js.scroll && $('.ti-witem:last-child').visible(true, true, 'vertical', $('#ti-listHolder'))) {
+                            console.warn('loading more on primescroll trigger...');
+                            loadMore();
+                        }
+                        else if (__config.js.scroll && $('#anozb-plugfrm', parent.document).visible(false, false, 'vertical', parent.document.firstElementChild)) {
+                            console.warn('loading more on primescroll trigger...');
+                            loadMore();
+                        }
+                    }
                     var list = $('#ti-listHolder');
                     var head = $('#ti-listHeader');
                     if (__scroll_pos < list.scrollTop())
@@ -63,11 +73,18 @@
                         __scroll_anchor = __scroll_pos;
                     }
                 });
+                if (__config.view == "normal")
+                    loadCats();
+                if (__config.view == "single")
+                    loadSingleView(__config.get.urn);
+                if (__config.js.scroll) {
+                    if (DEBUG) 
+                        console.warn(">> scroll-sync allowed!");
+                    //__scroll_origin = parent.document.firstElementChild;
+                    initSizingSync();
+                }
                 getTiConf(function() {
-                    if (__config.view == "normal")
-                        loadCats();
-                    if (__config.view == "single")
-                        loadSingleView(__config.get.urn);
+                    
                     /*loadMore(true);*/
                 });
                 $('#ti-finalHolder #ti-xcupon').keypress(function (event) {
@@ -80,8 +97,12 @@
                         return false;
                     }
                 });
-                $('#ti-finalHolder #ti-xcupon').change(function (event) {
+                $('#ti-finalHolder input[type="text"]').on('input', function (event) {
+                    checkFinalForm();
+                });
+                $('#ti-finalHolder #ti-xcupon').on('input', function (event) {
                     $('#ti-finalHolder #ti-xvouchstat').text(""); 
+                    $('#ti-finalHolder #ti-xvouchstat').attr('valid', 'false');
                     if (__vouchtimer)
                         clearTimeout(__vouchtimer);
                     __vouchtimer = null;
@@ -116,7 +137,7 @@
                             addPick({ title: 'سانسی برای این برنامه وجود ندارد' });
                             return;
                         }
-                        console.log(zirdat);
+                        if (DEBUG) console.log(zirdat);
                         for (var i = 0; i < zirdat.data.length; i++)
                         {
                             __instances = zirdat.data;
@@ -134,13 +155,7 @@
                     switchToFinal();
                 });
                 $('#ti-finalHolder #ti-bvouch').click(function() {
-                    getVoucherState($('#ti-finalHolder #ti-xcupon').val(), (msg, ok) => {
-                        $('#ti-finalHolder #ti-xvouchstat').text(msg);
-                        if (ok)
-                            $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
-                        else 
-                            $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
-                    })
+                    updateVouch($('#ti-finalHolder #ti-xcupon').val());
                 });
                 $('#ti-finalHolder #ti-bpay').click(function() {
                     goForPayment({ 'instance_id': __current_instance, 
@@ -259,7 +274,7 @@
                                     <span>نام و نام خانوادگی</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-uname" style="direction: rtl; text-align: right;" class="exotic-input textbox" name="u_name" />
+                                    <input type="text" id="ti-uname" style="direction: rtl; text-align: right;" class="exotic-input textbox" name="u_name" />
                                 </div>
                             </div> 
                             <div class="ti-duo">
@@ -267,7 +282,7 @@
                                     <span>آدرس ایمیل</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-umail" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mail" />
+                                    <input type="text" id="ti-umail" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mail" />
                                 </div>
                             </div> 
                             <div class="ti-duo">
@@ -275,7 +290,7 @@
                                     <span>شماره موبایل</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
+                                    <input type="text" id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
                             </div>
                             <div class="ti-duo">
@@ -288,7 +303,7 @@
                                     <span id="ti-xvouchstat"></span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input style="display: none; direction: ltr; text-align: left;"  id="ti-xcupon" class="exotic-input textbox" name="u_cupon">
+                                    <input type="text" style="direction: ltr; text-align: left;"  id="ti-xcupon" class="exotic-input textbox ti-hidden" name="u_cupon">
                                 </div>
                             </div>
                         </div>
@@ -353,7 +368,11 @@
 
         <div id="ti-loader" class="ti-xHolder ti-currentcard">
             <i class="material-icons">people</i>
-            <span><img src="https://zbcdn.cloud/images/tiwall_loader.gif" /></span>
+            <span>
+                <object style="max-height: 250px" data="<?= json_decode($cfg)->js->loading ?>">
+                    <img src="https://zbcdn.cloud/images/tiwall_loader.gif"/>
+                </object>
+            </span>
         </div>
 
         <script type="text/javascript">

@@ -4,19 +4,16 @@
         <meta charset="utf-8" />
     </head>
     <body>
+        <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <style>
             #module-viewx {
-                min-width: 290px; 
-                min-width: 290px; 
-                height: 400px; 
                 width: 400px; 
-                resize: both; 
-                overflow: hidden;
+                min-height: 400px; 
             }
 
             @media only screen and (max-device-width: 480px) {
                 #module-viewx {
-                    height: 100vh; 
+                    min-height: 100vh; 
                     width: 100vw; 
                     resize: none; 
                 }
@@ -25,8 +22,8 @@
                 }
             }
         </style>
-        <div id="module-viewx">
-            <object data="module.php" style="height: 100%; width: 100%" />
-        </div>
+        <!--<div id="module-viewx">-->
+        <object id="anozb-plugfrm" data="module.php" style="height: var(--ti-plugin-height, 400px); width: 400px" />
+        <!--</div>-->
     </body>
 </html>

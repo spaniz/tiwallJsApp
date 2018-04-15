@@ -1,6 +1,6 @@
 <?php
     //ini_set('display_errors', TRUE);
-    //error_reporting(E_ALL);
+    error_reporting(0);
     define('ROOTDIR', "../");
     include_once('../php/consts.php');
     require_once('../php/paths.php');
@@ -14,7 +14,9 @@
             updateConfig(array(
                 'view' => $_POST["view"],
                 'js' => array(
-                    'debug' => !empty($_POST["js_debug"])
+                    'debug' => !empty($_POST["js_debug"]),
+                    'scroll' => !empty($_POST["js_scroll"]),
+                    'loading' => $_POST["js_loading"]
                 ),
                 'categories' => array(
                     'mode' => isset($_POST["categories_mode"]) ? $_POST["categories_mode"] : null,
@@ -143,6 +145,9 @@
             #main-form[tview="single"] .main-settings:not(#settings-single) {
                 display: none;
             }
+            input {
+                direction: ltr;
+            }
         </style>
     </head>
     <body>
@@ -155,6 +160,8 @@
                         echo "$('#" . $_GET["result"] . "-msg').css('display', 'block');";
                     if ($app_config->js->debug)
                         echo "$('#jsdebug').click();\n";
+                    if ($app_config->js->scroll)
+                        echo "$('#jsscroll').click();\n";
                     echo "$('#cat_" . $app_config->categories->mode . "').click();\n";
                     echo "$('#view_" . $app_config->view . "').click();\n";
                 ?>
@@ -176,6 +183,14 @@
                     <input type="checkbox" name="js.debug" />
                 </div>
                 <span>حالت دیباگ جاوااسکریپت</span>
+                <br />
+                <div id="jsscroll" class="exotic-input checkbox">
+                    <input type="checkbox" name="js.scroll" />
+                </div>
+                <span>ارتفاع آزاد پلاگین</span>
+                <br/>
+                <span class="duo-right">لودینگ دلخواه</span>
+                <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />
             </div>
 
             <h1>شناسه امنیتی</h1>

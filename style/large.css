@@ -20,7 +20,7 @@
     }
 
     #ti-listHolder .ti-witem {
-        margin: 2.5rem;
+        margin: 2.4rem;
     }
 
     #ti-listHolder .ti-xitem > span {
@@ -297,7 +297,7 @@
         visibility: hidden;
     } 
 
-    #ti-cardWrapper > div:not(:hover) > div > div {
+    #ti-cardWrapper > div > div > div:not(:hover) {
         background: rgba(255,255,255,.8);
     }
 

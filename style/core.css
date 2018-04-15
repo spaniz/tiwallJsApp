@@ -648,16 +648,15 @@ iframe.width-changed {
 	border-radius: 100%;
 	vertical-align: middle;
 	margin: 2rem;
-	clear: right;
 	/*! margin-right: 6rem; */
 }
 #legend > label {
-	font-size: 13rem;
+	font-size: 12rem;
 	/*! display: inline-block; */
 }
 #legend {
 	vertical-align: middle;
-	background: rgba(0,0,0,.08);
+	background: rgba(0,0,0,.03);
 	border-radius: 4rem;
 	padding: 5rem;
 	box-sizing: border-box;
@@ -672,7 +671,7 @@ iframe.width-changed {
 	white-space: nowrap;
 }
 .scene {
-	border-bottom: solid 1rem var(--ti-blind);
+	border: solid 1rem var(--ti-blind);
 	font-size: 12rem;
 	margin: 5rem;
 	text-align: center;
@@ -1013,6 +1012,9 @@ div#tooltip {
 }
 .ti-error {
 	color: red;
+}
+.ti-success {
+	color: green;
 }
 .numeric {
 	padding: 5rem 50rem;

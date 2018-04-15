@@ -1,1 +1,1 @@
-{"view":"single","js":{"debug":false},"categories":{"mode":"store","_filter":""},"list":{"venue":""},"get":{"urn":"cyrus"}}
+{"view":"normal","js":{"debug":true,"scroll":true,"loading":"images\/@infload.svg"},"categories":{"mode":"store","_filter":""},"list":{"venue":""},"get":{"urn":"cyrus"}}

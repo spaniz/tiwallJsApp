@@ -1,16 +1,18 @@
 $(document).ready(function() {
-    $('div.exotic-input.radiobox, div.exotic-input-checkbox').click(function() {
+    $('div.exotic-input.radiobox, div.exotic-input.checkbox').click(function() {
         var c = $(this).attr('check');
         if (c == 'true') {
-            $(this).children('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+            $(this).children('input').prop('checked', false);
             $(this).attr('check', 'false');
         }
         else {     
             $(this).parents('div.radiogroup').find('div.radiobox[check="true"]').click();
-            $(this).children('input[type="checkbox"], input[type="radio"]').prop('checked', true);
+            $(this).children('input').prop('checked', true);
             $(this).attr('check', 'true');
         }
-        $(this).children('input[type="checkbox"], input[type="radio"]').trigger('change');
+        /*if (DEBUG)
+            console.log(this);*/
+        $(this).children('input').trigger('exotic:check');
     });
     $(document).mousemove(function(e) {
         document.documentElement.style.setProperty('--overX', (e.pageX > (document.documentElement.clientWidth / 2)) ? 1 : 0)

@@ -16,7 +16,7 @@ function displayEventItem(htmlx, coords) {
         initEventPage($(this).attr('itemid')); 
     });
     if (coords.i === (coords.max || 0) - 1)
-        setTimeout(finaliseListLoad, 500);
+        setTimeout(finaliseListLoad, 200);
 }
 
 function initEventPage(i) {
@@ -72,7 +72,6 @@ function initEventPage(i) {
 let __current_instance = null;
 let __instances = null;
 function addPick(datZ) {
-
     lockLoader(true);
     var ops = { 'id': datZ.id || "", 'name': datZ.title || "خرید", 'info': datZ.remained_text || "" };
     getEventPickHtml(ops, function (xhtml) {
@@ -99,8 +98,10 @@ function addPick(datZ) {
                         //if (DEBUG)
                         //    jsdat.data.html = jsdat.data.html.replace('https://store.zirbana.com/resource/js/hallRenderer-v2.js', '/engine/hallRenderer-v2.js');
                         $('#ti-seatHolder .ti-xframe').html(jsdat.data.html);
+                        $('#ti-hallstyle').html(jsdat.data.css);
                         $('#ti-seatHolder .ti-seperator').empty();
-                        console.warn(jsdat.data.sections.length + " sections");
+                        if (DEBUG) 
+                            console.warn(jsdat.data.sections.length + " sections");
                         for (var seat in jsdat.data.sections) {
                             $('#ti-seatHolder .ti-seperator').append(
                                 '<span itemid="' + jsdat.data.sections[seat].id + '">' + jsdat.data.sections[seat].title + '</span>');
@@ -206,6 +207,8 @@ function finaliseListLoad() {
     if (DEBUG)
         console.log("calling finaliseListLoad on " + __current_cat + " with #" + __last_count);
     $('#ti-listHolder').trigger("scroll");
+    if (__config.js.scroll)
+        syncViewSize();
     if (DEBUG)
         console.log("call ended, finaliseListLoad on " + __current_cat + " with #" + __last_count);
 }
@@ -255,6 +258,7 @@ function loadMore(force) {
 }
 
 function loadCats() {
+    desyncViewSize();
     $('#ti-singlePic').addClass('ti-hidden');
     $('#ti-catSel').removeClass('ti-hidden');
     $('#ti-eventHolder .ti-btn.ti-dead').removeClass('ti-hidden');
@@ -335,8 +339,6 @@ $(document).ready(function () {
         $(this).addClass('ti-active');
         selectSectionById($(this).attr('itemid'));
     });
-    $('#ti-finalHolder #ti-xusecup').click(cuponUseCheck);
-
 });
 
 function switchToDead() {
@@ -345,6 +347,7 @@ function switchToDead() {
     $('#ti-cardWrapper #ti-pickHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '-1');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '-2');
+    syncViewSize();
 }
 function switchToEvent() {
     $('#ti-listHolder').addClass('ti-unfocus');
@@ -352,6 +355,7 @@ function switchToEvent() {
     $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '0');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '0');
+    desyncViewSize();
 }
 function switchToPick() {
     $('#ti-listHolder').addClass('ti-unfocus');
@@ -359,6 +363,7 @@ function switchToPick() {
     $('#ti-cardWrapper #ti-pickHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '1');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '2');
+    desyncViewSize();
 }
 function switchToSeat() {
     $('#ti-listHolder').addClass('ti-unfocus');
@@ -366,6 +371,7 @@ function switchToSeat() {
     $('#ti-cardWrapper #ti-seatHolder ~ .flex-tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '2');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '2');
+    desyncViewSize();
 }
 function switchToFinal() {
     $('#ti-listHolder').addClass('ti-unfocus');
@@ -374,6 +380,10 @@ function switchToFinal() {
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '3');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
     $('#ti-cardWrapper #ti-finalHolder').removeClass('ti-disabled');
+    $('#ti-finalHolder #ti-xusecup input').off();
+    $('#ti-finalHolder #ti-xusecup input').on('exotic:check', () => cuponUseCheck());
+    checkFinalForm();
+    desyncViewSize();
 }
 function switchToAftermath() {
     $('#ti-listHolder').addClass('ti-unfocus');
@@ -382,10 +392,12 @@ function switchToAftermath() {
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '4');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '4');
     $('#ti-cardWrapper #ti-finalHolder').addClass('ti-disabled');
+    desyncViewSize();
 }
 
 let __err_pass = null;
 function showError(message, retry_callback, return_callback, pass) {
+    desyncViewSize();
     $('#ti-mastercontain').addClass('errored');
     $('#ti-errorHandle span.ti-xname').text(message);
     lockLoader(false);
@@ -423,16 +435,20 @@ function showError(message, retry_callback, return_callback, pass) {
 function cuponUseCheck() {
     var isx = $('#ti-finalHolder #ti-xusecup').attr('check') === 'true';
     if (DEBUG) console.warn('Use cupon? >>' + isx);
-    if (isx) {
-        $('#ti-finalHolder #ti-xcupon').fadeOut();
-        $('#ti-finalHolder #ti-xvouchstat').fadeOut();
+    if (!isx) {
+        $('#ti-finalHolder #ti-xcupon').addClass('ti-hidden');
+        $('#ti-finalHolder #ti-xvouchstat').addClass('ti-hidden');
         $('#ti-finalHolder #ti-bvouch').addClass('ti-locked');
     }
     else {
-        $('#ti-finalHolder #ti-xcupon').fadeIn();
-        $('#ti-finalHolder #ti-xvouchstat').fadeIn();
+        $('#ti-finalHolder #ti-xcupon').removeClass('ti-hidden');
+        $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-hidden');
         $('#ti-finalHolder #ti-bvouch').removeClass('ti-locked');
     }
+
+    if ($('#ti-finalHolder #ti-xcupon').val().length >= 5)
+        updateVouch($('#ti-finalHolder #ti-xcupon').val());
+    checkFinalForm();
 }
 
 let __aftermath_timer = null;
@@ -484,11 +500,43 @@ function causeAftermathPayment() {
 }
 
 function updateVouch(voucher) {
+    $('#ti-finalHolder #ti-xvouchstat').attr('valid', 'false');
+    checkFinalForm();
+    $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
+    $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-success');
+    $('#ti-finalHolder #ti-xvouchstat').text('در حال بررسی...');
     getVoucherState(voucher, (msg, ok) => {
         $('#ti-finalHolder #ti-xvouchstat').text(msg);
-        if (ok)
-            $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
-        else 
+        if (ok) {
+            $('#ti-finalHolder #ti-xvouchstat').attr('valid', 'true');
+            $('#ti-finalHolder #ti-xvouchstat').addClass('ti-success');
+        }
+        else {
             $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
+            $('#ti-finalHolder #ti-xvouchstat').attr('valid', 'false');
+        }
+        checkFinalForm();
     });
+}
+
+function checkFinalForm() {
+    let arc = [];
+    let validvouch = true;
+    if ($('#ti-finalHolder #ti-xusecup').attr('check') === 'true') {
+        arc = $('#ti-finalHolder input[type="text"]');
+        if ($('#ti-finalHolder #ti-xvouchstat').attr('valid') !== 'true')
+            validvouch = false;
+    }
+    else
+        arc = $('#ti-finalHolder input[type="text"]:not(#ti-xcupon)');
+
+    if (DEBUG) {
+        console.log("check = " + $('#ti-finalHolder #ti-xusecup').attr('check'));
+        console.warn("valid voucher? >>" + validvouch);
+    }
+
+    if (arc.is((i, e) => !$(e).val()) || !validvouch)
+        $('#ti-finalHolder #ti-bpay').addClass('ti-locked');
+    else    
+        $('#ti-finalHolder #ti-bpay').removeClass('ti-locked');
 }
