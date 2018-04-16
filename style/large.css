@@ -28,7 +28,20 @@
         width: 120rem;
     }
 
-    @media all and (min-width: 986px) {
+    #ti-listHolder .ti-xitem > .ti-name {
+        padding-right: 3rem;
+        max-width: 120rem;
+        box-sizing: border-box;
+        margin-top: 4rem;
+    }
+
+    #ti-listHolder .ti-xitem:hover > .ti-name {
+        margin-top: -115rem;
+        transition: .5s var(--ti-normbaz);
+        margin-bottom: -100%;
+    }
+
+    @media all and (min-width: 916px) {
         #ti-listHolder .ti-witem {
             margin: 4rem;
         }
@@ -37,13 +50,14 @@
             height: 150rem;
             width: 150rem;
         }
-    }
 
-    #ti-listHolder .ti-xitem > .ti-name {
-        padding-right: 3rem;
-        max-width: 100rem;
-        box-sizing: border-box;
-        margin-top: 4rem;
+        #ti-listHolder .ti-xitem > .ti-name {
+            max-width: 150rem;
+        }
+
+        #ti-listHolder .ti-xitem:hover > .ti-name {
+            margin-top: -145rem;
+        }
     }
 
     #ti-listHolder .ti-xitem > .ti-name > div {
@@ -52,7 +66,25 @@
     }
 
     #ti-listHolder .ti-xitem > .ti-name > span {
+        line-height: 0rem;
+        margin: -100% 0;
+        opacity: 0;
+        transition: inherit;
+    }
+
+    #ti-listHolder .ti-xitem:hover > .ti-name > span {
         line-height: 15rem;
+        margin: 5rem -5rem;
+        opacity: 1;
+    }
+
+    #ti-listHolder .ti-xitem > span {
+        transition: .7s var(--ti-normbaz);
+    }
+
+    #ti-listHolder .ti-xitem:hover > span {
+        opacity: .1;
+        filter: blur(3rem);
     }
 
     /*#ti-listHeader {

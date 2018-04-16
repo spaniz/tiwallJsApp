@@ -138,7 +138,7 @@ iframe.width-changed {
     display: table;
     font-family: IRANSans, Tahoma;
     font-weight: 400;
-    font-size: 16rem;
+    font-size: 15rem;
     padding: 2.5rem;
     user-select: none;
 }
@@ -163,11 +163,18 @@ iframe.width-changed {
 }
 
 .ti-xitem > div > span {
-    display: block;
-    padding-right: 5rem;
+    display: inline-flex;
+    padding: 0 5rem;
     font-size: 12rem;
     font-weight: 300;
     margin-top: -4rem;
+}
+
+.ti-xitem > div > span i.material-icons {
+	font-size: 15rem;
+	margin-left: 3px;
+	vertical-align: middle;
+	opacity: .87;
 }
 
 .ti-witem:hover > .ti-xitem > div {
@@ -175,8 +182,8 @@ iframe.width-changed {
 }
 
 .ti-xitem > span {
-    height: 50rem;
-    width: 50rem;
+    height: 75rem;
+    width: 65rem;
     vertical-align: middle;
     display: table-cell;
     border-radius: 2rem;

@@ -11,8 +11,8 @@ function syncViewSize() {
     }
     if (hs > hx)
         parent.document.firstElementChild.style.setProperty('--ti-plugin-height', hs + 'px');
-    else 
-        parent.document.firstElementChild.style.removeProperty('--ti-plugin-height');
+    //else 
+    //    parent.document.firstElementChild.style.removeProperty('--ti-plugin-height');
 }
 
 function desyncViewSize() {

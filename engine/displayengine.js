@@ -160,15 +160,18 @@ function onNumericSeatChange(num) {
 
 function addItem(i, offset, datX, max) {
     lockLoader(true);
-    var _spec = datX.spec.director;
-    if (_spec && _spec != undefined)
-        _spec = _spec.text;
-    else
-        _spec = "";
+    var _nxaut = processMiniCast(__current_data.data[i], true) || "";
+    var _nxtime = (__current_data.data[i].spec.date_duration_text || "") + ' ' + ((__current_data.data[i].spec.time || { text: "" }).text || "");
+    var _nxloc = __current_data.data[i].spec.venue.title || "";
 
     getEventItemHtml({
         'name': toLocalisedNumbers(datX.title),
-        'info': _spec,
+        'aut': _nxaut,
+        'ac': _nxaut ? '' : 'ti-hidden',
+        'time': _nxtime,
+        'tc': _nxtime ? '' : 'ti-hidden',
+        'place': _nxloc,
+        'pc': _nxloc ? '' : 'ti-hidden',
         'image': datX.image.thumb_url,
         'id': i + offset
     }, displayEventItem, { max: max, i: i });
@@ -214,6 +217,7 @@ function finaliseListLoad() {
 }
 
 function loadMore(force) {
+    syncViewSize();
     $('#ti-singlePic').addClass('ti-hidden');
     $('#ti-eventHolder .ti-btn.ti-dead').removeClass('ti-hidden');
     if (__load_lock) {
@@ -245,6 +249,7 @@ function loadMore(force) {
         }
         lockLoader(false);
     }, function (e) {
+        syncViewSize();
         getEventItemHtml({
             'name': "تلاش مجدد",
             'info': "خطایی رخ داد، این دکمه را بزنید تا مجددا بارگذاری انجام شود."

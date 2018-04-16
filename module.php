@@ -9,7 +9,7 @@
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
-        <style id="ti-hallstyle">
+        <style id="hallstyle">
         </style>
         <link rel="stylesheet" href="style/core.css" />
         <link title="largeCSS" rel="stylesheet" href="style/large.css" />
@@ -23,6 +23,7 @@
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
+        <script type="text/javascript" src="engine/zb-engine.js"></script>
         <script type="text/javascript" src="engine/ti-get.js"></script>
         <script type="text/javascript" src="engine/itemparser.js"></script>
         <script type="text/javascript" src="engine/scrollsync.js"></script>
