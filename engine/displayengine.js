@@ -93,7 +93,8 @@ function addPick(datZ) {
                 __current_instance = $(this).attr('itemid');
                 getSeatmap(__active_event.urn, { 'showtime_id': $(this).attr('itemid') },
                     function (jsdat) {
-                        //console.warn(jsdat);
+                        if (DEBUG)
+                            console.log(jsdat.data);
                         //var jsdat = JSON.parse(_jsdat);
                         //if (DEBUG)
                         //    jsdat.data.html = jsdat.data.html.replace('https://store.zirbana.com/resource/js/hallRenderer-v2.js', '/engine/hallRenderer-v2.js');
