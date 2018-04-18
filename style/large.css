@@ -39,6 +39,7 @@
         margin-top: -115rem;
         transition: .5s var(--ti-normbaz);
         margin-bottom: -100%;
+        color: black;
     }
 
     @media all and (min-width: 916px) {
@@ -83,7 +84,7 @@
     }
 
     #ti-listHolder .ti-xitem:hover > span {
-        opacity: .1;
+        opacity: .07;
         filter: blur(3rem);
     }
 
