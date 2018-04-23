@@ -46,17 +46,17 @@
                 $('#ti-listHeader').click(loadCats);
                 $('#ti-mastercontain').trigger('widthChanged');
                 //__scroll_origin = $('#ti-listHolder');
-                $('#ti-listHolder').scroll(function(eventScr) {
+                $('#ti-listHolder').on((__config.js.scroll ? 'sync:' : '') + 'scroll', function(eventScr) {
                     if (DEBUG)
                         console.log("handler triggered, finaliseListLoad on " + __current_cat + " with " + __scroll_pos + "%" + $('#ti-listHolder').scrollTop());
                     if (DEBUG) console.warn("awaiting retry: " + ($('#ti-listHolder .ti-retryItem').length > 0));
                     if (!$('#ti-listHolder .ti-retryItem').length) {
-                        if (!__config.js.scroll && $('.ti-witem:last-child').visible(true, true, 'vertical', $('#ti-listHolder'))) {
-                            console.warn('loading more on primescroll trigger...');
+                        if (__config.js.scroll && eventScr) {
+                            console.warn('loading more on forced trigger...');
                             loadMore();
                         }
-                        else if (__config.js.scroll && $('#anozb-plugfrm', parent.document).visible(false, false, 'vertical', parent.document.firstElementChild)) {
-                            console.warn('loading more on primescroll trigger...');
+                        else if (!__config.js.scroll && $('.ti-witem:last-child').visible(true, true, 'vertical', $('#ti-listHolder'))) {
+                            console.log('loading more on primescroll trigger...');
                             loadMore();
                         }
                     }
@@ -82,7 +82,8 @@
                     if (DEBUG) 
                         console.warn(">> scroll-sync allowed!");
                     //__scroll_origin = parent.document.firstElementChild;
-                    initSizingSync();
+                    parent.initOuterSync();
+                    initInnerSync();
                 }
                 getTiConf(function() {
                     

@@ -60,95 +60,7 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="../style/core.css" />
-        <style>
-            body {
-                background: var(--ti-accent);
-                color: white;
-                font-family: 'IRANSans';
-                direction: rtl;
-                font-size: 16rem;
-            }
-            form {
-                display: flex;
-                align-items: center;
-                flex-direction: column;
-            }
-            h1, h2 , h3 {
-                text-align: center;
-                opacity: .87;
-                font-weight: 200;
-                border-bottom: 2px solid rgba(255,255,255,.2);
-            }
-            form > div {
-                margin: calc(1% + 5px);
-                background-color: rgba(255,255,255,.7);
-                box-shadow: 0px 1px 1px 0 rgba(0,0,0,0.2);
-                border-radius: 4px;
-                padding: 15px;
-                max-width: 600px;
-                width: calc(98% - 10px);
-                box-sizing: border-box;
-                color: var(--ti-dead);
-            }
-            #settings-security {
-                display: flex;
-                justify-content: space-evenly;
-            }
-            #settings-custom div {
-                display: flex;
-                justify-content: space-evenly;
-            }
-            #appid {
-                --width: 150px;
-            }
-            #apptoken {
-                --width: 300px;
-            }
-            input.ti-btn {
-                border: 4px solid white;
-                opacity: .6;
-                margin: 15px;
-                height: unset;
-                background-color: transparent !important;
-                background-image: radial-gradient(white 50%, transparent 50%) !important;
-                background-position: 50% 50% !important;
-                background-repeat: no-repeat !important;;
-                background-size: 0px 0px !important;
-                transition: .3s ease-out !important;
-                font-size: 20px !important;
-                font-weight: 400;
-                width: 180px;
-            }
-            input.ti-btn:hover {
-                opacity: .9;
-            }
-            input.ti-btn:active {
-                opacity: 1;
-                background-size: 400px 400px !important;
-                color: black;
-            }
-            br {
-                margin-bottom: 15px;
-            }
-            .duo-right {
-                float: right;
-                clear: right;
-            }
-            .duo-left {
-                float: left;
-                margin-left: 10px;
-                --width: 300px !important;
-            }
-            #main-form[tview="normal"] .main-settings:not(#settings-custom) {
-                display: none;
-            }
-            #main-form[tview="single"] .main-settings:not(#settings-single) {
-                display: none;
-            }
-            input {
-                direction: ltr;
-            }
-        </style>
+        <link rel="stylesheet" href="../style/setup.css" />
     </head>
     <body>
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
@@ -241,7 +153,7 @@
                 </div>
                 <br />
                 <span class="duo-right">زمینه‌ها</span>
-                <input class="exotic-input textbox duo-left" name="categories.filter" id="venueid" type="text" placeholder="Category Keys" value="<?= isset($app_config->categories->_filter) ? $app_config->categories->_filter : "" ?>" />
+                <input class="exotic-input textbox duo-left" name="categories.filter" id="catid" type="text" placeholder="Category Keys" value="<?= isset($app_config->categories->_filter) ? $app_config->categories->_filter : "" ?>" />
                 <br />
                 <span class="duo-right">محل/سالن‌ها</span>
                 <input class="exotic-input textbox duo-left" name="list.venue" id="venueid" type="text" placeholder="Venue ID(s)" value="<?= isset($app_config->list->venue) ? $app_config->list->venue : "" ?>" />
