@@ -16,7 +16,8 @@
                 'js' => array(
                     'debug' => !empty($_POST["js_debug"]),
                     'scroll' => !empty($_POST["js_scroll"]),
-                    'loading' => $_POST["js_loading"]
+                    'loading' => $_POST["js_loading"],
+                    'callback' => urlencode($_POST["js_callback"])
                 ),
                 'categories' => array(
                     'mode' => isset($_POST["categories_mode"]) ? $_POST["categories_mode"] : null,
@@ -103,6 +104,7 @@
                 <br/>
                 <span class="duo-right">لودینگ دلخواه</span>
                 <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />
+                <input class="exotic-input textbox duo-left" name="js.callback" id="jscallback" placeholder="Callback Page" value="<?= urldecode($app_config->js->callback) ?>" />
             </div>
 
             <h1>شناسه امنیتی</h1>

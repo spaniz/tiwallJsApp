@@ -29,7 +29,7 @@ function initOuterSync() {
 }
 
 function syncOuterScroll(visibility) {
-    if (allowSync && visibility)
+    if (allowSync && visibility )
         $('#ti-listHolder', childWin.document).trigger('sync:scroll', visibility);
 }
 

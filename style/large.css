@@ -349,4 +349,15 @@
     #ti-cardWrapper > div.ti-leftside > div > div {
         margin-right: 0;
     }
+
+    #ti-cardWrapper > div.ti-centrespan {
+        justify-content: center;
+    }
+    #ti-cardWrapper > div.ti-centrespan > div {
+        width: 100vw;
+    }
+    #ti-cardWrapper > #ti-receiptHolder > .ti-seperator {
+        height: unset;
+        margin: 10px;
+    }
 }

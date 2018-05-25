@@ -7,6 +7,17 @@ let __current_cat = null;
 let __eol = false;
 let __vouchtimer = null;
 
+function lockLoader(toggle) {
+    if (toggle) {
+        __load_lock = true;
+        $('#ti-loader').removeClass('ti-hidden');
+    }
+    else {
+        __load_lock = false;
+        $('#ti-loader').addClass('ti-hidden');
+    }
+}
+
 function displayEventItem(htmlx, coords) {
     var list = $('#ti-listHolder');
     list.append(htmlx);
@@ -30,6 +41,7 @@ function initEventPage(i) {
     if (__current_data.data[i].image)
         $('#ti-bannerHolder img').attr('src', __current_data.data[i].image.normal_url || "");
 
+    // DIR & AUTH
     _nxaut = processMiniCast(__current_data.data[i]);
     if (_nxaut) {
         $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').removeClass('ti-hidden');
@@ -38,7 +50,8 @@ function initEventPage(i) {
     else
         $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').addClass('ti-hidden');
 
-    var _nxloc = __current_data.data[i].spec.venue;
+    // VENUE
+    var _nxloc = __current_data.data[i].spec.hasOwnProperty('venue') ? __current_data.data[i].spec.venue : null;
     _nxloc = (!_nxloc) ? null : _nxloc.title;
     if (_nxloc) {
         $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').removeClass('ti-hidden');
@@ -47,9 +60,10 @@ function initEventPage(i) {
     else
         $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').addClass('ti-hidden');
 
-    var _nxtime = __current_data.data[i].spec.time;
+    // DATETIME
+    var _nxtime = __current_data.data[i].spec.hasOwnProperty('time') ? __current_data.data[i].spec.time : "";
     _nxtime = (!_nxtime) ? "" : _nxtime.text;
-    var _nxdat = __current_data.data[i].spec.date_duration_text || "";
+    var _nxdat = __current_data.data[i].spec.hasOwnProperty('date_duration_text') ? (__current_data.data[i].spec.date_duration_text || "") : "";
     if (_nxdat || _nxtime) {
         $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').removeClass('ti-hidden');
         $('#ti-eventHolder .ti-xcontainer .ti-nxdat').text(toLocalisedNumbers(_nxdat + ' ' + _nxtime));
@@ -57,7 +71,8 @@ function initEventPage(i) {
     else
         $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').addClass('ti-hidden');
 
-    var _nxprc = __current_data.data[i].price;
+    // PRICE
+    var _nxprc = __current_data.data[i].hasOwnProperty('price') ? __current_data.data[i].price : "";
     _nxprc = (!_nxprc) ? null : _nxprc.text;
     if (_nxprc) {
         $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').removeClass('ti-hidden');
@@ -499,7 +514,7 @@ function reserveTimerTick() {
 }
 
 function causeAftermathPayment() {
-    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}`;
+    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${__config.js.callback}`;
     var nwo = window.open(payUrl, '_blank');
     if (window.focus)
         nwo.focus();
