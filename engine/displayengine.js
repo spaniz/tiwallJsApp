@@ -176,9 +176,15 @@ function onNumericSeatChange(num) {
 
 function addItem(i, offset, datX, max) {
     lockLoader(true);
-    var _nxaut = processMiniCast(__current_data.data[i], true) || "";
-    var _nxtime = (__current_data.data[i].spec.date_duration_text || "") + ' ' + ((__current_data.data[i].spec.time || { text: "" }).text || "");
-    var _nxloc = __current_data.data[i].spec.venue.title || "";
+    // DIR & AUTH
+    _nxaut = processMiniCast(__current_data.data[i]);
+    // VENUE
+    var _nxloc = __current_data.data[i].spec.hasOwnProperty('venue') ? __current_data.data[i].spec.venue : null;
+    _nxloc = (!_nxloc) ? null : _nxloc.title;
+    // DATETIME
+    var _nxtime = __current_data.data[i].spec.hasOwnProperty('time') ? __current_data.data[i].spec.time : "";
+    _nxtime = (!_nxtime) ? "" : _nxtime.text;
+    var _nxdat = __current_data.data[i].spec.hasOwnProperty('date_duration_text') ? (__current_data.data[i].spec.date_duration_text || "") : "";
 
     getEventItemHtml({
         'name': toLocalisedNumbers(datX.title),
@@ -514,7 +520,7 @@ function reserveTimerTick() {
 }
 
 function causeAftermathPayment() {
-    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${encodeURI(`${decodeURI(__config.js.callback)}?urn=${__active_event.urn}&redir=${location}&zb_result={result}`)}`;
+    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${__config.js.callback}`;
     var nwo = window.open(payUrl, '_blank');
     if (window.focus)
         nwo.focus();

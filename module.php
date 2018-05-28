@@ -25,10 +25,13 @@
         <script type="text/javascript">
             let __config = <?= $cfg = file_get_contents($config_path) ?>;
             <?php
-                if (!isset($_GET['zb_result']))
+                if (!isset($_GET['zb_result'])) {
                     foreach ($_GET as $k => $v)
                         echo "__config." . str_replace('~', '.', $k) . " = '$v';";
+                } else {
             ?>
+            let callData = <?php echo $_GET['zb_result']; ?>;
+                <?php } ?>
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
@@ -183,59 +186,72 @@
                 });
                 $('#ti-aftermathHolder #ti-bxpay').click(() => causeAftermathPayment());
             <?php } else { ?>
-                $('#ti-receiptHolder .ti-btn.ti-dead').click(function (event) {
-                    if (parent)
-                        parent.location = "<?php echo $_GET['redir']; ?>";
-                });
+                
                 $('#ti-receiptHolder .ti-btn:not(.ti-dead)').click(function (event) {
                     var link = document.createElement('a');
-                    link.setAttribute('href', "<?php echo $cbd->data->attachment_url; ?>");
-                    link.setAttribute('download', 'tiwall<?php echo $cbd->data->trace_number; ?>.pdf');
+                    link.setAttribute('href', callData.data.attachment_url);
+                    link.setAttribute('download', 'tiwall${callData.data.trace_number}.pdf');
                     link.setAttribute('target', '_blank');
                     link.style.display = 'none';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 });
-                loadSingleView("<?php echo $_GET['urn']; ?>");
+                loadSingleView(callData.ok ? callData.data.sale.urn : 'sampleEvent');
             <?php } ?>
             });
         </script>
 
         <div id="ti-cardWrapper">
-        <?php if (isset($_GET['zb_result'])) {
-            $cbd = json_decode($_GET['zb_result']); ?>
+        <?php if (isset($_GET['zb_result'])) { ?>
             <div id="ti-receiptHolder" class="flex-tr ti-centrespan">
+                <script>
+                    if (callData.ok) {
+                        $('#okCBD').removeClass('ti-hidden');
+                        $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
+                        $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
+                        switch (callData.data.sale.deliver_type) {
+                            case "receipt_station":
+                                $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
+                                break;
+                            case "ticket":
+                                $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
+                                break;
+                        }
+                        $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
+                        $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
+                        $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + callData.data.trace_number);
+                        if (callData.data.item_behavior == "event") {
+                            $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
+                            $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
+                        }
+                    }
+                    else {
+                        $('#failCBD').removeClass('ti-hidden');
+                    }
+                </script>
                 <div>
                     <div>
-                        <div class="ti-title"><?php echo $cbd->data->sale->title; ?></div>
-                        <div class="ti-suffix"><?php echo $cbd->data->item_behavior == "event" ? $cbd->data->venue->title : ""; ?></div>
+                        <div class="ti-title"></div>
+                        <div class="ti-suffix"></div>
                         <div class="ti-seperator">
-                        <?php if ($cbd->data->sale->deliverType == 'receipt_station') { ?>
-                            </img style="max-height: 100rem;" src="<?php echo $cbd->data->attachment_url; ?>" />
-                        <?php } ?>
+                            <img class="ti-hidden" style="max-height: 100rem;" src="" />
                         </div>
-                    <?php if ($cbd->ok) { ?>
-                        <div class="ti-xcontainer">
-                            <p><i class="material-icons">event</i><span class="ti-rcinst"><?php echo $cbd->data->instance->title; ?></span></p>
-                            <p><i class="material-icons">event_seat</i><span class="ti-rcseat"><?php echo $cbd->data->sale->method == "event_seat" ? persianNumbers($cbd->data->seats) : (persianNumbers($cbd->data->count) . " عدد"); ?></span></p>
-                            <p><i class="material-icons">label</i><span class="ti-rctrace">کد پیگیری <?php echo persianNumbers($cbd->data->trace_number); ?></span></p>
-                            <?php if ($cbd->data->item_behavior == "event") { ?><p><i class="material-icons">not_listed_location</i><span class="ti-rcaddr"><?php echo $cbd->data->venue->address; ?></span></p><?php } ?>
+
+                        <div id="okCBD" class="ti-xcontainer ti-hidden">
+                            <p><i class="material-icons">event</i><span class="ti-rcinst"></span></p>
+                            <p><i class="material-icons">event_seat</i><span class="ti-rcseat"></span></p>
+                            <p><i class="material-icons">label</i><span class="ti-rctrace"></span></p>
+                            <p id="ti-rcaddr" class="ti-hidden"><i class="material-icons">not_listed_location</i><span class="ti-rcaddr"></span></p>
                         </div>
-                        <span class="ti-btnwrap">
-                            <div class="ti-btn ti-dead">بازگشت</div>
-                        </span>
-                    <?php } else { ?>
-                        <div class="ti-xcontainer">
+
+                        <div id="failCBD" class="ti-xcontainer ti-hidden">
                             <p><i class="material-icons">warning</i><span>پرداخت شما با شکست مواجه شد، لطفا دوباره تلاش کنید.</span></p>
                         </div>
+
                         <span class="ti-btnwrap">
-                        <?php if ($cbd->data->sale->deliver_type == 'ticket') { ?>
-                            <div class="ti-btn">دانلود بلیت</div>
-                        <?php } ?>
-                            <div class="ti-btn ti-dead">بازگشت</div>
+                            <div class="ti-btn ti-hidden">دانلود بلیت</div>
                         </span>
-                    <?php } ?>
                     </div>
                 </div>
             </div>

@@ -31,3 +31,10 @@ function submenu2(){
 <?php
 }
 ?>
+<?php function loadreceipt($urn, $zb_result, $callback) { ?>
+	<object style="width: 100%; height: 500px" data="<?php echo plugins_url('module.php?urn=$urn&callback=' . urlencode($callback) . '&zb_result=$zb_result'); ?>"></object>
+<?php } ?>
+
+<?php function loadreceipt() { ?>
+	<object style="width: 100%; height: 500px" data="<?php echo plugins_url('module.php?urn=' . $_GET['urn'] . '&callback=' . urlencode($_GET['callback']) . '&zb_result=' . $_GET['zb_result']); ?>"></object>
+<?php } ?>
