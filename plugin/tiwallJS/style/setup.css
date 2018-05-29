@@ -1,0 +1,105 @@
+@font-face {
+    font-family: Fira-Code;
+    src: url(./firacode.ttf);
+}
+
+body {
+    background: var(--ti-accent);
+    color: white;
+    font-family: 'IRANSans';
+    direction: rtl;
+    font-size: 16rem;
+}
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+h1, h2 , h3 {
+    text-align: center;
+    opacity: .87;
+    font-weight: 200;
+    border-bottom: 2rem solid rgba(255,255,255,.2);
+}
+form > div {
+    margin: calc(1% + 5rem);
+    background-color: rgba(255,255,255,.7);
+    box-shadow: 0rem 1rem 1rem 0 rgba(0,0,0,0.2);
+    border-radius: 4rem;
+    padding: 15rem;
+    max-width: 600rem;
+    width: calc(98% - 10rem);
+    box-sizing: border-box;
+    color: var(--ti-dead);
+}
+#settings-security {
+    display: flex;
+    justify-content: space-evenly;
+}
+#settings-custom div {
+    display: flex;
+    justify-content: space-evenly;
+}
+#appid {
+    --width: 150rem;
+}
+#apptoken {
+    --width: 300rem;
+}
+input.ti-btn {
+    border: 4rem solid white;
+    opacity: .6;
+    margin: 15rem;
+    height: unset;
+    background-color: transparent !important;
+    background-image: radial-gradient(white 50%, transparent 50%) !important;
+    background-position: 50% 50% !important;
+    background-repeat: no-repeat !important;;
+    background-size: 0 0 !important;
+    transition: .3s ease-out !important;
+    font-size: 20rem !important;
+    font-weight: 400;
+    width: 180rem;
+}
+input.ti-btn:hover {
+    opacity: .9;
+}
+input.ti-btn:active {
+    opacity: 1;
+    background-size: 400rem 400rem !important;
+    color: black;
+}
+br {
+    margin-bottom: 15rem;
+}
+.duo-right {
+    float: right;
+    clear: right;
+}
+.duo-left {
+    float: left;
+    margin-left: 10rem;
+    --width: 300rem !important;
+}
+#main-form[tview="normal"] .main-settings:not(#settings-custom) {
+    display: none;
+}
+#main-form[tview="single"] .main-settings:not(#settings-single) {
+    display: none;
+}
+input {
+    direction: ltr;
+}
+#output {
+    text-align: center;
+    font-family: Fira-Code, Consolas;
+    font-size: 20rem;
+    color: var(--ti-accent);
+    padding: 30rem;
+    direction: ltr;
+    user-select: text !important;
+    -o-user-select: text !important;
+    -ms-user-select: text !important;
+    -moz-user-select: text !important;
+    -webkit-user-select: text !important;
+}
