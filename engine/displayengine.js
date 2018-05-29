@@ -520,7 +520,7 @@ function reserveTimerTick() {
 }
 
 function causeAftermathPayment() {
-    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${__config.js.callback}`;
+    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${encodeURI(decodeURI(__config.js.callback) + `?userxid=${__userid}`)}`;
     var nwo = window.open(payUrl, '_blank');
     if (window.focus)
         nwo.focus();

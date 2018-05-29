@@ -6,14 +6,6 @@
     <?php
         define('ROOTDIR', "");
         require_once("php/paths.php");
-        function persianNumbers($num) {
-            $soo = $num;
-            $per = [ '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' ];
-            for ($i = 0; $i < count($per); $i++) {
-                $soo = str_replace(strval($i), $per[$i], $soo);
-            }
-            return $soo;
-        }
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
@@ -24,14 +16,15 @@
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
         <script type="text/javascript">
             let __config = <?= $cfg = file_get_contents($config_path) ?>;
-            <?php
-                if (!isset($_GET['zb_result'])) {
-                    foreach ($_GET as $k => $v)
-                        echo "__config." . str_replace('~', '.', $k) . " = '$v';";
-                } else {
-            ?>
-            let callData = <?php echo $_GET['zb_result']; ?>;
-                <?php } ?>
+        <?php
+            if (!isset($_GET['zb_result'])) {
+                foreach ($_GET as $k => $v)
+                    echo "__config." . str_replace('~', '.', $k) . " = '$v';";
+            } else {
+        ?>
+            let callData = JSON.parse('<?php echo $_GET['zb_result']; ?>');
+            let userReturn = JSON.parse('<?php echo $_GET['userxid']; ?>');
+        <?php } ?>
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
@@ -53,6 +46,7 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
+            var __userid = "<?php echo $_GET['user_id'] ?>";
             //var __scroll_origin = null;
             $(document).ready(function() {
                 $('#ti-mastercontain').trigger('widthChanged');
@@ -176,12 +170,12 @@
                     goForPayment({ 'instance_id': __current_instance, 
                         'seats': __finalSeatData.seats, 
                         'count': __finalSeatData.count, 
-                        'user_fullname': $('#ti-finalHolder #ti-uname').val(),
-                        'user_mobile': $('#ti-finalHolder #ti-umobile').val(),
-                        'user_email': $('#ti-finalHolder #ti-umail').val(),
+                        'user_fullname': (__config.user.override) ? __config.user.fullname : $('#ti-finalHolder #ti-uname').val(),
+                        'user_mobile': (__config.user.override) ? __config.user.mobile : $('#ti-finalHolder #ti-umobile').val(),
+                        'user_email': (__config.user.override) ? __config.user.email : $('#ti-finalHolder #ti-umail').val(),
                         'voucher': $('#ti-finalHolder #ti-xusecup').attr('check') === 'true' ? $('#ti-finalHolder #ti-xcupon').val() : '',
-                        'send_sms': true, 
-                        'send_email': true, 
+                        'send_sms': (!__config.user.override), 
+                        'send_email': (!__config.user.override), 
                         'use_internal_receipt': false });
                 });
                 $('#ti-aftermathHolder #ti-bxpay').click(() => causeAftermathPayment());
@@ -198,6 +192,29 @@
                     document.body.removeChild(link);
                 });
                 loadSingleView(callData.ok ? callData.data.sale.urn : 'sampleEvent');
+                if (callData.ok) {
+                    $('#ti-receiptHolder #okCBD').removeClass('ti-hidden');
+                    $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
+                    $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
+                    switch (callData.data.sale.deliver_type) {
+                        case "receipt_station":
+                            $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
+                            break;
+                        case "ticket":
+                            $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
+                            break;
+                    }
+                    $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
+                    $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
+                    $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + toLocalisedNumbers(callData.data.trace_number));
+                    if (callData.data.item_behavior == "event") {
+                        $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
+                        $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
+                    }
+                }
+                else {
+                    $('#failCBD').removeClass('ti-hidden');
+                }
             <?php } ?>
             });
         </script>
@@ -206,29 +223,7 @@
         <?php if (isset($_GET['zb_result'])) { ?>
             <div id="ti-receiptHolder" class="flex-tr ti-centrespan">
                 <script>
-                    if (callData.ok) {
-                        $('#okCBD').removeClass('ti-hidden');
-                        $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
-                        $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
-                        switch (callData.data.sale.deliver_type) {
-                            case "receipt_station":
-                                $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
-                                break;
-                            case "ticket":
-                                $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
-                                break;
-                        }
-                        $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
-                        $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
-                        $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + callData.data.trace_number);
-                        if (callData.data.item_behavior == "event") {
-                            $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
-                            $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
-                        }
-                    }
-                    else {
-                        $('#failCBD').removeClass('ti-hidden');
-                    }
+                    
                 </script>
                 <div>
                     <div>
@@ -353,6 +348,14 @@
                             </div> 
                             <div class="ti-duo">
                                 <div class="ti-rightside">
+                                    <span>مشخصات خرید</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span>خرید شما توسط سایت ایتوک انجام میشود.</span>
+                                </div>
+                            </div> 
+                            <!--<div class="ti-duo">
+                                <div class="ti-rightside">
                                     <span>نام و نام خانوادگی</span>
                                 </div>
                                 <div class="ti-leftside">
@@ -374,7 +377,7 @@
                                 <div class="ti-leftside">
                                     <input type="text" id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <div id="ti-xusecup" class="exotic-input checkbox">
