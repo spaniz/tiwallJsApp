@@ -1,1 +1,25 @@
-{"js":{"debug":true},"categories":{"mode":"store","_filter":""},"list":{"venue":""}}
+{
+"view": "normal",
+    "js": {
+        "debug": true,
+        "scroll": true,
+        "loading": "images\/@infload.svg",
+        "callback": ""
+    },
+    "categories": {
+        "mode": "store",
+        "_filter": "drama,moz"
+    },
+    "list": {
+        "venue": ""
+    },
+    "get": {
+        "urn": "cyrus"
+    },
+    "user": {
+       "override": true,
+        "fullname": "Etook Online",
+        "email": "receipt@etookonline.com",
+        "mobile": "09000000000"
+    }
+}

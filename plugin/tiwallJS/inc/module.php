@@ -5,65 +5,137 @@
 <body>
     <?php
         define('ROOTDIR', "");
-        require_once("php/paths.php")
+        require_once("php/paths.php");
+        // function persianNumbers($num) {
+        //     $soo = $num;
+        //     $per = [ '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' ];
+        //     for ($i = 0; $i < count($per); $i++) {
+        //         $soo = str_replace(strval($i), $per[$i], $soo);
+        //     }
+        //     return $soo;
+        // }
+//user_login
+//user_email
+//user_firstname
+//user_lastname
+//display_name
+//user_id
+//user_level
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+        <style id="ti-hallstyle">
+        </style>
         <link rel="stylesheet" href="../style/core.css" />
-        <link title="largeCSS" rel="stylesheet" href="style/large.css" />
+        <link title="largeCSS" rel="stylesheet" href="../style/large.css" />
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
         <script type="text/javascript">
-            let __config = <?= file_get_contents($config_path_madule) ?>;
-            <?php
+            let __config = <?= $cfg = file_get_contents($config_path_module) ?>;
+
+      <?php
+            if (!isset($_GET['zb_result'])) {
                 foreach ($_GET as $k => $v)
                     echo "__config." . str_replace('~', '.', $k) . " = '$v';";
-            ?>
-        </script>   
+            } else {
+        ?>
+            let callData = JSON.parse('<?php echo $_GET['zb_result']; ?>');
+            let userReturn = JSON.parse('<?php echo $_GET['user_id']; ?>');
+        <?php } ?>
+        </script>
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="../engine/utility.js"></script>
+        <script type="text/javascript" src="../engine/zb-engine.js"></script>
         <script type="text/javascript" src="../engine/ti-get.js"></script>
         <script type="text/javascript" src="../engine/itemparser.js"></script>
+        <script type="text/javascript" src="../engine/scrollsync.js"></script>
         <script type="text/javascript" src="../engine/displayengine.js"></script>
         <script type="text/javascript" src="../engine/exoticengine.js"></script>
 
         <div id="ti-listHolder"></div>
         <div id="ti-listHeader" style="top: 100%">
-        <i class="material-icons" style="margin-top: -4px;">expand_less</i>
-        <span></span>
+        <?php if($_GET['categories~_filter']==""){?>
+            <i class="material-icons" style="margin-top: -4px; margin-left: 7px">expand_less</i>
+		<?php } ?>
+            <span></span>
         </div>
-
+        <div id="ti-singlePic">
+        </div>
         <script type="text/javascript">
-            var __scroll_pos = 0;
-            var __scroll_anchor = 0;
+ 		    var __scroll_pos = 0;
+        var __scroll_anchor = 0;
+        var __userid = "<?php echo $_GET['user_id'] ?>";
+            //var __scroll_origin = null;
             $(document).ready(function() {
-                $('#ti-listHeader').click(loadCats);
                 $('#ti-mastercontain').trigger('widthChanged');
-                $('#ti-listHolder').scroll(function(eventScr) {
+            <?php if (!isset($_GET['zb_result'])) { ?>
+                $('#ti-listHeader').click(loadCats);
+                //__scroll_origin = $('#ti-listHolder');
+                $('#ti-listHolder').on((__config.js.scroll ? 'sync:' : '') + 'scroll', function(eventScr) {
                     if (DEBUG)
                         console.log("handler triggered, finaliseListLoad on " + __current_cat + " with " + __scroll_pos + "%" + $('#ti-listHolder').scrollTop());
                     if (DEBUG) console.warn("awaiting retry: " + ($('#ti-listHolder .ti-retryItem').length > 0));
-                    if (!$('#ti-listHolder .ti-retryItem').length)
-                        if ($('.ti-witem:last-child').visible(true, true, 'both', $('#ti-listHolder'))) {
-                                console.warn('loading more on primescroll trigger...');
-                                loadMore();
-                            }
+                    if (!$('#ti-listHolder .ti-retryItem').length) {
+                        if (__config.js.scroll && eventScr) {
+                            console.warn('loading more on forced trigger...');
+                            loadMore();
+                        }
+                        else if (!__config.js.scroll && $('.ti-witem:last-child').visible(true, true, 'vertical', $('#ti-listHolder'))) {
+                            console.log('loading more on primescroll trigger...');
+                            loadMore();
+                        }
+                    }
                     var list = $('#ti-listHolder');
                     var head = $('#ti-listHeader');
-                    if (__scroll_pos <= list.scrollTop())
+                    if (__scroll_pos < list.scrollTop())
                     {
                         __scroll_pos = list.scrollTop();
-                        head.css('top', -Math.min(__scroll_pos - __scroll_anchor, 50) + 'px');
+                        head.css('top', '-50rem');
                     }
                     else
                     {
                         __scroll_pos = list.scrollTop();
-                        head.css('top', '0px');
+                        head.css('top', '0rem');
                         __scroll_anchor = __scroll_pos;
                     }
                 });
-                getTiConf(function() {
+                if (__config.view == "normal")
                     loadCats();
+                if (__config.view == "single")
+                    loadSingleView(__config.get.urn);
+                if (__config.js.scroll) {
+                    if (DEBUG)
+                        console.warn(">> scroll-sync allowed!");
+                    //__scroll_origin = parent.document.firstElementChild;
+                    parent.initOuterSync();
+                    initInnerSync();
+                }
+                getTiConf(function() {
+
                     /*loadMore(true);*/
+                });
+                $('#ti-finalHolder #ti-xcupon').keypress(function (event) {
+                    if (event.keyCode === 13) {
+                        if (__vouchtimer)
+                            clearTimeout(__vouchtimer);
+                        __vouchtimer = null;
+                        $('#ti-finalHolder #ti-xvouchstat').text("");
+                        updateVouch($('#ti-finalHolder #ti-xcupon').val());
+                        return false;
+                    }
+                });
+                $('#ti-finalHolder input[type="text"]').on('input', function (event) {
+                    checkFinalForm();
+                });
+                $('#ti-finalHolder #ti-xcupon').on('input', function (event) {
+                    $('#ti-finalHolder #ti-xvouchstat').text("");
+                    $('#ti-finalHolder #ti-xvouchstat').attr('valid', 'false');
+                    if (__vouchtimer)
+                        clearTimeout(__vouchtimer);
+                    __vouchtimer = null;
+                    if ($('#ti-finalHolder #ti-xcupon').val().length >= 5) {
+                        __vouchtimer = setTimeout(() => updateVouch($('#ti-finalHolder #ti-xcupon').val()), 1000);
+                        if (DEBUG) console.log(__vouchtimer)
+                    }
                 });
                 // DEAD BTNS
                 $('#ti-eventHolder .ti-btn.ti-dead').click(function (event) {
@@ -91,7 +163,7 @@
                             addPick({ title: 'سانسی برای این برنامه وجود ندارد' });
                             return;
                         }
-                        console.log(zirdat);
+                        if (DEBUG) console.log(zirdat);
                         for (var i = 0; i < zirdat.data.length; i++)
                         {
                             __instances = zirdat.data;
@@ -109,40 +181,127 @@
                     switchToFinal();
                 });
                 $('#ti-finalHolder #ti-bvouch').click(function() {
-                    getVoucherState($('#ti-finalHolder #ti-xcupon').val(), (msg, ok) => {
-                        $('#ti-finalHolder #ti-xvouchstat').text(msg);
-                        if (ok)
-                            $('#ti-finalHolder #ti-xvouchstat').removeClass('ti-error');
-                        else 
-                            $('#ti-finalHolder #ti-xvouchstat').addClass('ti-error');
-                    })
+                    updateVouch($('#ti-finalHolder #ti-xcupon').val());
                 });
                 $('#ti-finalHolder #ti-bpay').click(function() {
-                    goForPayment({ 'instance_id': __current_instance, 
-                        'seats': __finalSeatData.seats, 
-                        'count': __finalSeatData.count, 
-                        'user_fullname': $('#ti-finalHolder #ti-uname').val(),
-                        'user_mobile': $('#ti-finalHolder #ti-umobile').val(),
-                        'user_email': $('#ti-finalHolder #ti-umail').val(),
-                        'voucher': $('#ti-finalHolder #ti-xcupon').val(),
-                        'send_sms': true, 
-                        'send_email': true, 
-                        'use_internal_receipt': true });
+                    goForPayment({ 'instance_id': __current_instance,
+                        'seats': __finalSeatData.seats,
+                        'count': __finalSeatData.count,
+
+
+                        'user_fullname': (__config.user.override) ? __config.user.fullname : $('#ti-finalHolder #ti-uname').val(),
+                        'user_mobile': (__config.user.override) ? __config.user.mobile : $('#ti-finalHolder #ti-umobile').val(),
+                        'user_email': (__config.user.override) ? __config.user.email : $('#ti-finalHolder #ti-umail').val(),
+                        'voucher': $('#ti-finalHolder #ti-xusecup').attr('check') === 'true' ? $('#ti-finalHolder #ti-xcupon').val() : '',
+                        'send_sms': (!__config.user.override),
+                        'send_email': (!__config.user.override), 
+                        'use_internal_receipt': false });
                 });
                 $('#ti-aftermathHolder #ti-bxpay').click(() => causeAftermathPayment());
+            <?php } else { ?>
+
+                $('#ti-receiptHolder .ti-btn:not(.ti-dead)').click(function (event) {
+                    var link = document.createElement('a');
+                    link.setAttribute('href', callData.data.attachment_url);
+                    link.setAttribute('download', 'tiwall${callData.data.trace_number}.pdf');
+                    link.setAttribute('target', '_blank');
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+                loadSingleView(callData.ok ? callData.data.sale.urn : 'sampleEvent');
+                   // if (callData.ok) {
+                   //      $('#okCBD').removeClass('ti-hidden');
+                   //      $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
+                   //      $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
+                   //      switch (callData.data.sale.deliver_type) {
+                   //          case "receipt_station":
+                   //              $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
+                   //              break;
+                   //          case "ticket":
+                   //              $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
+                   //              break;
+                   //      }
+                   //      $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
+                   //      $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
+                   //      $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + toLocalisedNumbers(callData.data.trace_number));
+                   //      if (callData.data.item_behavior == "event") {
+                   //          $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
+                   //          $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
+                   //      }
+                   //  }
+                   //  else {
+                   //      $('#failCBD').removeClass('ti-hidden');
+                   //  }
+                   if (callData.ok) {
+                    $('#ti-receiptHolder #okCBD').removeClass('ti-hidden');
+                    $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
+                    $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
+                    switch (callData.data.sale.deliver_type) {
+                        case "receipt_station":
+                            $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
+                            break;
+                        case "ticket":
+                            $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
+                            break;
+                    }
+                   $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
+                    $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
+                    $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + toLocalisedNumbers(callData.data.trace_number));
+                    if (callData.data.item_behavior == "event") {
+                        $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
+                       $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
+                    }
+                }
+                else {
+                    $('#failCBD').removeClass('ti-hidden');
+                }
+            <?php } ?>
             });
         </script>
 
-        <table id="ti-cardWrapper">
-            <tr id="ti-bannerHolder" class="ti-rightside">
-                <td>
+        <div id="ti-cardWrapper">
+        <?php if (isset($_GET['zb_result'])) { ?>
+            <div id="ti-receiptHolder" class="flex-tr ti-centrespan">
+                <script>
+
+                </script>
+                <div>
+                    <div>
+                        <div class="ti-title"></div>
+                        <div class="ti-suffix"></div>
+                        <div class="ti-seperator">
+                            <img class="ti-hidden" style="max-height: 100rem;" src="" />
+                        </div>
+
+                        <div id="okCBD" class="ti-xcontainer ti-hidden">
+                            <p><i class="material-icons">event</i><span class="ti-rcinst"></span></p>
+                            <p><i class="material-icons">event_seat</i><span class="ti-rcseat"></span></p>
+                            <p><i class="material-icons">label</i><span class="ti-rctrace"></span></p>
+                            <p id="ti-rcaddr" class="ti-hidden"><i class="material-icons">not_listed_location</i><span class="ti-rcaddr"></span></p>
+                        </div>
+
+                        <div id="failCBD" class="ti-xcontainer ti-hidden">
+                            <p><i class="material-icons">warning</i><span>پرداخت شما با شکست مواجه شد، لطفا دوباره تلاش کنید.</span></p>
+                        </div>
+
+                        <span class="ti-btnwrap">
+                            <div class="ti-btn ti-hidden">دانلود بلیت</div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        <?php } else { ?>
+            <div id="ti-bannerHolder" class="flex-tr ti-rightside">
+                <div>
                     <div>
                         <img />
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-eventHolder" class="fulfilled ti-leftside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-eventHolder" class="flex-tr fulfilled ti-leftside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -153,15 +312,18 @@
                             <p><i class="material-icons">event</i><span class="ti-nxdat"></span></p>
                             <p><i class="material-icons">credit_card</i><span class="ti-nxprc"></span></p>
                         </div>
+                        <div class="ti-xplate">
+
+                        </div>
                         <span class="ti-btnwrap">
                             <div class="ti-btn">خرید</div>
                             <div class="ti-btn ti-dead">بستن</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-pickHolder" class="fulfilled ti-rightside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-pickHolder" class="flex-tr fulfilled ti-rightside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -169,20 +331,20 @@
                         <div class="ti-xcontainer">
                         </div>
                         <span class="ti-btnwrap">
-                            <!--<div class="ti-btn">ادامه</div>-->
+                            <!-- <div class="ti-btn">ادامه</div> -->
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-seatHolder" class="ti-leftside ti-seatmap">
-                <td>
+                </div>
+            </div>
+            <div id="ti-seatHolder" class="flex-tr ti-leftside ti-seatmap">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
                         <div class="ti-seperator"></div>
                         <div class="ti-spinner">
-                            <span style="display: inline-block; margin: 10px;">تعداد صندلی</span>
+                            <span style="display: inline-block; margin: 10px;">به تعداد</span>
                             <div class="numeric">
                                 <div class="rem">remove_circle</div>
                                 <span class="value">۱</span>
@@ -201,10 +363,10 @@
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-finalHolder" class="ti-rightside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-finalHolder" class="flex-tr ti-rightside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -217,7 +379,7 @@
                                 <div class="ti-leftside">
                                     <span id="ti-xseats"></span>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <span>بهای کل</span>
@@ -225,31 +387,39 @@
                                 <div class="ti-leftside">
                                     <span id="ti-xcost"></span>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="ti-duo">
+                              <div class="ti-rightside">
+                                    <span>مشخصات خرید</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span>خرید شما توسط سایت ایتوک انجام میشود.</span>
+                                </div>
+                            </div>
+                            <!--<div class="ti-duo">
                                 <div class="ti-rightside">
                                     <span>نام و نام خانوادگی</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-uname" class="exotic-input textbox" name="u_name" />
+                                    <input type="text" id="ti-uname" style="direction: rtl; text-align: right;" class="exotic-input textbox" name="u_name" />
                                 </div>
-                            </div> 
+                            </div>
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <span>آدرس ایمیل</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-umail" class="exotic-input textbox" name="u_mail" />
+                                    <input type="text" id="ti-umail" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mail" />
                                 </div>
-                            </div> 
+                            </div>
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <span>شماره موبایل</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input id="ti-umobile" class="exotic-input textbox" name="u_mobile" />
+                                    <input type="text" id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <div id="ti-xusecup" class="exotic-input checkbox">
@@ -260,7 +430,7 @@
                                     <span id="ti-xvouchstat"></span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <input style="display: none" id="ti-xcupon" class="exotic-input textbox" name="u_cupon">
+                                    <input type="text" style="direction: ltr; text-align: left;"  id="ti-xcupon" class="exotic-input textbox ti-hidden" name="u_cupon">
                                 </div>
                             </div>
                         </div>
@@ -270,10 +440,10 @@
                             <div class="ti-btn ti-dead">برگشت</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-            <tr id="ti-aftermathHolder" class="ti-leftside">
-                <td>
+                </div>
+            </div>
+            <div id="ti-aftermathHolder" class="flex-tr ti-leftside">
+                <div>
                     <div>
                         <div class="ti-prefix"></div>
                         <div class="ti-title"></div>
@@ -312,9 +482,10 @@
                             <div class="ti-btn ti-dead">لغو</div>
                         </span>
                     </div>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        <?php } ?>
+        </div>
 
         <div id="ti-catSel" class="ti-xHolder ti-currentcard">
             <div>
@@ -325,22 +496,17 @@
 
         <div id="ti-loader" class="ti-xHolder ti-currentcard">
             <i class="material-icons">people</i>
-            <span><img src="https://zbcdn.cloud/images/tiwall_loader.gif" /></span>
+            <span>
+                <object style="max-height: 250px" data="<?= json_decode($cfg)->js->loading ?>">
+                    <img src="https://zbcdn.cloud/images/tiwall_loader.gif"/>
+                </object>
+            </span>
         </div>
 
         <script type="text/javascript">
 
 
-            function lockLoader(toggle) {
-                    if (toggle) {
-                        __load_lock = true;
-                        $('#ti-loader').removeClass('ti-hidden');
-                    }
-                    else {
-                        __load_lock = false;
-                        $('#ti-loader').addClass('ti-hidden');
-                    }
-            }
+
         </script>
     </div>
     <div id="ti-errorHandle" class="ti-xHolder ti-currentcard">

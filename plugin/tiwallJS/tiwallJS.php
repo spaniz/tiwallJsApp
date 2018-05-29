@@ -1,10 +1,10 @@
 <?php
 /**
 * Plugin Name: tiwallJS
-* Plugin URI:tiwall.com 
+* Plugin URI:tiwall.com
 * Description: our new plugin wiyh javascript!
 * Version: 1.0
-* Author: FARZANE
+* Author: n s u n
 * Author URI: ******
 * License: GPL2
 */
