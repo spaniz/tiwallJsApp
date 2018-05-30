@@ -6,14 +6,6 @@
     <?php
         define('ROOTDIR', "");
         require_once("php/paths.php");
-        function persianNumbers($num) {
-            $soo = $num;
-            $per = [ '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' ];
-            for ($i = 0; $i < count($per); $i++) {
-                $soo = str_replace(strval($i), $per[$i], $soo);
-            }
-            return $soo;
-        }
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
@@ -178,12 +170,12 @@
                     goForPayment({ 'instance_id': __current_instance, 
                         'seats': __finalSeatData.seats, 
                         'count': __finalSeatData.count, 
-                        'user_fullname': $('#ti-finalHolder #ti-uname').val(),
-                        'user_mobile': $('#ti-finalHolder #ti-umobile').val(),
-                        'user_email': $('#ti-finalHolder #ti-umail').val(),
+                        'user_fullname': (__config.user.override) ? __config.user.fullname : $('#ti-finalHolder #ti-uname').val(),
+                        'user_mobile': (__config.user.override) ? __config.user.mobile : $('#ti-finalHolder #ti-umobile').val(),
+                        'user_email': (__config.user.override) ? __config.user.email : $('#ti-finalHolder #ti-umail').val(),
                         'voucher': $('#ti-finalHolder #ti-xusecup').attr('check') === 'true' ? $('#ti-finalHolder #ti-xcupon').val() : '',
-                        'send_sms': true, 
-                        'send_email': true, 
+                        'send_sms': (!__config.user.override), 
+                        'send_email': (!__config.user.override), 
                         'use_internal_receipt': false });
                 });
                 $('#ti-aftermathHolder #ti-bxpay').click(() => causeAftermathPayment());
@@ -356,6 +348,14 @@
                             </div> 
                             <div class="ti-duo">
                                 <div class="ti-rightside">
+                                    <span>مشخصات خرید</span>
+                                </div>
+                                <div class="ti-leftside">
+                                    <span>خرید شما توسط سایت ایتوک انجام میشود.</span>
+                                </div>
+                            </div> 
+                            <!--<div class="ti-duo">
+                                <div class="ti-rightside">
                                     <span>نام و نام خانوادگی</span>
                                 </div>
                                 <div class="ti-leftside">
@@ -377,7 +377,7 @@
                                 <div class="ti-leftside">
                                     <input type="text" id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <div id="ti-xusecup" class="exotic-input checkbox">

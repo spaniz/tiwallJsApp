@@ -17,7 +17,6 @@ const TI_BASE_URL = "https://store.zirbana.com/v2";
 function getTiPages(path, callback, error, passable) {
     var addr = TI_BASE_URL + "/pages/" + path;
     $.ajax(addr, { 
-        data: { get_param: 'value' }, 
         dataType: 'json',
         success: function(result) {
             __lastTiResponse = result;
@@ -74,7 +73,7 @@ function getTiEventList(cat, attrs, callback, passable) {
 
 function getTiEventItem(pageId, callback, passable) {
     var addr = "get?";
-    if (pageId !== null )
+    if (pageId !== null)
         addr += "id=" + pageId;
     getTiPages(addr, callback, passable);
 }
@@ -90,7 +89,6 @@ function getZbData(urn, action, params, callback, error) {
             addr += '&' + key + '=' + encodeURI(params[key]);
     console.warn('calling ' + addr);
     $.ajax(addr, { 
-        data: { get_param: 'value' }, 
         dataType: 'json',
         success: callback,
         error: function() {
@@ -109,7 +107,6 @@ function getZbInsecureData(urn, action, params, callback, error) {
         for (var key in params)
             addr += key + '=' + encodeURI(params[key]) + '&';
     $.ajax(addr, { 
-        data: { get_param: 'value' }, 
         dataType: 'json',
         success: callback,
         error: function() {
@@ -129,75 +126,4 @@ function getShowtimes(urn, callback, error) {
 function getSeatmap(urn, params, callback, error) {
     params['format'] = 'html';
     getZbInsecureData(urn, "seatmap", params, callback, error);
-}
-
-let __paymentClause = { reserve_id: null, trace_number: null, total_price: null, time: null };
-function goForPayment(args) {
-    lockLoader(true);
-    getZbData(__active_event.urn, "reserve", args, dat => {
-        lockLoader(false);
-        if (DEBUG) console.log(dat);
-        if (!dat.ok) {
-            switch (dat.error.code) {
-                case 400:
-                    showError("ورودی های شما نادرست‌اند، بازبینی کنید.", null, () => {});
-                    break;
-
-                case 404:
-                    showError("چنین سانسی وجود ندارد!", null, () => swicthToPick());
-                    break;
-
-                case 502:
-                    showError("صندلی هایی که انتخاب کرده‌اید رزرو شده اند.", null, () => swicthToSeat());
-                    break;
-
-                case 500:
-                    showError("این سانس به اندازه کافی ظرفیت ندارد.", null, () => swicthToPick());
-                    break;
-
-                case 501:
-                    showError("ظرفیت این سانس تکمیل است.", null, () => swicthToPick());
-                    break;
-
-                default:
-                    showError("خطایی ناشناس رخ داد.", null, () => {});
-                    break;
-            }
-            return;
-        }
-        __paymentClause.reserve_id = dat.data.reserve_id;
-        __paymentClause.trace_number = dat.data.trace_number;
-        __paymentClause.total_price = dat.data.total_price;
-        __paymentClause.time = __RESERVETIME;
-        setupAftemath();
-    }, 
-    () => { switchToFinal(); });
-}
-
-function cancelAftermath(callback) {
-    lockLoader(true);
-    getZbData(__active_event.urn, "cancel", __paymentClause, dat => {
-        lockLoader(false);
-        if (!dat.ok)
-            showError("درخواست شما با مشکل بر خورد.", 
-                function(e) { cancelAftermath(e); },
-                () => { },
-                callback);
-        else {
-            clearInterval(__aftermath_timer);
-            __aftermath_timer = null;
-            callback();
-        }
-    }, 
-    () => { });
-}
-
-function getVoucherState(vouch, callback) {
-    getZbInsecureData(__active_event.urn, "checkVoucher", { voucher: vouch }, dat => {
-        if (!dat.ok) 
-            callback("نادرست است", false);
-        else if (dat.data.state === 'valid' || dat.data.state === 'conditional')
-            callback("درست است", true);
-    }, 
-    () => callback("خطایی رخ داد", false));
 }

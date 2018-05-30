@@ -11,6 +11,9 @@
         try { 
             if ($_POST["app_id"] != _ZB_APPID || $_POST["app_token"] != _ZB_SECRET)
                 updateConsts($_POST["app_id"], $_POST["app_token"]);
+            $fx = file_get_contents($config_path);
+            if ($fx)
+                $confx = json_decode($f);
             updateConfig(array(
                 'view' => $_POST["view"],
                 'js' => array(
@@ -28,6 +31,12 @@
                 ),
                 'get' => array(
                     'urn' => str_replace(' ', '', $_POST["get_urn"])
+                )
+                'user' => array(
+                    'override' => $confx->user->override,
+                    'fullname' => $confx->user->fullname,
+                    'email' => $confx->user->email,
+                    'mobile' => $confx->user->mobile,
                 )
             ));
             header("Refresh:0;url=?result=ok");
@@ -104,6 +113,7 @@
                 <br/>
                 <span class="duo-right">لودینگ دلخواه</span>
                 <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />
+                <span class="duo-right">آدرس رسید خرید</span>
                 <input class="exotic-input textbox duo-left" name="js.callback" id="jscallback" placeholder="Callback Page" value="<?= urldecode($app_config->js->callback) ?>" />
             </div>
 

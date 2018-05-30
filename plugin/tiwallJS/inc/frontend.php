@@ -1,4 +1,4 @@
 <?php
-add_shortcode('drama', 'loaddrama');	
-add_shortcode('concert', 'loadconcert');
+add_shortcode('zb-page', 'load');
+add_shortcode('zb-callback', 'loadreceipt');	
 ?>

@@ -52,25 +52,27 @@ function getTiConf(callback) {
     }
 }
 
-function isUrnAllowed(urn) {
+/*function isUrnAllowed(urn) {
     return ($.inArray(urn, __ticonfig.allowed_urns) > -1);
-}
+}*/
 
-function processMiniCast(datx) {
-    if (datx.type === "film" || datx.type === "performance")
+function processMiniCast(datx, micro) {
+    if ((datx.type === "film" || datx.type === "performance"))
     {
-        var _nxaut1 = datx.spec.director;
+        var _nxaut1 = datx.spec.hasOwnProperty('director') ? datx.spec.director : null;
         _nxaut1 = (!_nxaut1) ? null : _nxaut1.text;
-        var _nxaut2 = datx.spec.writer;
+        var _nxaut2 = datx.spec.hasOwnProperty('writer') ? datx.spec.writer : null;
         _nxaut2 = (!_nxaut2) ? null : _nxaut2.text;
         var _nxaut = "";
         if (!(_nxaut1 || _nxaut2))
             return null;
         else if (_nxaut1 === _nxaut2)
-            return "ن و ک: " + _nxaut1;
+            return (!micro ? "ن و ک: " : "") + _nxaut1;
         else
-            return (!_nxaut1 ? "" : ("ک: " + _nxaut1)) + ((_nxaut1 && _nxaut2) ? " / " : "") + (!_nxaut2 ? "" : ("ن: " + _nxaut2));
+            return (!_nxaut1 ? "" : ((!micro ? "ک: " : "") + _nxaut1)) + ((_nxaut1 && _nxaut2) ? " / " : "") + (!_nxaut2 ? "" : ((!micro ? "ن: " : "") + _nxaut2));
     }
-    else if (datx.spec.cast)
+    else if (datx.spec.hasOwnProperty('cast') && datx.spec.cast && !micro)
         return datx.spec.cast.text;
+    return null;
 }
+
