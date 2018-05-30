@@ -1103,3 +1103,9 @@ div#tooltip {
 	color: var(--ti-dead);
 	font-size: 14rem;
 }
+
+#ti-receiptHolder .ti-seperator {
+	height: unset;
+	flex-basis: auto;
+	margin: 15px;
+}

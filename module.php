@@ -24,14 +24,15 @@
         <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
         <script type="text/javascript">
             let __config = <?= $cfg = file_get_contents($config_path) ?>;
-            <?php
-                if (!isset($_GET['zb_result'])) {
-                    foreach ($_GET as $k => $v)
-                        echo "__config." . str_replace('~', '.', $k) . " = '$v';";
-                } else {
-            ?>
-            let callData = <?php echo $_GET['zb_result']; ?>;
-                <?php } ?>
+        <?php
+            if (!isset($_GET['zb_result'])) {
+                foreach ($_GET as $k => $v)
+                    echo "__config." . str_replace('~', '.', $k) . " = '$v';";
+            } else {
+        ?>
+            let callData = JSON.parse('<?php echo $_GET['zb_result']; ?>');
+            let userReturn = JSON.parse('<?php echo $_GET['userxid']; ?>');
+        <?php } ?>
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
@@ -53,6 +54,7 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
+            var __userid = "<?php echo $_GET['user_id'] ?>";
             //var __scroll_origin = null;
             $(document).ready(function() {
                 $('#ti-mastercontain').trigger('widthChanged');
@@ -198,6 +200,29 @@
                     document.body.removeChild(link);
                 });
                 loadSingleView(callData.ok ? callData.data.sale.urn : 'sampleEvent');
+                if (callData.ok) {
+                    $('#ti-receiptHolder #okCBD').removeClass('ti-hidden');
+                    $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
+                    $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
+                    switch (callData.data.sale.deliver_type) {
+                        case "receipt_station":
+                            $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
+                            break;
+                        case "ticket":
+                            $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
+                            break;
+                    }
+                    $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
+                    $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
+                    $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + toLocalisedNumbers(callData.data.trace_number));
+                    if (callData.data.item_behavior == "event") {
+                        $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
+                        $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
+                    }
+                }
+                else {
+                    $('#failCBD').removeClass('ti-hidden');
+                }
             <?php } ?>
             });
         </script>
@@ -206,29 +231,7 @@
         <?php if (isset($_GET['zb_result'])) { ?>
             <div id="ti-receiptHolder" class="flex-tr ti-centrespan">
                 <script>
-                    if (callData.ok) {
-                        $('#okCBD').removeClass('ti-hidden');
-                        $('#ti-receiptHolder .ti-title').text(callData.data.sale.title);
-                        $('#ti-receiptHolder .ti-suffix').text(callData.data.item_behavior == "event" ? callData.data.venue.title : "");
-                        switch (callData.data.sale.deliver_type) {
-                            case "receipt_station":
-                                $('#ti-receiptHolder .ti-seperator img').removeClass('ti-hidden').attr('src', callData.data.attachment_url);
-                                break;
-                            case "ticket":
-                                $('#ti-receiptHolder .ti-btnwrap ti-btn').removeClass('ti-hidden');
-                                break;
-                        }
-                        $('#ti-receiptHolder .ti-rcinst').text(callData.data.instance.title);
-                        $('#ti-receiptHolder .ti-rcseat').text(callData.data.sale.method == "event_seat" ? toLocalisedNumbers(callData.data.seats) : (toLocalisedNumbers(callData.data.seats) + " عدد"));
-                        $('#ti-receiptHolder .ti-rctrace').text("کد پیگیری " + callData.data.trace_number);
-                        if (callData.data.item_behavior == "event") {
-                            $('#ti-receiptHolder #ti-rcaddr').removeClass('ti-hidden');
-                            $('#ti-receiptHolder .ti-rcaddr').text(callData.data.venue.address);
-                        }
-                    }
-                    else {
-                        $('#failCBD').removeClass('ti-hidden');
-                    }
+                    
                 </script>
                 <div>
                     <div>
