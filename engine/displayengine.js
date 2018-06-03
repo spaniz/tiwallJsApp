@@ -190,8 +190,8 @@ function addItem(i, offset, datX, max) {
         'name': toLocalisedNumbers(datX.title),
         'aut': _nxaut,
         'ac': _nxaut ? '' : 'ti-hidden',
-        'time': _nxtime,
-        'tc': _nxtime ? '' : 'ti-hidden',
+        'time': _nxdat + ' ' + _nxtime,
+        'tc': _nxdat || _nxtime ? '' : 'ti-hidden',
         'place': _nxloc,
         'pc': _nxloc ? '' : 'ti-hidden',
         'image': datX.image.thumb_url,
@@ -520,10 +520,7 @@ function reserveTimerTick() {
 }
 
 function causeAftermathPayment() {
-    var payUrl = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${encodeURI(decodeURI(__config.js.callback) + `?userxid=${__userid}`)}`;
-    var nwo = window.open(payUrl, '_blank');
-    if (window.focus)
-        nwo.focus();
+    location = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${encodeURI(decodeURI(__config.js.callback) + `?userxid=${__userid}`)}`;
 }
 
 function updateVouch(voucher) {

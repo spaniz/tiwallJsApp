@@ -1,21 +1,24 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/core.css" />
+    <link title="largeCSS" rel="stylesheet" href="style/large.css" />
+    <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
 </head>
 <body>
     <?php
         define('ROOTDIR', "");
         require_once("php/paths.php");
+        $cfg = file_get_contents($config_path);
+        $uconf = json_decode($cfg);
+        if (!(!isset($_GET['user_id']) && $uconf->wordpress->forcelogin)) {
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
         <style id="ti-hallstyle">
         </style>
-        <link rel="stylesheet" href="style/core.css" />
-        <link title="largeCSS" rel="stylesheet" href="style/large.css" />
-        <link type="font/woff2" href="https://fonts.gstatic.com/s/materialicons/v34/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" as="font" rel="preload" />
         <script type="text/javascript">
-            let __config = <?= $cfg = file_get_contents($config_path) ?>;
+            let __config = <?php echo $cfg; ?>;
         <?php
             if (!isset($_GET['zb_result'])) {
                 foreach ($_GET as $k => $v)
@@ -46,10 +49,11 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
-            var __userid = "<?php echo $_GET['user_id'] ?>";
+            var __userid = "<?php echo isset($_GET['user_id']) ? $_GET['user_id'] : 'null' ?>";
             //var __scroll_origin = null;
             $(document).ready(function() {
                 $('#ti-mastercontain').trigger('widthChanged');
+                configSync(__config.js.scroll);
             <?php if (!isset($_GET['zb_result'])) { ?>
                 $('#ti-listHeader').click(loadCats);
                 //__scroll_origin = $('#ti-listHolder');
@@ -85,6 +89,13 @@
                     loadCats();
                 if (__config.view == "single")
                     loadSingleView(__config.get.urn);
+                if (__config.user.override) {
+                    $('ti-foruser').addClass('ti-hidden');
+                    $('ti-nonuser').removeClass('ti-hidden');
+                } else {
+                    $('ti-foruser').removeClass('ti-hidden');
+                    $('ti-nonuser').addClass('ti-hidden');
+                }
                 if (__config.js.scroll) {
                     if (DEBUG) 
                         console.warn(">> scroll-sync allowed!");
@@ -346,15 +357,15 @@
                                     <span id="ti-xcost"></span>
                                 </div>
                             </div> 
-                            <div class="ti-duo">
+                            <div class="ti-duo ti-nonuser">
                                 <div class="ti-rightside">
                                     <span>مشخصات خرید</span>
                                 </div>
                                 <div class="ti-leftside">
-                                    <span>خرید شما توسط سایت ایتوک انجام میشود.</span>
+                                    <span class="ti-uplate"></span>
                                 </div>
-                            </div> 
-                            <!--<div class="ti-duo">
+                            </div>
+                            <div class="ti-duo ti-foruser">
                                 <div class="ti-rightside">
                                     <span>نام و نام خانوادگی</span>
                                 </div>
@@ -362,7 +373,7 @@
                                     <input type="text" id="ti-uname" style="direction: rtl; text-align: right;" class="exotic-input textbox" name="u_name" />
                                 </div>
                             </div> 
-                            <div class="ti-duo">
+                            <div class="ti-duo ti-foruser">
                                 <div class="ti-rightside">
                                     <span>آدرس ایمیل</span>
                                 </div>
@@ -370,14 +381,14 @@
                                     <input type="text" id="ti-umail" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mail" />
                                 </div>
                             </div> 
-                            <div class="ti-duo">
+                            <div class="ti-duo ti-foruser">
                                 <div class="ti-rightside">
                                     <span>شماره موبایل</span>
                                 </div>
                                 <div class="ti-leftside">
                                     <input type="text" id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
-                            </div>-->
+                            </div>
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <div id="ti-xusecup" class="exotic-input checkbox">
@@ -460,12 +471,6 @@
                 </object>
             </span>
         </div>
-
-        <script type="text/javascript">
-
-
-            
-        </script>
     </div>
     <div id="ti-errorHandle" class="ti-xHolder ti-currentcard">
         <h2>خطا</h2>
@@ -475,4 +480,10 @@
             <div class="ti-btn ti-dead">برگشت</div>
         </span>
     </div>
+    <?php } else { ?>
+    <div id="ti-errorHandle" class="ti-xHolder ti-cutru" style="opacity: 0">
+        <h2>خطا</h2>
+        <span class="ti-xname">دسترسی شما بدون لاگین در این بخش میسر نمی‌باشد.</span>
+    </div>
+    <?php } ?>
 </body>

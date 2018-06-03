@@ -38,6 +38,10 @@ i.material-icons {
 	-webkit-user-select: none;
 }
 
+.ti-cutru {
+	opacity: .87 !important;
+}
+
 .ti-xcontainer i.material-icons {
 	font-size: 16rem;
 	vertical-align: middle;
@@ -879,7 +883,7 @@ iframe.width-changed {
 	}
   }
   
-  input.textbox {
+  input.textbox, textarea.textbox {
 	--width: 200rem;
 	width: var(--width);
 	padding: 5rem;
@@ -888,7 +892,7 @@ iframe.width-changed {
 	/*animation: .75s unbloop 1;*/
   }
   
-  input.textbox:focus {
+  input.textbox:focus, textarea.textbox:focus {
 	background-size: calc(2 * var(--width)) calc(2 * var(--width));
 	border-color: var(--ti-accent);
 	color: white;

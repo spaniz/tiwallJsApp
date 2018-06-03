@@ -17,6 +17,7 @@
     #ti-listHolder .ti-xitem {
         height: unset;
         padding: 5rem;
+        position: relative;
     }
 
     #ti-listHolder .ti-witem {
@@ -28,7 +29,8 @@
         width: 120rem;
     }
 
-    #ti-listHolder .ti-xitem > .ti-name {
+    #ti-listHolder .ti-xitem > .ti-name,
+    #ti-listHolder .ti-xitem > .ti-nametitle {
         padding-right: 3rem;
         max-width: 120rem;
         box-sizing: border-box;
@@ -52,31 +54,35 @@
             width: 150rem;
         }
 
-        #ti-listHolder .ti-xitem > .ti-name {
+        #ti-listHolder .ti-xitem > .ti-name,
+        #ti-listHolder .ti-xitem > .ti-nametitle {
             max-width: 150rem;
         }
-
-        #ti-listHolder .ti-xitem:hover > .ti-name {
-            margin-top: -145rem;
-        }
     }
 
-    #ti-listHolder .ti-xitem > .ti-name > div {
+    #ti-listHolder .ti-xitem > div.ti-nametitle {
         line-height: 19rem;
-        margin-bottom: 5rem;
+        margin-top: 7rem;
     }
 
-    #ti-listHolder .ti-xitem > .ti-name > span {
-        line-height: 0rem;
-        margin: -100% 0;
+    #ti-listHolder .ti-witem .ti-name {
+        position: absolute;
+        margin: 0 0 !important;
+        padding: 5px 0;
+        height: 0;
+    }
+
+    #ti-listHolder .ti-witem .ti-name > span {
+        line-height: 15rem;
+        margin: 5rem 0;
         opacity: 0;
         transition: inherit;
+        height: 0;
     }
 
-    #ti-listHolder .ti-xitem:hover > .ti-name > span {
-        line-height: 15rem;
-        margin: 5rem -5rem;
+    #ti-listHolder .ti-xitem:hover .ti-name > span {
         opacity: 1;
+        height: unset;
     }
 
     #ti-listHolder .ti-xitem > span {

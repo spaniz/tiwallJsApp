@@ -31,12 +31,16 @@
                 ),
                 'get' => array(
                     'urn' => str_replace(' ', '', $_POST["get_urn"])
-                )
+                ),
                 'user' => array(
-                    'override' => $confx->user->override,
-                    'fullname' => $confx->user->fullname,
-                    'email' => $confx->user->email,
-                    'mobile' => $confx->user->mobile,
+                    'override' => !empty($_POST["user_override"]),
+                    'fullname' => $_POST["user_fullname"],
+                    'email' => $_POST["user_email"],
+                    'mobile' => $_POST["user_mobile"],
+                    'message' => htmlentities($_POST["user_message"])
+                ),
+                'wordpress' => array(
+                    'forcelogin' => !empty($_POST["wp_forcelogin"])
                 )
             ));
             header("Refresh:0;url=?result=ok");
@@ -84,16 +88,20 @@
                         echo "$('#jsdebug').click();\n";
                     if ($app_config->js->scroll)
                         echo "$('#jsscroll').click();\n";
+                    if ($app_config->user->override)
+                        echo "$('#useroverride').click();\n";
+                    if ($app_config->wordpress->forcelogin)
+                        echo "$('#wpforcelogin').click();\n";
                     echo "$('#cat_" . $app_config->categories->mode . "').click();\n";
                     echo "$('#view_" . $app_config->view . "').click();\n";
                 ?>
-                $('input[name="view"]').bind('change', function() {
+                $('input[name="view"]').on('exotic:check', function() {
                     console.log($(this).attr('value') + ': ' + $(this).prop('checked'));
-                    if ($(this).prop('checked') == true) {
+                    if ($(this).prop('checked')) {
                         $('#main-form').attr('tview', $(this).attr('value'));
                     }
                 });
-                $('input[name="view"]').trigger('change');
+                $('input[name="view"]').trigger('exotic:check');
             });
         </script>
         <div id="ok-msg" style="display: none;padding: 20px;background: rgba(0,0,0,.5);text-align: center;">تغییرات با موفقیت ثبت شدند</div>
@@ -113,6 +121,7 @@
                 <br/>
                 <span class="duo-right">لودینگ دلخواه</span>
                 <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />
+                <br/>
                 <span class="duo-right">آدرس رسید خرید</span>
                 <input class="exotic-input textbox duo-left" name="js.callback" id="jscallback" placeholder="Callback Page" value="<?= urldecode($app_config->js->callback) ?>" />
             </div>
@@ -177,8 +186,33 @@
                 <input class="exotic-input textbox duo-left" name="get.urn" id="singleurn" type="text" placeholder="Page URN" value="<?= isset($app_config->get->urn) ? $app_config->get->urn : "" ?>" />
             </div>
 
+            <h1>تنظیمات کاربری</h1>
+            <div id="settings-user">
+                <div id="wpforcelogin" class="exotic-input checkbox">
+                    <input type="checkbox" name="wp.forcelogin" />
+                </div>
+                <span>خرید محدود به کاربران</span>
+                <br/>
+                <div id="useroverride" class="exotic-input checkbox">
+                    <input type="checkbox" name="user.override" />
+                </div>
+                <span>ثبت خرید به نام وبسایت</span>
+                <br class="tiset-user" />
+                <span class="duo-right">نام</span>
+                <input class="exotic-input textbox duo-left" name="user.fullname" id="userfullname" type="text" placeholder="" value="<?= isset($app_config->user->fullname) ? $app_config->user->fullname : "" ?>" />
+                <br class="tiset-user" />
+                <span class="duo-right">ایمیل</span>
+                <input class="exotic-input textbox duo-left" name="user.email" id="useremail" type="text" placeholder="" value="<?= isset($app_config->user->email) ? $app_config->user->email : "" ?>" />
+                <br class="tiset-user" />
+                <span class="duo-right">شماره</span>
+                <input class="exotic-input textbox duo-left" name="user.mobile" id="usermobile" type="text" placeholder="" value="<?= isset($app_config->user->mobile) ? $app_config->user->mobile : "" ?>" />
+                <br class="tiset-user" />
+                <span class="duo-right">توضیحات در صفحه رزرو</span>
+                <input class="exotic-input textbox duo-left" name="user.message" id="usermobile" type="text" placeholder="" value="<?= isset($app_config->user->message) ? $app_config->user->message : "" ?>" />
+            </div>
+
             <input class="ti-btn" type="submit" value="ثبت تغییرات" />
         </form>
-        <center style="margin-bottom: 10px; margin-top: 15px;">Powered by <a><img src="http://x.anovase.com/logo-wide-w.svg" height="30px" style="vertical-align: baseline; margin-bottom: -5px;" /></a> 2018</center>
+        <center style="margin-bottom: 10px; margin-top: 15px;">Powered by <a href="http://www.anoavse.com/"><img src="http://x.anovase.com/logo-wide-w.svg" height="30px" style="vertical-align: baseline; margin-bottom: -5px;" /></a> 2018</center>
     </body>
 </html>

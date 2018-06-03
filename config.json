@@ -20,6 +20,10 @@
         "override": true,
         "fullname": "Etook Online",
         "email": "receipt@etookonline.com",
-        "mobile": "09000000000"
+        "mobile": "09000000000",
+        "message": ""
+    },
+    "wordpress": {
+        "forcelogin": false
     }
 }
