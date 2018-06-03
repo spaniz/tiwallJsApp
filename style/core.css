@@ -302,7 +302,7 @@ iframe.width-changed {
 	opacity: 0;
 }
 
-.ti-xitem .ti-name, .ti-xitem .ti-nametitle {
+#ti-listHolder .ti-xitem .ti-name, .ti-xitem .ti-nametitle {
 	display: block;
 }
 

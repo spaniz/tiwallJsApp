@@ -96,14 +96,14 @@
                 });
                 if (__config.view == "normal")
                     loadCats();
-                if (__config.view == "single")
+                else if (__config.view == "single")
                     loadSingleView(__config.get.urn);
                 if (__config.user.override) {
-                    $('ti-foruser').addClass('ti-hidden');
-                    $('ti-nonuser').removeClass('ti-hidden');
+                    $('.ti-foruser').addClass('ti-hidden');
+                    $('.ti-nonuser').removeClass('ti-hidden');
                 } else {
-                    $('ti-foruser').removeClass('ti-hidden');
-                    $('ti-nonuser').addClass('ti-hidden');
+                    $('.ti-foruser').removeClass('ti-hidden');
+                    $('.ti-nonuser').addClass('ti-hidden');
                 }
                 if (__config.js.scroll) {
                     if (DEBUG) 
