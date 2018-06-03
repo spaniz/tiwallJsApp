@@ -18,9 +18,6 @@ i.material-icons {
 }
 
 @media only screen and (max-device-width: 480px) {
-	:root {
-		font-size: 2.4px;
-	}
 
 	#ti-listHolder, #ti-listHeader {
 		filter: none !important;
@@ -176,7 +173,7 @@ iframe.width-changed {
 
 .ti-xitem > div > span i.material-icons {
 	font-size: 15rem;
-	margin-left: 3px;
+	margin-left: 3rem;
 	vertical-align: middle;
 	opacity: .87;
 }
@@ -187,7 +184,7 @@ iframe.width-changed {
 
 .ti-xitem > span {
     height: 75rem;
-    width: 65rem;
+    width: 70rem;
     vertical-align: middle;
     display: table-cell;
     border-radius: 2rem;
@@ -303,6 +300,20 @@ iframe.width-changed {
 .ti-hidden {
 	display: none !important;
 	opacity: 0;
+}
+
+.ti-xitem .ti-name, .ti-xitem .ti-nametitle {
+	display: block;
+}
+
+.ti-xitem .ti-nametitle {
+	line-height: 17rem;
+	margin: 6rem;
+}
+
+.ti-xitem .ti-name span {
+    line-height: 15rem;
+    margin: 3rem;
 }
 
 /*.ti-xHolder > div {

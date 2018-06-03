@@ -20,7 +20,8 @@
                     'debug' => !empty($_POST["js_debug"]),
                     'scroll' => !empty($_POST["js_scroll"]),
                     'loading' => $_POST["js_loading"],
-                    'callback' => urlencode($_POST["js_callback"])
+                    'callback' => urlencode($_POST["js_callback"]),
+                    'responsive' => !empty($_POST["js_responsive"])
                 ),
                 'categories' => array(
                     'mode' => isset($_POST["categories_mode"]) ? $_POST["categories_mode"] : null,
@@ -88,6 +89,8 @@
                         echo "$('#jsdebug').click();\n";
                     if ($app_config->js->scroll)
                         echo "$('#jsscroll').click();\n";
+                    if ($app_config->js->responsive)
+                        echo "$('#jsrespons').click();\n";
                     if ($app_config->user->override)
                         echo "$('#useroverride').click();\n";
                     if ($app_config->wordpress->forcelogin)
@@ -118,6 +121,11 @@
                     <input type="checkbox" name="js.scroll" />
                 </div>
                 <span>ارتفاع آزاد پلاگین</span>
+                <br/>
+                <div id="jsrepons" class="exotic-input checkbox">
+                    <input type="checkbox" name="js.responsive" />
+                </div>
+                <span>حالت ریسپانسیو درونی<span>در صورتی که وبسایت شما ریسپانسیو است این گزینه را خاموش کنید.</span></span>
                 <br/>
                 <span class="duo-right">لودینگ دلخواه</span>
                 <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />

@@ -17,6 +17,15 @@
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
         <style id="ti-hallstyle">
         </style>
+    <?php if ($uconf->js->responsive) { ?>
+        <style>
+            @media only screen and (max-device-width: 480px) {
+                :root {
+                    font-size: 2.35px;
+                }
+            }
+        </style>
+    <?php } ?>
         <script type="text/javascript">
             let __config = <?php echo $cfg; ?>;
         <?php

@@ -4,7 +4,8 @@
         "debug": true,
         "scroll": true,
         "loading": "images\/@infload.svg",
-        "callback": ""
+        "callback": "",
+        "responsive": false
     },
     "categories": {
         "mode": "store",
