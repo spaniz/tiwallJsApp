@@ -32,17 +32,18 @@ function goForPayment(args, addargs) {
             }
             return;
         }
-        let xaddr = null;
+        let xaddr = '';
         if (__userid)
-            xaddr += `${ZB_BASE_URL}?mode=wp&trace=${dat.data.trace_number}&reserve=${dat.data.reserve_id}&fullname=${__userinfo["fullname"]}&email=${__userinfo["email"]}&userxid=${__userid}`;
+            xaddr += `sign.php?mode=wp&trace=${dat.data.trace_number}&reserve=${dat.data.reserve_id}&fullname=${__userinfo["fullname"]}&email=${__userinfo["email"]}&userxid=${__userid}`;
         else
-            xaddr += `${ZB_BASE_URL}?mode=mx&trace=${dat.data.trace_number}&reserve=${dat.data.reserve_id}&fullname=${addargs["fullname"]}&email=${addargs["email"]}&mobile=${addargs["mobile"]}`;
+            xaddr += `sign.php?mode=mx&trace=${dat.data.trace_number}&reserve=${dat.data.reserve_id}&fullname=${addargs["fullname"]}&email=${addargs["email"]}&mobile=${addargs["mobile"]}`;
         $.ajax(xaddr, { 
-            dataType: 'text/plain',
-            success: (xhrx) => {
-                __paymentClause.reserve_id = dat.data.reserve_id;
-                __paymentClause.trace_number = dat.data.trace_number;
-                __paymentClause.total_price = dat.data.total_price;
+            contentType: 'text/plain',
+            success: xhrx => {
+                __paymentClause.token = xhrx,
+                __paymentClause.reserve_id = mat.data.reserve_id;
+                __paymentClause.trace_number = mat.data.trace_number;
+                __paymentClause.total_price = mat.data.total_price;
                 __paymentClause.time = __RESERVETIME;
                 setupAftemath();
             },

@@ -42,8 +42,12 @@
             if ($uconf->user->override) {
                 $cb_payload = array();
                 $cb_auth = verifyToken($_GET['backtoken'], $_GET['zb_result'], $cb_payload);
+                if ($uconf->wordpress->forcelogin)
+                    $cb_auth = $cb_auth && ($cb_payload['mode'] == 'wp');
             }
+            if (!isset($_GET['user_id']) && $uconf->wordpress->forcelogin) {
         } ?>
+            $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید.");
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>

@@ -1124,3 +1124,12 @@ div#tooltip {
 	flex-basis: auto;
 	margin: 15px;
 }
+
+.ti-btn.ti-warn {
+    background-color: darkred;
+    width: unset;
+    height: unset;
+    line-height: unset;
+    padding: 9rem 12rem;
+    pointer-events: none;
+}

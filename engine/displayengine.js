@@ -492,7 +492,7 @@ function setupAftemath() {
 function reserveTimerTick() {
     __paymentClause.time--;
     var time = __paymentClause.time;
-    var strtime = Math.floor(time / 60) + ':' + (time % 60);
+    var strtime = time >= 0 ? Math.floor(time / 60) + ':' + (time % 60 >= 10 ? time % 60 : `0${(time % 60)}`) : 'اتمام زمان';
     $('#ti-aftermathHolder #ti-xrtimer').text(toLocalisedNumbers(strtime));
     if (time < 60)
         $('#ti-aftermathHolder #ti-xrtimer').addClass('ti-error');
@@ -501,7 +501,7 @@ function reserveTimerTick() {
     if (time <= 0) {
         getZbData(__active_event.urn, "check", __paymentClause, dat => {
             if (!dat.ok)
-                switchToFinal();
+                cancelAftermath(switchToFinal);
             else {
                 clearTimeout(__aftermath_timer);
                 switch (dat.data.state) {
@@ -511,7 +511,7 @@ function reserveTimerTick() {
                     case "pending": 
                         break;
                     default:
-                        switchToFinal();
+                        cancelAftermath(switchToFinal);
                         break;
                 }
             }
