@@ -12,8 +12,8 @@
         require_once("php/tokener.php");
         $cfg = file_get_contents($config_path);
         $uconf = json_decode($cfg);
-        global $current_user;
-        get_currentuserinfo();
+        /*global $current_user;
+        get_currentuserinfo();*/
         /*if (!(!isset($_GET['user_id']) && $uconf->wordpress->forcelogin)) {*/
     ?>
     <div id="ti-mastercontain">
@@ -65,11 +65,11 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
-            var __userid = <?php echo isset($current_user) ? '"' . $current_user->ID . '"' : 'null' ?>;
-        <?php if (isset($current_user)) { ?>
+            var __userid = <?php echo isset($_GET['user_id']) ? '"' . $_GET['user_id'] . '"' : 'null' ?>;
+        <?php if (isset($_GET['user_id'])) { ?>
             var __userinfo = {
-                'fullname': '<?php echo $current_user->user_firstname . " " . $current_user->user_lastname; ?>',
-                'email': '<?php echo $current_user->user_email; ?>'
+                'fullname': '<?php echo $_GET['user_firstname'] . " " . $_GET['user_lastname']; ?>',
+                'email': '<?php echo $_GET['user_email']; ?>'
             }
         <?php } ?>
             //var __scroll_origin = null;
