@@ -9,9 +9,12 @@
     <?php
         define('ROOTDIR', "");
         require_once("php/paths.php");
+        require_once("php/tokener.php");
         $cfg = file_get_contents($config_path);
         $uconf = json_decode($cfg);
-        if (!(!isset($_GET['user_id']) && $uconf->wordpress->forcelogin)) {
+        global $current_user;
+        get_currentuserinfo();
+        /*if (!(!isset($_GET['user_id']) && $uconf->wordpress->forcelogin)) {*/
     ?>
     <div id="ti-mastercontain">
         <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
@@ -28,15 +31,19 @@
     <?php } ?>
         <script type="text/javascript">
             let __config = <?php echo $cfg; ?>;
-        <?php
-            if (!isset($_GET['zb_result'])) {
-                foreach ($_GET as $k => $v)
-                    echo "__config." . str_replace('~', '.', $k) . " = '$v';";
-            } else {
-        ?>
+    <?php
+        if (!isset($_GET['zb_result'])) {
+            foreach ($_GET as $k => $v)
+                echo "__config." . str_replace('~', '.', $k) . " = '$v';";
+        } else {
+    ?>
             let callData = JSON.parse('<?php echo $_GET['zb_result']; ?>');
-            let userReturn = JSON.parse('<?php echo $_GET['userxid']; ?>');
-        <?php } ?>
+    <?php
+            if ($uconf->user->override) {
+                $cb_payload = array();
+                $cb_auth = verifyToken($_GET['backtoken'], $_GET['zb_result'], $cb_payload);
+            }
+        } ?>
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
@@ -58,7 +65,13 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
-            var __userid = "<?php echo isset($_GET['user_id']) ? $_GET['user_id'] : 'null' ?>";
+            var __userid = <?php echo isset($current_user) ? '"' . $current_user->ID . '"' : 'null' ?>;
+        <?php if (isset($current_user)) { ?>
+            var __userinfo = {
+                'fullname': '<?php echo $current_user->user_firstname . " " . $current_user->user_lastname; ?>',
+                'email': '<?php echo $current_user->user_email; ?>'
+            }
+        <?php } ?>
             //var __scroll_origin = null;
             $(document).ready(function() {
                 $('#ti-mastercontain').trigger('widthChanged');
@@ -98,9 +111,10 @@
                     loadCats();
                 else if (__config.view == "single")
                     loadSingleView(__config.get.urn);
-                if (__config.user.override) {
+                if (__config.user.override && __userid) {
                     $('.ti-foruser').addClass('ti-hidden');
                     $('.ti-nonuser').removeClass('ti-hidden');
+                    $('.ti-uplate').text(__config.user.message);
                 } else {
                     $('.ti-foruser').removeClass('ti-hidden');
                     $('.ti-nonuser').addClass('ti-hidden');
@@ -196,7 +210,11 @@
                         'voucher': $('#ti-finalHolder #ti-xusecup').attr('check') === 'true' ? $('#ti-finalHolder #ti-xcupon').val() : '',
                         'send_sms': (!__config.user.override), 
                         'send_email': (!__config.user.override), 
-                        'use_internal_receipt': false });
+                        'use_internal_receipt': false }, 
+                        (__config.user.override && !__userid) ? {
+                        'fullname': $('#ti-finalHolder #ti-uname').val(),
+                        'email': $('#ti-finalHolder #ti-umail').val(),
+                        'mobile': $('#ti-finalHolder #ti-umobile').val() } : null);
                 });
                 $('#ti-aftermathHolder #ti-bxpay').click(() => causeAftermathPayment());
             <?php } else { ?>
@@ -258,6 +276,9 @@
                             <p><i class="material-icons">event_seat</i><span class="ti-rcseat"></span></p>
                             <p><i class="material-icons">label</i><span class="ti-rctrace"></span></p>
                             <p id="ti-rcaddr" class="ti-hidden"><i class="material-icons">not_listed_location</i><span class="ti-rcaddr"></span></p>
+                        <?php if (!$cb_auth) { ?>
+                            <p><i class="material-icons">warning</i><span>مالکیت شما برای این خرید تایید نشد، رسید شما ممکن است معتبر باشد ولی این خرید در این وبسایت به نام شما ثبت نخواهد شد.</span></p>
+                        <?php } ?>
                         </div>
 
                         <div id="failCBD" class="ti-xcontainer ti-hidden">
@@ -398,6 +419,7 @@
                                     <input type="text" id="ti-umobile" style="direction: ltr; text-align: left;" class="exotic-input textbox" name="u_mobile" />
                                 </div>
                             </div>
+                            <div class="ti-duo" style="flex: 1 1 auto"></div>
                             <div class="ti-duo">
                                 <div class="ti-rightside">
                                     <div id="ti-xusecup" class="exotic-input checkbox">
@@ -489,10 +511,4 @@
             <div class="ti-btn ti-dead">برگشت</div>
         </span>
     </div>
-    <?php } else { ?>
-    <div id="ti-errorHandle" class="ti-xHolder ti-cutru" style="opacity: 0">
-        <h2>خطا</h2>
-        <span class="ti-xname">دسترسی شما بدون لاگین در این بخش میسر نمی‌باشد.</span>
-    </div>
-    <?php } ?>
 </body>

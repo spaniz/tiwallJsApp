@@ -1020,7 +1020,7 @@ div#tooltip {
 	flex-direction: column;
 }
 #ti-finalHolder .ti-xcontainer * {
-	flex: 1;
+	flex: 0 0 auto;
 }
 #ti-finalHolder .ti-duo .ti-rightside {
 	color: var(--ti-blind);

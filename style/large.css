@@ -32,9 +32,12 @@
     #ti-listHolder .ti-xitem > .ti-name,
     #ti-listHolder .ti-xitem > .ti-nametitle {
         padding-right: 3rem;
-        max-width: 120rem;
+        width: 120rem;
         box-sizing: border-box;
         margin-top: 4rem;
+    }
+    #ti-listHolder .ti-xitem > .ti-nametitle {
+        width: 105rem;
     }
 
     #ti-listHolder .ti-xitem:hover > .ti-name {
@@ -54,9 +57,11 @@
             width: 150rem;
         }
 
-        #ti-listHolder .ti-xitem > .ti-name,
+        #ti-listHolder .ti-xitem > .ti-name {
+            width: 150rem;
+        }
         #ti-listHolder .ti-xitem > .ti-nametitle {
-            max-width: 150rem;
+            width: 135rem;
         }
     }
 

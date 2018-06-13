@@ -110,36 +110,6 @@
         <div id="ok-msg" style="display: none;padding: 20px;background: rgba(0,0,0,.5);text-align: center;">تغییرات با موفقیت ثبت شدند</div>
         <div id="fail-msg" style="display: none;padding: 20px;background: rgba(255,0,0,.7);text-align: center;">در حین ثبت تغییرات با مشکلی بر خوردیم</div>
         <form id="main-form" method="post">
-            <h1>تنظیمات فنی</h1>
-            <div id="settings-technical">
-                <div id="jsdebug" class="exotic-input checkbox">
-                    <input type="checkbox" name="js.debug" />
-                </div>
-                <span>حالت دیباگ جاوااسکریپت</span>
-                <br />
-                <div id="jsscroll" class="exotic-input checkbox">
-                    <input type="checkbox" name="js.scroll" />
-                </div>
-                <span>ارتفاع آزاد پلاگین</span>
-                <br/>
-                <div id="jsrepons" class="exotic-input checkbox">
-                    <input type="checkbox" name="js.responsive" />
-                </div>
-                <span>حالت ریسپانسیو درونی<span>در صورتی که وبسایت شما ریسپانسیو است این گزینه را خاموش کنید.</span></span>
-                <br/>
-                <span class="duo-right">لودینگ دلخواه</span>
-                <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />
-                <br/>
-                <span class="duo-right">آدرس رسید خرید</span>
-                <input class="exotic-input textbox duo-left" name="js.callback" id="jscallback" placeholder="Callback Page" value="<?= urldecode($app_config->js->callback) ?>" />
-            </div>
-
-            <h1>شناسه امنیتی</h1>
-            <div id="settings-security">
-                <input class="exotic-input textbox" name="app.token" id="apptoken" type="text" placeholder="App Token" value="<?= _ZB_SECRET ?>" />
-                <input class="exotic-input textbox" name="app.id" id="appid" type="text" placeholder="App ID" value="<?= _ZB_APPID ?>" />
-            </div>
-
             <h1>حالت نمایش</h1>
             <div>
                 <div class="radiogroup">
@@ -217,6 +187,36 @@
                 <br class="tiset-user" />
                 <span class="duo-right">توضیحات در صفحه رزرو</span>
                 <input class="exotic-input textbox duo-left" name="user.message" id="usermobile" type="text" placeholder="" value="<?= isset($app_config->user->message) ? $app_config->user->message : "" ?>" />
+            </div>
+
+            <h1>شناسه امنیتی</h1>
+            <div id="settings-security">
+                <input class="exotic-input textbox" name="app.token" id="apptoken" type="text" placeholder="App Token" value="<?= _ZB_SECRET ?>" />
+                <input class="exotic-input textbox" name="app.id" id="appid" type="text" placeholder="App ID" value="<?= _ZB_APPID ?>" />
+            </div>
+
+            <h1>تنظیمات فنی</h1>
+            <div id="settings-technical">
+                <div id="jsdebug" class="exotic-input checkbox">
+                    <input type="checkbox" name="js.debug" />
+                </div>
+                <span>حالت دیباگ جاوااسکریپت</span>
+                <br />
+                <div id="jsscroll" class="exotic-input checkbox">
+                    <input type="checkbox" name="js.scroll" />
+                </div>
+                <span>ارتفاع آزاد پلاگین</span>
+                <br/>
+                <div id="jsrepons" class="exotic-input checkbox">
+                    <input type="checkbox" name="js.responsive" />
+                </div>
+                <span>حالت ریسپانسیو درونی<span>در صورتی که وبسایت شما ریسپانسیو است این گزینه را خاموش کنید.</span></span>
+                <br/>
+                <span class="duo-right">لودینگ دلخواه</span>
+                <input class="exotic-input textbox duo-left" name="js.loading" id="jsloading" placeholder="GIF/SVG Url" value="<?= $app_config->js->loading ?>" />
+                <br/>
+                <span class="duo-right">آدرس رسید خرید</span>
+                <input class="exotic-input textbox duo-left" name="js.callback" id="jscallback" placeholder="Callback Page" value="<?= urldecode($app_config->js->callback) ?>" />
             </div>
 
             <input class="ti-btn" type="submit" value="ثبت تغییرات" />
