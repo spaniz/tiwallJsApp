@@ -1,6 +1,7 @@
 <?php
 	error_reporting(0);
 	require_once('php/consts.php');
+	require_once('php/tokener.php');
 
 	function signReservePayload($args) {
 		if (!isset($args['mode']))
