@@ -41,9 +41,9 @@ function goForPayment(args, addargs) {
             contentType: 'text/plain',
             success: xhrx => {
                 __paymentClause.token = xhrx,
-                __paymentClause.reserve_id = mat.data.reserve_id;
-                __paymentClause.trace_number = mat.data.trace_number;
-                __paymentClause.total_price = mat.data.total_price;
+                __paymentClause.reserve_id = dat.data.reserve_id;
+                __paymentClause.trace_number = dat.data.trace_number;
+                __paymentClause.total_price = dat.data.total_price;
                 __paymentClause.time = __RESERVETIME;
                 setupAftemath();
             },

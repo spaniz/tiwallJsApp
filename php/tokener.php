@@ -35,6 +35,7 @@
 			$payload = array();
 			$payload['reserve'] = $receipt['reserve_id'];
 			$payload['trace'] = $receipt['trace_number'];
+			
 			$signature = array_pop($payload_b64);
 			if ($paylaod_b64[2] == base64url_encode('wp')) {
 				$order = ['mode', 'userxid', 'fullname', 'email'];

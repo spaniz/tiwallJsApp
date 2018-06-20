@@ -45,10 +45,8 @@
                 if ($uconf->wordpress->forcelogin)
                     $cb_auth = $cb_auth && ($cb_payload['mode'] == 'wp');
             }
-        }
-        if (!isset($_GET['user_id']) && $uconf->wordpress->forcelogin) { ?>
-            $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید.");
-        <?php } ?>
+        } ?>
+        
         </script>   
         <script type="text/javascript" src="https://cdn.zirbana.com/js/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="engine/utility.js"></script>
@@ -83,6 +81,9 @@
                 configSync(__config.js.scroll);
             <?php if (!isset($_GET['zb_result'])) { ?>
                 $('#ti-listHeader').click(loadCats);
+            <?php if (!isset($_GET['user_id']) && $uconf->wordpress->forcelogin) { ?>
+                $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید.");
+            <?php } ?>
                 //__scroll_origin = $('#ti-listHolder');
                 $('#ti-listHolder').on((__config.js.scroll ? 'sync:' : '') + 'scroll', function(eventScr) {
                     if (DEBUG)

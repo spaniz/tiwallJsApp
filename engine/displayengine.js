@@ -520,7 +520,7 @@ function reserveTimerTick() {
 }
 
 function causeAftermathPayment() {
-    location = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${encodeURI(decodeURI(__config.js.callback) + `?backtoken=${__paymentClause.token}`)}`;
+    parent.location = `${ZB_MAIN_URL}${__active_event.urn}/payment?reserve_id=${__paymentClause.reserve_id}&trace_number=${__paymentClause.trace_number}&callback=${encodeURI(decodeURI(__config.js.callback) + `?backtoken=${__paymentClause.token}`)}`;
 }
 
 function updateVouch(voucher) {

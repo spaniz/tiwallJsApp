@@ -2,8 +2,6 @@
 	error_reporting(0);
 	require_once('php/consts.php');
 	require_once('php/tokener.php');
-<<<<<<< HEAD
-=======
 
 	function signReservePayload($args) {
 		if (!isset($args['mode']))
@@ -23,7 +21,6 @@
 		
 		return implode('.', $payload) . '.' . hash_hmac('sha256', implode('.', $payload), _ZB_SECRET);
 	}
->>>>>>> 2cb6273f76f41a2a5eeda3b62f666c251681162b
 
 	header('Content-Type: text/plain');
 	echo signReservePayload($_GET);
