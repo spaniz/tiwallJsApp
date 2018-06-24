@@ -82,7 +82,7 @@
             <?php if (!isset($_GET['zb_result'])) { ?>
                 $('#ti-listHeader').click(loadCats);
             <?php if (!isset($_GET['user_id']) && $uconf->wordpress->forcelogin) { ?>
-                $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید.");
+                $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید");
             <?php } ?>
                 //__scroll_origin = $('#ti-listHolder');
                 $('#ti-listHolder').on((__config.js.scroll ? 'sync:' : '') + 'scroll', function(eventScr) {
@@ -298,7 +298,7 @@
                 </div>
             </div>
         <?php } else { ?>
-            <div id="ti-bannerHolder" class="flex-tr ti-rightside">
+            <div id="ti-bannerHolder" class="flex-tr ti-rightside chaotic">
                 <div>
                     <div>
                         <img />
@@ -327,7 +327,7 @@
                     </div>
                 </div>
             </div>
-            <div id="ti-pickHolder" class="flex-tr fulfilled ti-rightside">
+            <div id="ti-pickHolder" class="flex-tr fulfilled ti-rightside chaotic">
                 <div>
                     <div>
                         <div class="ti-prefix"></div>

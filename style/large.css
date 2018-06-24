@@ -345,19 +345,23 @@
         background: rgba(255,255,255,.8);
     }
 
-    #ti-cardWrapper > div.ti-rightside {
+    #ti-cardWrapper:not(.chaotic) > div.ti-rightside, 
+    #ti-cardWrapper.chaotic > div:nth-child(odd) {
         flex-direction: row-reverse;
     }
 
-    #ti-cardWrapper > div.ti-leftside {
+    #ti-cardWrapper:not(.chaotic) > div.ti-leftside, 
+    #ti-cardWrapper.chaotic > div:nth-child(even) {
         flex-direction: row;
     }
 
-    #ti-cardWrapper > div.ti-rightside > div > div {
+    #ti-cardWrapper:not(.chaotic) > div.ti-rightside > div > div,
+    #ti-cardWrapper.chaotic > div:nth-child(odd) > div > div {
         margin-left: 0;
     }
 
-    #ti-cardWrapper > div.ti-leftside > div > div {
+    #ti-cardWrapper:not(.chaotic) > div.ti-leftside > div > div,
+    #ti-cardWrapper.chaotic > div:nth-child(even) > div > div {
         margin-right: 0;
     }
 

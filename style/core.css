@@ -1133,3 +1133,7 @@ div#tooltip {
     padding: 9rem 12rem;
     pointer-events: none;
 }
+
+#ti-cardWrapper.chaotic > div:not(.chaotic) {
+	display: none !important;
+}
