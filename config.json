@@ -4,7 +4,7 @@
         "debug": true,
         "scroll": true,
         "loading": "images\/@infload.svg",
-        "callback": "",
+        "callback": "http:\/\/star47-nsun:8655\/tiwalljs\/module.php",
         "responsive": false
     },
     "categories": {
@@ -19,12 +19,12 @@
     },
     "user": {
         "override": true,
-        "fullname": "Etook Online",
+        "fullname": "Etook Offline",
         "email": "receipt@etookonline.com",
         "mobile": "09000000000",
         "message": ""
     },
     "wordpress": {
-        "forcelogin": true
+        "forcelogin": false
     }
 }

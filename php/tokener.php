@@ -2,11 +2,11 @@
 	require_once('consts.php');
 
 	function base64url_encode($input) {
-		return strtr(base64_encode($input), '+/=', '._-');
+		return strtr(base64_encode($input), '+/=', '~_-');
 	}
 	
 	function base64url_decode($input) {
-		return base64_decode(strtr($input, '._-', '+/='));
+		return base64_decode(strtr($input, '~_-', '+/='));
 	}
 
 	function signReservePayload($args) {
@@ -35,7 +35,7 @@
 			$payload = array();
 			$payload['reserve'] = $receipt['reserve_id'];
 			$payload['trace'] = $receipt['trace_number'];
-			
+
 			$signature = array_pop($payload_b64);
 			if ($paylaod_b64[2] == base64url_encode('wp')) {
 				$order = ['mode', 'userxid', 'fullname', 'email'];
