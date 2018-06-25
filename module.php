@@ -298,14 +298,14 @@
                 </div>
             </div>
         <?php } else { ?>
-            <div id="ti-bannerHolder" class="flex-tr ti-rightside chaotic">
+            <div id="ti-bannerHolder" class="flex-tr ti-rightside">
                 <div>
                     <div>
                         <img />
                     </div>
                 </div>
             </div>
-            <div id="ti-eventHolder" class="flex-tr fulfilled ti-leftside">
+            <div id="ti-eventHolder" class="flex-tr fulfilled ti-leftside chaotic chaotic-right">
                 <div>
                     <div>
                         <div class="ti-prefix"></div>
@@ -327,7 +327,7 @@
                     </div>
                 </div>
             </div>
-            <div id="ti-pickHolder" class="flex-tr fulfilled ti-rightside chaotic">
+            <div id="ti-pickHolder" class="flex-tr fulfilled ti-rightside chaotic chaotic-left">
                 <div>
                     <div>
                         <div class="ti-prefix"></div>

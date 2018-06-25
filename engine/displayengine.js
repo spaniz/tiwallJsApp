@@ -50,63 +50,64 @@ function initEventPage(i, isRef) {
         getTiEventList(null, { parent_id: __active_event.id }, xdat => {
             xdat.data.forEach(elem => addChild(elem));
         });
-    } else {
-        // DIR & AUTH
-        _nxaut = processMiniCast(__active_event);
-        if (_nxaut) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxaut').text(_nxaut);
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').addClass('ti-hidden');
-
-        // VENUE
-        var _nxloc = __active_event.spec.hasOwnProperty('venue') ? __active_event.spec.venue : null;
-        _nxloc = (!_nxloc) ? null : _nxloc.title;
-        if (_nxloc) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxloc').text(toLocalisedNumbers(_nxloc));
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').addClass('ti-hidden');
-
-        // DATETIME
-        var _nxtime = __active_event.spec.hasOwnProperty('time') ? __active_event.spec.time : "";
-        _nxtime = (!_nxtime) ? "" : _nxtime.text;
-        var _nxdat = __active_event.spec.hasOwnProperty('date_duration_text') ? (__active_event.spec.date_duration_text || "") : "";
-        if (_nxdat || _nxtime) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxdat').text(toLocalisedNumbers(_nxdat + ' ' + _nxtime));
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').addClass('ti-hidden');
-
-        // PRICE
-        var _nxprc = __active_event.hasOwnProperty('price') ? __active_event.price : "";
-        _nxprc = (!_nxprc) ? null : _nxprc.text;
-        if (_nxprc) {
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').removeClass('ti-hidden');
-            $('#ti-eventHolder .ti-xcontainer .ti-nxprc').text(toLocalisedNumbers(_nxprc));
-        }
-        else
-            $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
-
-        $('#ti-eventHolder .ti-seperator').text(__active_event.short_desc || "");
-        $('#ti-eventHolder .ti-xplate').text(__active_event.promo_desc || "");
     }
+    // DIR & AUTH
+    _nxaut = processMiniCast(__active_event);
+    if (_nxaut) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxaut').text(_nxaut);
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(1)').addClass('ti-hidden');
+
+    // VENUE
+    var _nxloc = __active_event.spec.hasOwnProperty('venue') ? __active_event.spec.venue : null;
+    _nxloc = (!_nxloc) ? null : _nxloc.title;
+    if (_nxloc) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxloc').text(toLocalisedNumbers(_nxloc));
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(2)').addClass('ti-hidden');
+
+    // DATETIME
+    var _nxtime = __active_event.spec.hasOwnProperty('time') ? __active_event.spec.time : "";
+    _nxtime = (!_nxtime) ? "" : _nxtime.text;
+    var _nxdat = __active_event.spec.hasOwnProperty('date_duration_text') ? (__active_event.spec.date_duration_text || "") : "";
+    if (_nxdat || _nxtime) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxdat').text(toLocalisedNumbers(_nxdat + ' ' + _nxtime));
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(3)').addClass('ti-hidden');
+
+    // PRICE
+    var _nxprc = __active_event.hasOwnProperty('price') ? __active_event.price : "";
+    _nxprc = (!_nxprc) ? null : _nxprc.text;
+    if (_nxprc) {
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').removeClass('ti-hidden');
+        $('#ti-eventHolder .ti-xcontainer .ti-nxprc').text(toLocalisedNumbers(_nxprc));
+    }
+    else
+        $('#ti-eventHolder .ti-xcontainer p:nth-child(4)').addClass('ti-hidden');
+
+    $('#ti-eventHolder .ti-seperator').text(__active_event.short_desc || "");
+    $('#ti-eventHolder .ti-xplate').text(__active_event.promo_desc || "");
 }
 
 let __current_instance = null;
 let __instances = null;
 function addChild(datC) {
+    let datO = datC;
     lockLoader(true);
-    var ops = { id: datC.id || "", name: datC.title };
+    var ops = { id: datC.id || "", name: datC.title, info: '' };
     getEventPickHtml(ops, xhtml => {
         $('#ti-pickHolder .ti-xcontainer').append(xhtml);
         $('#ti-pickHolder .ti-witem:last-child').click(event => {
-            initEventPage(event, true);
+            initEventPage(datO, true);
         });
     });
+    lockLoader(false);
 }
 function addPick(datZ) {
     lockLoader(true);
@@ -404,6 +405,7 @@ function switchToEvent() {
     $('#ti-cardWrapper #ti-pickHolder ~ tr').removeClass('fulfilled');
     $('#ti-cardWrapper').get(0).style.setProperty('--shift', '0');
     $('#ti-cardWrapper').get(0).style.setProperty('--stage', '0');
+    $('#ti-cardWrapper').removeClass('chaotic');
     desyncViewSize();
 }
 function switchToPick() {
