@@ -1137,3 +1137,6 @@ div#tooltip {
 #ti-cardWrapper.chaotic > div:not(.chaotic) {
 	display: none !important;
 }
+.ti-error {
+	color: darkred;
+}

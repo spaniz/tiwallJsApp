@@ -283,7 +283,7 @@
                             <p><i class="material-icons">label</i><span class="ti-rctrace"></span></p>
                             <p id="ti-rcaddr" class="ti-hidden"><i class="material-icons">not_listed_location</i><span class="ti-rcaddr"></span></p>
                         <?php if (!$cb_auth) { ?>
-                            <p><i class="material-icons">warning</i><span>مالکیت شما برای این خرید تایید نشد، رسید شما ممکن است معتبر باشد ولی این خرید در این وبسایت به نام شما ثبت نخواهد شد.</span></p>
+                            <p class="ti-error"><i class="material-icons">warning</i><span>مالکیت شما برای این خرید تایید نشد، رسید شما ممکن است معتبر باشد ولی این خرید در این وبسایت به نام شما ثبت نخواهد شد.</span></p>
                         <?php } ?>
                         </div>
 
