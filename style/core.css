@@ -256,10 +256,10 @@ iframe.width-changed {
 #ti-cardWrapper > div > div > div {
     width: calc(100% - 20rem);
     height: calc(100% - 20rem);
-	min-height: 240rem;
-    min-width: 240rem;
-    max-height: 360rem;
-    max-width: 320rem;
+	min-height: 290rem;
+	min-width: 290rem;
+	max-height: 400rem;
+	max-width: 450rem;
     background: white;
     box-sizing: border-box;
     margin: auto;

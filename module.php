@@ -68,12 +68,12 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
-            var __userid = <?php echo !empty($_GET['user_id']) ? '"' . $_GET['user_id'] . '"' : 'null' ?>;
-        <?php if (!empty($_GET['user_id'])) { ?>
-            var __userinfo = {
-                'fullname': '<?php echo $_GET['user_firstname'] . " " . $_GET['user_lastname']; ?>',
-                'email': '<?php echo $_GET['user_email']; ?>'
-            }
+            var __cypher = <?php echo !empty($_GET['cypherkey']) ? '"' . $_GET['cypherkey'] . '"' : 'null' ?>;
+        <?php if (!empty($_GET['cypherkey'])) { ?>
+            /*var __userinfo = {
+                'fullname': '</?php echo $_GET['user_firstname'] . " " . $_GET['user_lastname']; ?>',
+                'email': '</?php echo $_GET['user_email']; ?>'
+            }*/
         <?php } ?>
             //var __scroll_origin = null;
             $(document).ready(function() {
@@ -81,7 +81,7 @@
                 configSync(__config.js.scroll);
             <?php if (empty($_GET['zb_result'])) { ?>
                 $('#ti-listHeader').click(loadCats);
-            <?php if (empty($_GET['user_id']) && $uconf->wordpress->forcelogin) { ?>
+            <?php if (empty($_GET['cypherkey']) && $uconf->wordpress->forcelogin) { ?>
                 $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید");
             <?php } ?>
                 //__scroll_origin = $('#ti-listHolder');
@@ -117,7 +117,7 @@
                     loadCats();
                 else if (__config.view == "single")
                     loadSingleView(__config.get.urn);
-                if (__config.user.override && __userid) {
+                if (__config.user.override && __cypher) {
                     $('.ti-foruser').addClass('ti-hidden');
                     $('.ti-nonuser').removeClass('ti-hidden');
                     $('.ti-uplate').text(__config.user.message);
@@ -217,7 +217,7 @@
                         'send_sms': (!__config.user.override), 
                         'send_email': (!__config.user.override), 
                         'use_internal_receipt': false }, 
-                        (__config.user.override && !__userid) ? {
+                        (__config.user.override && !__cypher) ? {
                         'fullname': $('#ti-finalHolder #ti-uname').val(),
                         'email': $('#ti-finalHolder #ti-umail').val(),
                         'mobile': $('#ti-finalHolder #ti-umobile').val() } : null);

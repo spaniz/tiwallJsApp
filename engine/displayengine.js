@@ -583,7 +583,7 @@ function checkFinalForm() {
         console.warn("valid voucher? >>" + validvouch);
     }
 
-    if ((!__config.user.override || !__userid) && (arc.is((i, e) => !$(e).val()) || !validvouch))
+    if ((!__config.user.override || !__cypher) && (arc.is((i, e) => !$(e).val()) || !validvouch))
         $('#ti-finalHolder #ti-bpay').addClass('ti-locked');
     else    
         $('#ti-finalHolder #ti-bpay').removeClass('ti-locked');
