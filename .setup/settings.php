@@ -13,7 +13,7 @@
                 updateConsts($_POST["app_id"], $_POST["app_token"]);
             $fx = file_get_contents($config_path);
             if ($fx)
-                $confx = json_decode($f);
+                $confx = json_decode($fx);
             updateConfig(array(
                 'view' => $_POST["view"],
                 'js' => array(

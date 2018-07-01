@@ -24,17 +24,18 @@
 			foreach ($order as $i)
 				array_push($payload, base64url_encode($args[$i]));
 		}
-		
+		array_push(time());
 		return implode('.', array_slice($payload, 2)) . '.' . hash_hmac('sha256', implode('.', $payload), _ZB_SECRET);
 	}
 
 	function verifyToken($token, $result, &$payload) {
 		try {
-			$receipt = json_decode($result);
-			if (!$receipt->ok)
+			$_receipt = json_decode($result);
+			$receipt = null;
+			if (!$_receipt->ok)
 				return false;
 			else 
-				$receipt = $receipt->data;
+				$receipt = $_receipt->data;
 			//trigger_error("Received token as " . $token);
 			$payload_b64 = explode('.', $token);
 			//trigger_error("Received reserveid as " . $receipt->reserve_id);
@@ -44,7 +45,11 @@
 
 			$signature = array_pop($payload_b64);
 
-			$cpayload = array_merge(array(base64url_encode($payload['reserve']), base64url_encode($payload['trace'])), $payload_b64);
+			$cpayload = array_merge(
+				array(base64url_encode($payload['reserve']), base64url_encode($payload['trace'])), 
+				$payload_b64, 
+				array(array_pop($payload_b64))
+			);
 			if ($payload_b64[0] == base64url_encode('wp')) {
 				$order = ['mode', 'userxid', 'fullname', 'email'];
 				foreach ($payload_b64 as $i => $p)
@@ -63,6 +68,26 @@
 			return false;
 		}
 		return false;
+	}
+
+	function makeCypherKey($mode, $fullname, $email, $userxid) {
+		$jdata = json_encode([
+			'mode' => $mode,
+			'fullname' => $name,
+			'email' => $email,
+			'userxid' => $userxid,
+			'igni' => time()
+		]);
+		return openssl_encrypt($jdata, 'aes-128-cbc', _ZB_SECRET);
+	}
+
+	function openCypherKey($cypher) {
+		$jdata = openssl_decrypt($cypher, 'aes-128-cbc', _ZB_SECRET);
+		$dec = json_decode($jdata, true);
+		if (isset($dec['mode'], $dec['igni']))
+			return $dec;
+		else 
+			return null;
 	}
 
  ?>

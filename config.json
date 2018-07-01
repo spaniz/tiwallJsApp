@@ -25,6 +25,6 @@
         "message": ""
     },
     "wordpress": {
-        "forcelogin": false
+        "forcelogin": true
     }
 }

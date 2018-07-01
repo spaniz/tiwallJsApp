@@ -79,15 +79,35 @@ function getTiEventItem(pageId, callback, passable) {
 }
 
 // Zirbana API Engine
+const ZB_RESERVER = "reserve." + __FRAMEWORK;
 const ZB_BASE_URL = "zb-agent." + __FRAMEWORK;
 const ZB_MAIN_URL = "https://store.zirbana.com/v2/";
+
+function getZbReserve(urn, params, callback, error) {
+    var addr = ZB_RESERVER + "?urn=" + urn;
+    if (params)
+        for (var key in params)
+            addr += '&' + key + '=' + encodeURI(params[key]);
+    if (DEBUG) console.warn('calling ' + addr);
+    $.ajax(addr, { 
+        dataType: 'json',
+        success: callback,
+        error: function() {
+            showError("بارگذاری اطلاعات با مشکل بر خورد.", 
+                function(e) { getZbReserve(e.urn, e.params, e.callback, e.error); lockLoader(true); },
+                error,
+                { urn, callback, params, error });
+        },
+        timeout: 10000
+    });
+}
 
 function getZbData(urn, action, params, callback, error) {
     var addr = ZB_BASE_URL + "?urn=" + urn + "&action=" + action;
     if (params)
         for (var key in params)
             addr += '&' + key + '=' + encodeURI(params[key]);
-    console.warn('calling ' + addr);
+    if (DEBUG) console.warn('calling ' + addr);
     $.ajax(addr, { 
         dataType: 'json',
         success: callback,
@@ -111,7 +131,7 @@ function getZbInsecureData(urn, action, params, callback, error) {
         success: callback,
         error: function() {
             showError("بارگذاری اطلاعات با مشکل بر خورد.", 
-                function(e) { getZbData(e.urn, e.action, e.params, e.callback, e.error); lockLoader(true); },
+                function(e) { getZbInsecureData(e.urn, e.action, e.params, e.callback, e.error); lockLoader(true); },
                 error,
                 { urn, callback, params, action, error });
         },

@@ -1,13 +1,17 @@
 let __paymentClause = { reserve_id: null, trace_number: null, total_price: null, time: null, token: null };
 function goForPayment(args, addargs) {
     lockLoader(true);
-    getZbData(__active_event.urn, "reserve", args, dat => {
+    getZbReserve(__active_event.urn, args + addargs, dat => {
         lockLoader(false);
         if (DEBUG) console.log(dat);
         if (!dat.ok) {
             switch (dat.error.code) {
                 case 400:
                     showError("ورودی های شما نادرست‌اند، بازبینی کنید.", null, () => {});
+                    break;
+
+                case 401:
+                    showError("شما باید لاگین باشید.", null, () => switchToEvent());
                     break;
 
                 case 404:
@@ -32,23 +36,12 @@ function goForPayment(args, addargs) {
             }
             return;
         }
-        let xaddr = '';
-        if (__userid)
-            xaddr += `sign.php?mode=wp&trace=${dat.data.trace_number}&reserve=${dat.data.reserve_id}&fullname=${__userinfo["fullname"]}&email=${__userinfo["email"]}&userxid=${__userid}`;
-        else
-            xaddr += `sign.php?mode=mx&trace=${dat.data.trace_number}&reserve=${dat.data.reserve_id}&fullname=${addargs["fullname"]}&email=${addargs["email"]}&mobile=${addargs["mobile"]}`;
-        $.ajax(xaddr, { 
-            contentType: 'text/plain',
-            success: xhrx => {
-                __paymentClause.token = xhrx,
-                __paymentClause.reserve_id = dat.data.reserve_id;
-                __paymentClause.trace_number = dat.data.trace_number;
-                __paymentClause.total_price = dat.data.total_price;
-                __paymentClause.time = __RESERVETIME;
-                setupAftemath();
-            },
-            timeout: 10000
-        });
+        __paymentClause.token = dat.token,
+        __paymentClause.reserve_id = dat.data.reserve_id;
+        __paymentClause.trace_number = dat.data.trace_number;
+        __paymentClause.total_price = dat.data.total_price;
+        __paymentClause.time = __RESERVETIME;
+        setupAftemath();
     }, 
     () => { switchToFinal(); });
 }

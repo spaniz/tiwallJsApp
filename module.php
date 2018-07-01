@@ -32,7 +32,7 @@
         <script type="text/javascript">
             let __config = <?php echo $cfg; ?>;
     <?php
-        if (!isset($_GET['zb_result'])) {
+        if (empty($_GET['zb_result'])) {
             foreach ($_GET as $k => $v)
                 echo "__config." . str_replace('~', '.', $k) . " = '$v';";
         } else {
@@ -68,8 +68,8 @@
         <script type="text/javascript">
             var __scroll_pos = 0;
             var __scroll_anchor = 0;
-            var __userid = <?php echo isset($_GET['user_id']) ? '"' . $_GET['user_id'] . '"' : 'null' ?>;
-        <?php if (isset($_GET['user_id'])) { ?>
+            var __userid = <?php echo !empty($_GET['user_id']) ? '"' . $_GET['user_id'] . '"' : 'null' ?>;
+        <?php if (!empty($_GET['user_id'])) { ?>
             var __userinfo = {
                 'fullname': '<?php echo $_GET['user_firstname'] . " " . $_GET['user_lastname']; ?>',
                 'email': '<?php echo $_GET['user_email']; ?>'
@@ -79,9 +79,9 @@
             $(document).ready(function() {
                 $('#ti-mastercontain').trigger('widthChanged');
                 configSync(__config.js.scroll);
-            <?php if (!isset($_GET['zb_result'])) { ?>
+            <?php if (empty($_GET['zb_result'])) { ?>
                 $('#ti-listHeader').click(loadCats);
-            <?php if (!isset($_GET['user_id']) && $uconf->wordpress->forcelogin) { ?>
+            <?php if (empty($_GET['user_id']) && $uconf->wordpress->forcelogin) { ?>
                 $('#ti-eventHolder .ti-btn:not(.ti-dead)').addClass('ti-warn').text("شما باید لاگین باشید تا بتوانید خرید کنید");
             <?php } ?>
                 //__scroll_origin = $('#ti-listHolder');
@@ -264,7 +264,7 @@
         </script>
 
         <div id="ti-cardWrapper">
-        <?php if (isset($_GET['zb_result'])) { ?>
+        <?php if (!empty($_GET['zb_result'])) { ?>
             <div id="ti-receiptHolder" class="flex-tr ti-centrespan">
                 <script>
                     
