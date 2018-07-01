@@ -14,7 +14,8 @@
 		'email' => null,
 		'mobile' => null,
 		'send_sms' => false,
-		'send_email' => false
+		'send_email' => false,
+		'cypherkey' => null
 	);
 	if ($confx->user->override) {
 		$enforceParams['user_fullname'] = $confx->user->fullname;
@@ -34,7 +35,7 @@
         die '{"ok":false,"error":{"code":400,"message":"Bad request."}}';
     }
     foreach ($_GET as $getKey => $getVal)
-        if ($getKey != 'urn' && (!isset($enforceParams[$getKey]) || $enforceParams[$getKey] != null)) {
+        if ($getKey != 'urn' && $getKey != 'cypherkey' && (!isset($enforceParams[$getKey]) || $enforceParams[$getKey] != null)) {
 			$params .= $getKey . '=' . urlencode($getVal) . '&';
 		}
     $head = array(
